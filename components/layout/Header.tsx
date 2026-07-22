@@ -252,7 +252,7 @@ export default function Header() {
           z-40
           bg-black/30
           transition-opacity
-          duration-300
+          duration-150
           lg:hidden
           ${
             mobileMenuOpen
@@ -280,14 +280,14 @@ export default function Header() {
           bg-white
           shadow-2xl
           transition-transform
-          duration-300
+          duration-180
           ease-out
           will-change-transform
           lg:hidden
           ${
             mobileMenuOpen
-              ? "translate-x-0"
-              : "translate-x-full"
+              ? "translate-x-0 pointer-events-auto"
+              : "translate-x-full pointer-events-none"
           }
         `}
       >
