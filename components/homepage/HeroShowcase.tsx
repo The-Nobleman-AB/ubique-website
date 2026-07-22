@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HeroShowcase() {
   return (
-    <div className="relative w-full max-w-[650px] mx-auto">
+    <div className="relative z-0 w-full max-w-[650px] mx-auto">
 
       <div
         className="
@@ -76,6 +76,7 @@ export default function HeroShowcase() {
       <div
         className="
         absolute
+        z-10
         -left-3
         md:-left-6
         lg:-left-10

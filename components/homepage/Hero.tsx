@@ -57,7 +57,7 @@ export default function Hero() {
 
           {/* LEFT */}
 
-          <div>
+          <div className="relative z-20">
 
             <p
               className="
@@ -146,7 +146,9 @@ export default function Hero() {
 
           {/* RIGHT */}
 
-          <HeroShowcase />
+          <div className="relative z-0 mt-16 lg:mt-0">
+            <HeroShowcase />
+          </div>
 
         </div>
 
