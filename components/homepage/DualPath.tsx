@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { ArrowRight } from "lucide-react";
 
@@ -102,20 +103,33 @@ export default function DualPath() {
                 consulting and business functions.
               </p>
 
-              <button
-                className="
-                flex
-                items-center
-                gap-2
-                text-[#12B76A]
-                mt-10
-                font-semibold
-                "
-              >
-                Hire Talent
+          <Link
+            href="/contact"
+            className="
+            group
+            mt-10
+            inline-flex
+            items-center
+            gap-2
+            font-semibold
+            text-[#12B76A]
+            transition-all
+            duration-300
+            hover:gap-3
+            "
+          >
+            Hire Talent
 
-                <ArrowRight size={18} />
-              </button>
+            <ArrowRight
+              size={18}
+              className="
+              transition-transform
+              duration-300
+              group-hover:translate-x-1
+              "
+            />
+          </Link>
+              
 
             </div>
 
@@ -180,20 +194,33 @@ export default function DualPath() {
                 employers worldwide.
               </p>
 
-              <button
-                className="
-                flex
-                items-center
-                gap-2
-                text-[#155EEF]
-                mt-10
-                font-semibold
-                "
-              >
-                Explore Opportunities
+          <Link
+            href="/careers"
+            className="
+            group
+            mt-10
+            inline-flex
+            items-center
+            gap-2
+            font-semibold
+            text-[#155EEF]
+            transition-all
+            duration-300
+            hover:gap-3
+            "
+          >
+            Explore Opportunities
 
-                <ArrowRight size={18} />
-              </button>
+            <ArrowRight
+              size={18}
+              className="
+              transition-transform
+              duration-300
+              group-hover:translate-x-1
+              "
+            />
+          </Link>
+              
 
             </div>
 

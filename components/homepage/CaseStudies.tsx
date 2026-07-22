@@ -1,270 +1,272 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import {
+  Globe2,
+  Building2,
+  Zap,
+  Handshake,
+  ArrowRight,
+} from "lucide-react";
+
+const pillars = [
+  {
+    icon: Globe2,
+    title: "Global Reach",
+    description:
+      "Supporting organisations across Asia-Pacific, Europe and the Americas through our international delivery network.",
+  },
+  {
+    icon: Building2,
+    title: "Industry Expertise",
+    description:
+      "Deep consulting and workforce experience across technology, manufacturing, banking, healthcare, retail and automotive.",
+  },
+  {
+    icon: Zap,
+    title: "Agile Delivery",
+    description:
+      "Rapid access to specialist consultants and talent, enabling organisations to scale with confidence.",
+  },
+  {
+    icon: Handshake,
+    title: "Long-Term Partnership",
+    description:
+      "Building trusted relationships focused on sustainable growth, quality delivery and measurable business outcomes.",
+  },
+];
 
 export default function CaseStudies() {
   return (
-    <section className="py-40 bg-white">
+    <section className="bg-white py-40">
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-6">
 
-        {/* HEADER */}
+        {/* Header */}
 
         <div className="text-center">
 
           <p
             className="
+            font-semibold
             uppercase
             tracking-[0.3em]
             text-[#155EEF]
-            font-semibold
             "
           >
-            SUCCESS STORIES
+            WHY UBIQUE
           </p>
 
           <h2
             className="
-            text-6xl
-            font-black
             mt-4
+            text-5xl
+            font-black
+            lg:text-6xl
             "
           >
-            Proven Results
+            Why Leading Organisations
             <br />
-            Across Global Markets
+            Choose Ubique
           </h2>
+
+          <p
+            className="
+            mx-auto
+            mt-8
+            max-w-3xl
+            text-xl
+            leading-9
+            text-gray-500
+            "
+          >
+            Combining technology consulting, workforce expertise
+            and regional delivery capabilities to help businesses
+            transform, scale and succeed.
+          </p>
 
         </div>
 
-        {/* FEATURE CASE STUDY */}
+        {/* Pillars */}
 
         <div
           className="
           mt-20
-          bg-[#071B3A]
-          rounded-[40px]
-          overflow-hidden
+          grid
+          gap-8
+          md:grid-cols-2
+          lg:grid-cols-4
           "
         >
 
-          <div className="grid lg:grid-cols-2">
+          {pillars.map((pillar) => {
 
-            {/* LEFT */}
+            const Icon = pillar.icon;
 
-            <div className="p-14">
+            return (
 
-              <p
+              <div
+                key={pillar.title}
                 className="
-                text-[#12B76A]
-                uppercase
-                tracking-[0.2em]
+                group
+                rounded-[32px]
+                border
+                border-gray-200
+                bg-white
+                p-10
+                transition-all
+                duration-300
+                hover:-translate-y-2
+                hover:border-[#155EEF]/20
+                hover:shadow-2xl
                 "
               >
-                Automotive Industry
-              </p>
 
-              <h3
-                className="
-                text-white
-                text-5xl
-                font-black
-                mt-6
-                "
-              >
-                Scaling SAP Talent
-                Across Germany
-              </h3>
+                <div
+                  className="
+                  flex
+                  h-16
+                  w-16
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  bg-[#EEF4FF]
+                  text-[#155EEF]
+                  transition-all
+                  duration-300
+                  group-hover:bg-[#155EEF]
+                  group-hover:text-white
+                  "
+                >
 
-              <p
-                className="
-                text-white/70
-                mt-8
-                text-lg
-                leading-relaxed
-                "
-              >
-                A leading automotive client required
-                rapid access to highly specialized SAP
-                consultants to support a critical
-                transformation initiative.
-              </p>
-
-              <button
-                className="
-                mt-10
-                flex
-                items-center
-                gap-2
-                text-[#12B76A]
-                font-semibold
-                "
-              >
-                Read Full Story
-
-                <ArrowRight size={18} />
-              </button>
-
-            </div>
-
-            {/* RIGHT */}
-
-            <div
-              className="
-              bg-gradient-to-br
-              from-[#155EEF]
-              to-[#12B76A]
-              p-14
-              "
-            >
-
-              <div className="grid grid-cols-2 gap-8">
-
-                <div>
-
-                  <div
-                    className="
-                    text-white
-                    text-6xl
-                    font-black
-                    "
-                  >
-                    15
-                  </div>
-
-                  <div className="text-white/80">
-                    SAP Consultants Placed
-                  </div>
+                  <Icon size={30} />
 
                 </div>
 
-                <div>
+                <h3
+                  className="
+                  mt-8
+                  text-2xl
+                  font-bold
+                  "
+                >
+                  {pillar.title}
+                </h3>
 
-                  <div
-                    className="
-                    text-white
-                    text-6xl
-                    font-black
-                    "
-                  >
-                    8
-                  </div>
-
-                  <div className="text-white/80">
-                    Weeks Delivery
-                  </div>
-
-                </div>
-
-                <div>
-
-                  <div
-                    className="
-                    text-white
-                    text-6xl
-                    font-black
-                    "
-                  >
-                    98%
-                  </div>
-
-                  <div className="text-white/80">
-                    Retention Rate
-                  </div>
-
-                </div>
-
-                <div>
-
-                  <div
-                    className="
-                    text-white
-                    text-6xl
-                    font-black
-                    "
-                  >
-                    40%
-                  </div>
-
-                  <div className="text-white/80">
-                    Faster Hiring
-                  </div>
-
-                </div>
+                <p
+                  className="
+                  mt-5
+                  leading-8
+                  text-gray-500
+                  "
+                >
+                  {pillar.description}
+                </p>
 
               </div>
 
-            </div>
+            );
 
-          </div>
+          })}
 
         </div>
 
-        {/* BOTTOM CARDS */}
+        {/* CTA Banner */}
 
         <div
           className="
-          grid
-          md:grid-cols-2
-          gap-8
-          mt-10
+          mt-20
+          overflow-hidden
+          rounded-[40px]
+          bg-gradient-to-r
+          from-[#071B3A]
+          via-[#0C2F63]
+          to-[#155EEF]
+          p-14
+          lg:flex
+          lg:items-center
+          lg:justify-between
           "
         >
 
-          <div
-            className="
-            border
-            border-gray-200
-            rounded-[32px]
-            p-10
-            "
-          >
-            <h4
-              className="
-              text-3xl
-              font-black
-              "
-            >
-              Cloud Engineering
-            </h4>
+          <div>
 
             <p
               className="
-              mt-4
-              text-gray-500
+              font-semibold
+              uppercase
+              tracking-[0.25em]
+              text-[#12B76A]
               "
             >
-              Enabled rapid scaling of cloud teams
-              across multiple regions.
+              READY TO GROW?
             </p>
+
+            <h3
+              className="
+              mt-4
+              max-w-2xl
+              text-4xl
+              font-black
+              leading-tight
+              text-white
+              lg:text-5xl
+              "
+            >
+              Let's Build Your
+              Next Success Story
+            </h3>
+
+            <p
+              className="
+              mt-6
+              max-w-2xl
+              text-lg
+              leading-8
+              text-blue-100
+              "
+            >
+              Whether you're expanding your technology teams,
+              delivering transformation programmes or looking
+              for specialist consulting expertise, we're ready
+              to help.
+            </p>
+
           </div>
 
-          <div
-            className="
-            border
-            border-gray-200
-            rounded-[32px]
-            p-10
-            "
-          >
-            <h4
-              className="
-              text-3xl
-              font-black
-              "
-            >
-              Global Workforce
-            </h4>
+          <div className="mt-10 lg:mt-0">
 
-            <p
+            <Link
+              href="/contact"
               className="
-              mt-4
-              text-gray-500
+              group
+              inline-flex
+              items-center
+              gap-3
+              rounded-2xl
+              bg-white
+              px-8
+              py-4
+              font-semibold
+              text-[#071B3A]
+              transition-all
+              duration-300
+              hover:scale-[1.03]
               "
             >
-              Supported international hiring across
-              multiple countries and disciplines.
-            </p>
+              Talk To Our Experts
+
+              <ArrowRight
+                size={20}
+                className="
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+                "
+              />
+
+            </Link>
+
           </div>
 
         </div>

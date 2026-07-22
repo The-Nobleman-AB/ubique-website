@@ -3,35 +3,39 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-const countries = [
+const regions = [
   {
-    country: "India",
-    flag: "🇮🇳",
+    title: "India",
+    emoji: "🇮🇳",
     headline: "Global Headquarters • Kolkata",
-    subHeadline: "5M+ Technology Professionals",
-    tags: ["Cloud", "SAP", "AI"],
+    subHeadline: "The heart of Ubique's global operations",
+    tags: ["Technology", "Consulting", "Talent"],
     href: "/countries/india",
+    featured: true,
   },
   {
-    country: "Germany",
-    flag: "🇩🇪",
-    headline: "SAP & Automotive Hub",
-    tags: ["SAP", "Industry 4.0", "Engineering"],
-    href: "/countries/germany",
+    title: "Asia-Pacific",
+    emoji: "🌏",
+    headline: "Regional Delivery Network",
+    subHeadline: "Supporting enterprises across APAC",
+    tags: ["Enterprise", "Engineering", "Growth"],
+    href: "/countries/asia-pacific",
   },
   {
-    country: "USA",
-    flag: "🇺🇸",
-    headline: "Digital Transformation Talent",
-    tags: ["Cloud", "Product", "AI"],
-    href: "/countries/usa",
+    title: "Europe",
+    emoji: "🇪🇺",
+    headline: "Enterprise Solutions",
+    subHeadline: "Digital transformation across Europe",
+    tags: ["SAP", "Automotive", "Manufacturing"],
+    href: "/countries/europe",
   },
   {
-    country: "United Kingdom",
-    flag: "🇬🇧",
-    headline: "Finance & Technology Hub",
-    tags: ["FinTech", "Cybersecurity", "Consulting"],
-    href: "/countries/uk",
+    title: "Americas",
+    emoji: "🌎",
+    headline: "Technology & Innovation",
+    subHeadline: "Cloud, AI and digital talent solutions",
+    tags: ["Cloud", "AI", "Digital"],
+    href: "/countries/americas",
   },
 ];
 
@@ -39,10 +43,10 @@ export default function GlobalPresence() {
   return (
     <section
       className="
-      py-40
-      bg-[#071B3A]
       relative
       overflow-hidden
+      bg-[#071B3A]
+      py-40
       "
     >
       {/* Background Glow */}
@@ -50,19 +54,19 @@ export default function GlobalPresence() {
       <div
         className="
         absolute
-        top-0
         right-0
-        w-[700px]
+        top-0
         h-[700px]
-        bg-blue-600/10
+        w-[700px]
         rounded-full
+        bg-blue-600/10
         blur-[180px]
         "
       />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
 
-        <div className="grid lg:grid-cols-12 gap-16 items-start">
+        <div className="grid items-start gap-16 lg:grid-cols-12">
 
           {/* LEFT */}
 
@@ -70,60 +74,72 @@ export default function GlobalPresence() {
 
             <p
               className="
+              font-semibold
               uppercase
               tracking-[0.3em]
               text-[#12B76A]
-              font-semibold
               "
             >
-              GLOBAL TALENT MARKETS
+              GLOBAL PRESENCE
             </p>
 
             <h2
               className="
-              text-6xl
-              lg:text-7xl
-              font-black
-              text-white
               mt-6
+              text-6xl
+              font-black
               leading-[0.95]
+              text-white
+              lg:text-7xl
               "
             >
-              Explore
-              Global Talent
-              Markets
+              Our Global
+              <br />
+              Delivery
+              <br />
+              Network
             </h2>
 
             <p
               className="
-              text-white/70
-              text-xl
               mt-8
+              text-xl
               leading-relaxed
+              text-white/70
               "
             >
-              Access specialized talent ecosystems
-              across India, Germany, the United Kingdom
-              and the United States through Ubique's
-              global network.
+              With our Global Headquarters in India and regional
+              expertise across Asia-Pacific, Europe and the
+              Americas, Ubique delivers consulting, technology
+              and workforce solutions wherever our clients
+              operate.
             </p>
 
             <Link
-              href="/countries/india"
+              href="/countries"
               className="
+              group
               mt-10
               inline-flex
               items-center
               gap-3
-              text-[#12B76A]
               font-semibold
-              hover:gap-4
+              text-[#12B76A]
               transition-all
+              duration-300
+              hover:gap-4
               "
             >
-              Explore Talent Markets
+              Explore Global Presence
 
-              <ArrowRight size={18} />
+              <ArrowRight
+                size={18}
+                className="
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+                "
+              />
             </Link>
 
           </div>
@@ -132,95 +148,114 @@ export default function GlobalPresence() {
 
           <div
             className="
-            lg:col-span-8
             grid
-            md:grid-cols-2
             gap-6
+            md:grid-cols-2
+            lg:col-span-8
             "
           >
 
-            {countries.map((item) => (
+            {regions.map((region) => (
+
               <Link
-                key={item.country}
-                href={item.href}
-                className="
-                group
-                bg-white/5
-                backdrop-blur-xl
-                border
-                border-white/10
-                rounded-[32px]
-                p-8
-                hover:bg-white/10
-                hover:border-white/20
-                transition-all
-                duration-500
-                "
+                key={region.title}
+                href={region.href}
+                className={`
+                  group
+                  rounded-[32px]
+                  border
+                  p-8
+                  backdrop-blur-xl
+                  transition-all
+                  duration-500
+                  hover:-translate-y-2
+                  hover:bg-white/10
+                  ${
+                    region.featured
+                      ? "border-[#12B76A]/40 bg-white/10"
+                      : "border-white/10 bg-white/5 hover:border-white/20"
+                  }
+                `}
               >
 
-                <div
-                  className="
-                  text-4xl
-                  mb-5
-                  "
-                >
-                  {item.flag}
+                <div className="mb-5 text-4xl">
+                  {region.emoji}
                 </div>
+
+                {region.featured && (
+                  <div
+                    className="
+                    mb-4
+                    inline-flex
+                    rounded-full
+                    bg-[#12B76A]/15
+                    px-3
+                    py-1
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-[0.2em]
+                    text-[#12B76A]
+                    "
+                  >
+                    Global HQ
+                  </div>
+                )}
 
                 <h3
                   className="
-                  text-white
                   text-3xl
                   font-bold
+                  text-white
                   "
                 >
-                  {item.country}
+                  {region.title}
                 </h3>
 
                 <div className="mt-4">
 
-		  <p
-    			className="
-    			text-[#12B76A]
-    			text-xs
-    			uppercase
-    			tracking-[0.2em]
-    			font-semibold
-    			"
-  		  >
-    			{item.headline}
-  		  </p>
+                  <p
+                    className="
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-[0.2em]
+                    text-[#12B76A]
+                    "
+                  >
+                    {region.headline}
+                  </p>
 
-  		  <p
-    			className="
-    			text-white/80
-    			text-lg
-    			mt-2
-    			"
-  		  >
-    			{item.subHeadline ?? item.headline}
-  		  </p>
+                  <p
+                    className="
+                    mt-2
+                    text-lg
+                    text-white/80
+                    "
+                  >
+                    {region.subHeadline}
+                  </p>
 
-		</div>
+                </div>
 
                 <div
                   className="
+                  mt-6
                   flex
                   flex-wrap
                   gap-2
-                  mt-6
                   "
                 >
-                  {item.tags.map((tag) => (
+                  {region.tags.map((tag) => (
                     <span
                       key={tag}
                       className="
-                      px-3
-                      py-1.5
                       rounded-full
                       bg-white/10
-                      text-white/80
+                      px-3
+                      py-1.5
                       text-sm
+                      text-white/80
                       "
                     >
                       {tag}
@@ -234,18 +269,27 @@ export default function GlobalPresence() {
                   flex
                   items-center
                   gap-2
-                  text-[#12B76A]
                   font-semibold
-                  group-hover:gap-3
+                  text-[#12B76A]
                   transition-all
+                  duration-300
+                  group-hover:gap-3
                   "
                 >
-                  Explore Market
+                  Explore Region
 
-                  <ArrowRight size={18} />
+                  <ArrowRight
+                    size={18}
+                    className="
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                    "
+                  />
                 </div>
 
               </Link>
+
             ))}
 
           </div>
@@ -253,6 +297,7 @@ export default function GlobalPresence() {
         </div>
 
       </div>
+
     </section>
   );
 }

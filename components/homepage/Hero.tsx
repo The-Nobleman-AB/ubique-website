@@ -1,6 +1,8 @@
 import Container from "../ui/Container";
 import HeroShowcase from "./HeroShowcase";
 
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section
@@ -95,36 +97,51 @@ export default function Hero() {
               across 15+ countries.
             </p>
 
-            <div className="flex gap-5 mt-10">
+          <div className="mt-10 flex gap-5">
 
-              <button
-                className="
-                bg-[#12B76A]
-                px-8
-                py-4
-                rounded-xl
-                text-white
-                font-semibold
-                "
-              >
-                Hire Talent
-              </button>
+            <Link
+              href="/contact"
+              className="
+              inline-flex
+              items-center
+              justify-center
+              rounded-xl
+              bg-[#12B76A]
+              px-8
+              py-4
+              font-semibold
+              text-white
+              transition-all
+              duration-300
+              hover:scale-[1.02]
+              hover:opacity-95
+              "
+            >
+              Hire Talent
+            </Link>
 
-              <button
-                className="
-                border
-                border-white/20
-                px-8
-                py-4
-                rounded-xl
-                text-white
-                "
-              >
-                Explore Jobs
-              </button>
+            <Link
+              href="/careers"
+              className="
+              inline-flex
+              items-center
+              justify-center
+              rounded-xl
+              border
+              border-white/20
+              px-8
+              py-4
+              text-white
+              transition-all
+              duration-300
+              hover:bg-white/10
+              "
+            >
+              Explore Jobs
+            </Link>
 
-            </div>
-
+          </div>
+            
           </div>
 
           {/* RIGHT */}
