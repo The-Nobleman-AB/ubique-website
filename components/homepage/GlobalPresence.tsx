@@ -7,7 +7,8 @@ const countries = [
   {
     country: "India",
     flag: "🇮🇳",
-    headline: "5M+ Technology Professionals",
+    headline: "Global Headquarters • Kolkata",
+    subHeadline: "5M+ Technology Professionals",
     tags: ["Cloud", "SAP", "AI"],
     href: "/countries/india",
   },
@@ -176,15 +177,31 @@ export default function GlobalPresence() {
                   {item.country}
                 </h3>
 
-                <p
-                  className="
-                  text-white/80
-                  text-lg
-                  mt-4
-                  "
-                >
-                  {item.headline}
-                </p>
+                <div className="mt-4">
+
+		  <p
+    			className="
+    			text-[#12B76A]
+    			text-xs
+    			uppercase
+    			tracking-[0.2em]
+    			font-semibold
+    			"
+  		  >
+    			{item.headline}
+  		  </p>
+
+  		  <p
+    			className="
+    			text-white/80
+    			text-lg
+    			mt-2
+    			"
+  		  >
+    			{item.subHeadline ?? item.headline}
+  		  </p>
+
+		</div>
 
                 <div
                   className="

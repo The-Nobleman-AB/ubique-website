@@ -5,9 +5,11 @@ export default function Footer() {
   return (
     <footer className="bg-[#071B3A] text-white pt-24 pb-10">
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-6">
 
-        <div className="grid lg:grid-cols-4 gap-16">
+        <div className="grid gap-16 lg:grid-cols-4">
+
+          {/* Company Intro */}
 
           <div>
 
@@ -15,70 +17,159 @@ export default function Footer() {
               UBIQUE
             </h2>
 
-            <p className="text-white/70 mt-6">
-              Helping organizations build world-class teams
-              and professionals build global careers.
+            <p className="mt-6 max-w-sm leading-8 text-white/70">
+              Enterprise consulting, technology solutions
+              and workforce expertise supporting
+              organisations across global markets.
             </p>
 
           </div>
 
+          {/* Company */}
+
           <div>
 
-            <h4 className="font-bold mb-5">
+            <h4 className="mb-5 font-bold">
               Company
             </h4>
 
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
 
-              <Link href="/about">
+              <Link
+                href="/about"
+                className="text-white/70 transition hover:text-white"
+              >
                 About
               </Link>
 
-              <br />
-
-              <Link href="/careers">
+              <Link
+                href="/careers"
+                className="text-white/70 transition hover:text-white"
+              >
                 Careers
               </Link>
 
-              <br />
+              <Link
+                href="/insights"
+                className="text-white/70 transition hover:text-white"
+              >
+                News & Insights
+              </Link>
 
-              <Link href="/contact">
+              <Link
+                href="/contact"
+                className="text-white/70 transition hover:text-white"
+              >
                 Contact
               </Link>
 
             </div>
 
-          </div>
+            <div className="my-6 h-px w-16 bg-white/15" />
 
-          <div>
+            <h5 className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
+              Regions
+            </h5>
 
-            <h4 className="font-bold mb-5">
-              Services
-            </h4>
+            <div className="flex flex-col gap-3">
 
-            <div className="space-y-3">
+              <Link
+                href="/countries"
+                className="text-white/70 transition hover:text-white"
+              >
+                Global Presence
+              </Link>
 
-              <p>IT Consulting</p>
+              <Link
+                href="/countries/apac"
+                className="text-white/70 transition hover:text-white"
+              >
+                Asia-Pacific
+              </Link>
 
-              <p>HR Consulting</p>
+              <Link
+                href="/countries/india"
+                className="text-white/70 transition hover:text-white"
+              >
+                India
+              </Link>
 
-              <p>Staffing Solutions</p>
+              <Link
+                href="/countries/europe"
+                className="text-white/70 transition hover:text-white"
+              >
+                Europe
+              </Link>
+
+              <Link
+                href="/countries/americas"
+                className="text-white/70 transition hover:text-white"
+              >
+                Americas
+              </Link>
 
             </div>
 
           </div>
 
+          {/* Services */}
+
           <div>
 
-            <h4 className="font-bold mb-5">
+            <h4 className="mb-5 font-bold">
+              Services
+            </h4>
+
+            <div className="flex flex-col gap-3">
+
+              <Link
+                href="/services"
+                className="text-white/70 transition hover:text-white"
+              >
+                Overview
+              </Link>
+
+              <Link
+                href="/services#technology"
+                className="text-white/70 transition hover:text-white"
+              >
+                Technology Consulting
+              </Link>
+
+              <Link
+                href="/services#hr"
+                className="text-white/70 transition hover:text-white"
+              >
+                HR Consulting
+              </Link>
+
+              <Link
+                href="/services#staffing"
+                className="text-white/70 transition hover:text-white"
+              >
+                Staffing Solutions
+              </Link>
+
+            </div>
+
+          </div>
+
+          {/* Contact */}
+
+          <div>
+
+            <h4 className="mb-5 font-bold">
               Contact
             </h4>
 
-            <div className="space-y-4 text-white/70">
+            <div className="space-y-5 text-white/70">
 
-              <div className="flex gap-3">
+              <div className="flex items-start gap-3">
 
-                <Mail size={18} />
+                <Mail
+                  size={18}
+                  className="mt-1 shrink-0"
+                />
 
                 <span>
                   info@ubique-systems.com
@@ -86,9 +177,12 @@ export default function Footer() {
 
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex items-start gap-3">
 
-                <Phone size={18} />
+                <Phone
+                  size={18}
+                  className="mt-1 shrink-0"
+                />
 
                 <span>
                   +44 XX XXXX XXXX
@@ -96,12 +190,17 @@ export default function Footer() {
 
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex items-start gap-3">
 
-                <MapPin size={18} />
+                <MapPin
+                  size={18}
+                  className="mt-1 shrink-0"
+                />
 
                 <span>
-                  Global Presence
+                  Global Headquarters
+                  <br />
+                  Kolkata, India
                 </span>
 
               </div>
@@ -112,16 +211,26 @@ export default function Footer() {
 
         </div>
 
-        <div
-          className="
-          border-t
-          border-white/10
-          mt-16
-          pt-8
-          text-white/50
-          "
-        >
-          © 2026 Ubique Systems. All Rights Reserved.
+        {/* Bottom */}
+
+        <div className="mt-16 border-t border-white/10 pt-8">
+
+          <p className="text-center text-sm uppercase tracking-[0.2em] text-white/60">
+            Enterprise Consulting • Technology Solutions • Workforce Expertise
+          </p>
+
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-white/50 md:flex-row">
+
+            <p>
+              © 2026 Ubique Systems Pvt. Ltd. All Rights Reserved.
+            </p>
+
+            <p>
+              Global Headquarters • Kolkata, India
+            </p>
+
+          </div>
+
         </div>
 
       </div>

@@ -1,6 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
+import IndiaHeadquarters from "@/components/country/IndiaHeadquarters";
 import IndiaHero from "@/components/country/IndiaHero";
 import IndiaStats from "@/components/country/IndiaStats";
 import IndiaAdvantages from "@/components/country/IndiaAdvantages";
@@ -28,6 +29,8 @@ export default function IndiaPage() {
 
       <main>
         <IndiaHero />
+
+	<IndiaHeadquarters />
 
 	<IndiaReportCover />
 

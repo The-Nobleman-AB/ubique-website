@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HeroShowcase() {
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-[650px] mx-auto">
 
       <div
         className="
@@ -19,7 +19,9 @@ export default function HeroShowcase() {
           height={700}
           className="
           w-full
-          h-[550px]
+          h-[420px]
+          md:h-[500px]
+          lg:h-[550px]
           object-cover
           "
         />
@@ -42,16 +44,28 @@ export default function HeroShowcase() {
         <div
           className="
           absolute
-          bottom-8
-          left-8
+          left-6
+          md:left-8
+          bottom-20
+          md:bottom-24
+          lg:bottom-20
           text-white
+          max-w-[80%]
           "
         >
-          <p className="text-sm uppercase tracking-wider">
+          <p className="text-xs md:text-sm uppercase tracking-wider">
             Global Workforce Network
           </p>
 
-          <h3 className="text-3xl font-bold mt-2">
+          <h3
+            className="
+            text-2xl
+            md:text-3xl
+            font-bold
+            mt-2
+            leading-tight
+            "
+          >
             Connecting Talent Across Continents
           </h3>
         </div>
@@ -62,19 +76,32 @@ export default function HeroShowcase() {
       <div
         className="
         absolute
-        -left-10
-        top-12
+        -left-3
+        md:-left-6
+        lg:-left-10
+        top-8
+        md:top-10
+        lg:top-12
         bg-white
         rounded-2xl
-        p-5
+        p-3
+        md:p-4
+        lg:p-5
         shadow-2xl
         "
       >
-        <div className="text-3xl font-bold text-[#155EEF]">
+        <div
+          className="
+          text-2xl
+          md:text-3xl
+          font-bold
+          text-[#155EEF]
+          "
+        >
           15+
         </div>
 
-        <div className="text-gray-500 text-sm">
+        <div className="text-gray-500 text-xs md:text-sm">
           Countries
         </div>
       </div>
@@ -84,19 +111,32 @@ export default function HeroShowcase() {
       <div
         className="
         absolute
-        -right-8
-        top-40
+        -right-3
+        md:-right-5
+        lg:-right-8
+        top-28
+        md:top-32
+        lg:top-40
         bg-white
         rounded-2xl
-        p-5
+        p-3
+        md:p-4
+        lg:p-5
         shadow-2xl
         "
       >
-        <div className="text-3xl font-bold text-[#12B76A]">
+        <div
+          className="
+          text-2xl
+          md:text-3xl
+          font-bold
+          text-[#12B76A]
+          "
+        >
           500+
         </div>
 
-        <div className="text-gray-500 text-sm">
+        <div className="text-gray-500 text-xs md:text-sm">
           Placements
         </div>
       </div>
@@ -106,19 +146,33 @@ export default function HeroShowcase() {
       <div
         className="
         absolute
-        left-10
-        -bottom-8
+        left-6
+        md:left-8
+        lg:left-10
+        bottom-4
+        md:-bottom-2
+        lg:-bottom-8
         bg-white
         rounded-2xl
-        p-5
+        p-3
+        md:p-4
+        lg:p-5
         shadow-2xl
+        z-20
         "
       >
-        <div className="text-3xl font-bold text-[#12B76A]">
+        <div
+          className="
+          text-2xl
+          md:text-3xl
+          font-bold
+          text-[#12B76A]
+          "
+        >
           98%
         </div>
 
-        <div className="text-gray-500 text-sm">
+        <div className="text-gray-500 text-xs md:text-sm">
           Retention
         </div>
       </div>

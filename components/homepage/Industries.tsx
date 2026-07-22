@@ -1,34 +1,41 @@
+import Link from "next/link";
 import Container from "../ui/Container";
 import { ArrowRight } from "lucide-react";
 
 const industries = [
   {
     title: "Automotive",
+    href: "/industries/automotive",
     description:
       "Supporting digital transformation, SAP programmes and engineering talent requirements.",
   },
   {
     title: "Banking & Financial Services",
+    href: "/industries/banking-financial-services",
     description:
       "Technology, cybersecurity, data and consulting professionals for modern financial institutions.",
   },
   {
     title: "Healthcare & Life Sciences",
+    href: "/industries/healthcare-life-sciences",
     description:
       "Specialist talent supporting healthcare technology, operations and transformation initiatives.",
   },
   {
     title: "Retail & Consumer",
+    href: "/industries/retail-consumer",
     description:
       "Talent solutions for e-commerce, digital commerce and customer experience programmes.",
   },
   {
     title: "Manufacturing",
+    href: "/industries/manufacturing",
     description:
       "Industry 4.0, ERP transformation and engineering workforce solutions.",
   },
   {
     title: "Technology",
+    href: "/industries/technology",
     description:
       "Cloud, AI, software engineering and product development professionals.",
   },
@@ -44,10 +51,10 @@ export default function Industries() {
 
           <p
             className="
-            uppercase
-            tracking-[0.3em]
-            text-[#155EEF]
-            font-semibold
+              uppercase
+              tracking-[0.3em]
+              text-[#155EEF]
+              font-semibold
             "
           >
             INDUSTRY EXPERTISE
@@ -55,58 +62,66 @@ export default function Industries() {
 
           <h2
             className="
-            text-5xl
-            lg:text-6xl
-            font-black
-            mt-6
+              mt-6
+              text-5xl
+              font-black
+              lg:text-6xl
             "
           >
             Expertise Across
+            <br />
             High-Growth Industries
           </h2>
 
           <p
             className="
-            text-xl
-            text-gray-600
-            mt-8
+              mt-8
+              text-xl
+              text-gray-600
             "
           >
-            Helping organizations access specialist
-            talent across technology-driven sectors.
+            Helping organisations access specialist talent across
+            technology-driven sectors.
           </p>
 
         </div>
 
         <div
           className="
-          grid
-          md:grid-cols-2
-          lg:grid-cols-3
-          gap-8
-          mt-20
+            mt-20
+            grid
+            gap-8
+            md:grid-cols-2
+            lg:grid-cols-3
           "
         >
 
           {industries.map((industry) => (
-            <div
+
+            <Link
               key={industry.title}
+              href={industry.href}
               className="
-              bg-white
-              rounded-[32px]
-              p-10
-              border
-              border-gray-200
-              hover:shadow-xl
-              transition-all
-              duration-500
+                group
+                block
+                rounded-[32px]
+                border
+                border-gray-200
+                bg-white
+                p-10
+                transition-all
+                duration-300
+                hover:-translate-y-2
+                hover:border-[#155EEF]
+                hover:shadow-2xl
               "
             >
 
               <h3
                 className="
-                text-2xl
-                font-black
+                  text-2xl
+                  font-black
+                  text-[#071B3A]
                 "
               >
                 {industry.title}
@@ -114,9 +129,9 @@ export default function Industries() {
 
               <p
                 className="
-                text-gray-600
-                mt-5
-                leading-relaxed
+                  mt-5
+                  leading-relaxed
+                  text-gray-600
                 "
               >
                 {industry.description}
@@ -124,20 +139,30 @@ export default function Industries() {
 
               <div
                 className="
-                mt-8
-                flex
-                items-center
-                gap-2
-                text-[#155EEF]
-                font-semibold
+                  mt-8
+                  inline-flex
+                  items-center
+                  gap-2
+                  font-semibold
+                  text-[#155EEF]
                 "
               >
+
                 Learn More
 
-                <ArrowRight size={16} />
+                <ArrowRight
+                  size={18}
+                  className="
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                  "
+                />
+
               </div>
 
-            </div>
+            </Link>
+
           ))}
 
         </div>

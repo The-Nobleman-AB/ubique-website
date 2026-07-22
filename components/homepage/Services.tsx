@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Cpu,
   Users,
@@ -11,37 +12,37 @@ const services = [
   {
     title: "IT Consulting",
     description:
-      "Build high-performance technology teams across SAP, Cloud, AI and Engineering.",
+      "Deliver digital transformation through SAP, Cloud, AI, Data, Microsoft technologies and enterprise consulting services.",
     icon: Cpu,
   },
   {
     title: "HR Consulting",
     description:
-      "Optimize workforce strategy, compliance and organizational growth.",
+      "Enable organisational growth through workforce strategy, HR transformation, compliance and people advisory services.",
     icon: Users,
   },
   {
     title: "Staffing Solutions",
     description:
-      "Access specialized talent quickly with flexible hiring models.",
+      "Access specialist professionals through permanent, contract and project-based workforce solutions across global markets.",
     icon: Briefcase,
   },
 ];
 
 export default function Services() {
   return (
-    <section className="py-40 bg-white">
+    <section className="bg-white py-40">
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-6">
 
         <div className="text-center">
 
           <p
             className="
-            uppercase
-            tracking-[0.3em]
-            text-[#155EEF]
-            font-semibold
+              font-semibold
+              uppercase
+              tracking-[0.3em]
+              text-[#155EEF]
             "
           >
             SERVICES
@@ -49,99 +50,110 @@ export default function Services() {
 
           <h2
             className="
-            text-6xl
-            font-black
-            mt-4
+              mt-4
+              text-5xl
+              font-black
+              lg:text-6xl
             "
           >
-            Solutions Built For Growth
+            Solutions Built
+            <br />
+            For Growth
           </h2>
 
           <p
             className="
-            text-xl
-            text-gray-500
-            mt-6
-            max-w-3xl
-            mx-auto
+              mx-auto
+              mt-6
+              max-w-3xl
+              text-xl
+              leading-8
+              text-gray-500
             "
           >
-            End-to-end workforce solutions helping
-            organizations scale globally.
+            Delivering technology consulting, HR consulting and
+            workforce solutions that help organisations transform,
+            grow and scale globally.
           </p>
 
         </div>
 
         <div
           className="
-          mt-20
-          grid
-          lg:grid-cols-3
-          gap-8
+            mt-20
+            grid
+            gap-8
+            lg:grid-cols-3
           "
         >
 
           {services.map((service) => {
+
             const Icon = service.icon;
 
             return (
+
               <div
                 key={service.title}
                 className="
-                group
-                relative
-                overflow-hidden
-                rounded-[32px]
-                bg-[#071B3A]
-                p-10
-                hover:-translate-y-3
-                transition-all
-                duration-500
+                  group
+                  relative
+                  overflow-hidden
+                  rounded-[32px]
+                  bg-[#071B3A]
+                  p-10
+                  transition-all
+                  duration-300
+                  hover:-translate-y-2
+                  hover:shadow-2xl
                 "
               >
-                {/* Glow */}
+
+                {/* Background Glow */}
 
                 <div
                   className="
-                  absolute
-                  top-0
-                  right-0
-                  w-40
-                  h-40
-                  bg-blue-500/20
-                  blur-3xl
+                    absolute
+                    right-0
+                    top-0
+                    h-44
+                    w-44
+                    rounded-full
+                    bg-[#155EEF]/20
+                    blur-3xl
                   "
                 />
 
-                <div
-                  className="
-                  relative
-                  z-10
-                  "
-                >
+                <div className="relative z-10">
+
                   <div
                     className="
-                    w-16
-                    h-16
-                    rounded-2xl
-                    bg-white/10
-                    flex
-                    items-center
-                    justify-center
+                      flex
+                      h-16
+                      w-16
+                      items-center
+                      justify-center
+                      rounded-2xl
+                      bg-white/10
+                      transition-all
+                      duration-300
+                      group-hover:bg-white/15
                     "
                   >
+
                     <Icon
-                      size={32}
+                      size={30}
                       className="text-white"
                     />
+
                   </div>
 
                   <h3
                     className="
-                    text-white
-                    text-3xl
-                    font-bold
-                    mt-8
+                      mt-8
+                      text-3xl
+                      font-bold
+                      text-white
                     "
                   >
                     {service.title}
@@ -149,34 +161,57 @@ export default function Services() {
 
                   <p
                     className="
-                    text-white/70
-                    mt-5
-                    leading-relaxed
+                      mt-5
+                      leading-8
+                      text-white/75
                     "
                   >
                     {service.description}
                   </p>
 
-                  <button
-                    className="
-                    flex
-                    items-center
-                    gap-2
-                    text-[#12B76A]
-                    font-semibold
-                    mt-8
-                    "
-                  >
-                    Learn More
-
-                    <ArrowRight size={18} />
-                  </button>
-
                 </div>
 
               </div>
+
             );
+
           })}
+
+        </div>
+
+        {/* Explore Services */}
+
+        <div className="mt-16 flex justify-center">
+
+          <Link
+            href="/services#services-overview"
+            className="
+              group
+              inline-flex
+              items-center
+              gap-3
+              text-lg
+              font-semibold
+              text-[#155EEF]
+              transition-all
+              duration-300
+              hover:gap-4
+            "
+          >
+
+            Explore All Services
+
+            <ArrowRight
+              size={20}
+              className="
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+              "
+            />
+
+          </Link>
+
         </div>
 
       </div>

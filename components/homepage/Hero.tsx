@@ -7,7 +7,7 @@ export default function Hero() {
       className="
       relative
       min-h-screen
-      pt-24
+      pt-28
       bg-[#071B3A]
       overflow-hidden
       flex
