@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { activeDriver, blobAuth } from "@/lib/storage";
 import { activeTransport, recipients } from "@/lib/email";
 import { Panel } from "@/components/admin/ui";
+import TestStorageButton from "@/components/admin/TestStorageButton";
 
 export const metadata = { title: "System" };
 export const dynamic = "force-dynamic";
@@ -27,11 +28,13 @@ function Row({
   value,
   level,
   detail,
+  action,
 }: {
   label: string;
   value: string;
   level: Level;
   detail?: string;
+  action?: React.ReactNode;
 }) {
   const Icon =
     level === "ok" ? CheckCircle2 : level === "warn" ? CircleAlert : XCircle;
@@ -58,6 +61,7 @@ function Row({
         {detail && (
           <p className="text-muted mt-1 text-sm leading-relaxed">{detail}</p>
         )}
+        {action && <div className="mt-4">{action}</div>}
       </dd>
     </div>
   );
@@ -166,6 +170,7 @@ export default async function SystemPage() {
             value={storage.value}
             level={storage.level}
             detail={storage.detail}
+            action={<TestStorageButton />}
           />
           <Row
             label="Email"
