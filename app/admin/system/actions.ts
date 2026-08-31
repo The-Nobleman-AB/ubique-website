@@ -68,6 +68,12 @@ export async function testStorage(
       };
     }
 
+    if (/private store|public access|access on a/i.test(message)) {
+      return {
+        error: `The Blob store's access setting doesn't match what was requested: ${message}. CVs are written with private access, which is correct for personal data — if this appears, the store expects public and the two need reconciling.`,
+      };
+    }
+
     if (/401|403|unauthor|forbidden|token/i.test(message)) {
       return {
         error: `Storage rejected the request: ${message}. The store is connected but the credentials aren't valid for it — usually a store connected to a different project, or a deploy that predates the connection. Redeploy first.`,

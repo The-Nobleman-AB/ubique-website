@@ -6,16 +6,18 @@ import path from "node:path";
  *
  * Two drivers, chosen automatically:
  *
- *   blob   BLOB_READ_WRITE_TOKEN is set — Vercel Blob. Required in production,
- *          because Vercel's filesystem is read-only and wiped between
- *          invocations, so anything written to disk is gone before a recruiter
- *          could open it.
+ *   blob   Vercel Blob, when the environment has credentials for it. Required
+ *          in production, because Vercel's filesystem is read-only and wiped
+ *          between invocations — anything written to disk is gone before a
+ *          recruiter could open it.
  *
  *   disk   Otherwise — writes under ./storage/cv. Fine for local development.
  *
- * CVs are personal data under a 24-month retention policy, so they are stored
- * privately and only ever served through the admin route, which checks the
- * session on every request. Nothing here is publicly addressable.
+ * Blobs are stored with **private** access. CVs are personal data on a
+ * 24-month retention policy, so a URL that works for anyone holding it is the
+ * wrong model — a forwarded link would expose a candidate's CV indefinitely.
+ * Private blobs are readable only by an authenticated call from this app, and
+ * the one route that makes such a call checks the admin session first.
  */
 
 const DISK_DIR = path.join(process.cwd(), "storage", "cv");
@@ -39,16 +41,13 @@ export class StorageNotConfiguredError extends Error {
  * depends on when the store was created:
  *
  *   BLOB_READ_WRITE_TOKEN   the long-lived token. Older stores, and anything
- *                           you create manually.
+ *                           created manually.
  *
  *   BLOB_STORE_ID + OIDC    newer stores. There is no read-write token to
  *                           find — the platform injects a short-lived
  *                           VERCEL_OIDC_TOKEN at runtime and the SDK pairs it
- *                           with the store id. This is the better model: no
- *                           long-lived secret sitting in your environment.
- *
- * Checking only for the token made a correctly-configured OIDC store look
- * unconfigured, so we accept either.
+ *                           with the store id. The better model: no long-lived
+ *                           secret sitting in the environment.
  */
 export function blobAuth(): "token" | "oidc" | null {
   if (process.env.BLOB_READ_WRITE_TOKEN) return "token";
@@ -66,11 +65,18 @@ export function activeDriver(): StorageDriver {
 }
 
 export interface StoredFile {
-  /** Opaque handle to give `read`. A blob URL, or a path on disk. */
+  /**
+   * Opaque handle to give `read`. For blobs this is the *pathname*, not a URL —
+   * a private blob is addressed by pathname through an authenticated call, and
+   * its URL is not independently fetchable.
+   */
   key: string;
   driver: StorageDriver;
   size: number;
 }
+
+/** Blob keys carry this prefix so `read` knows how to fetch them. */
+const BLOB_PREFIX = "blob:";
 
 /* ------------------------------------------------------------------ write */
 
@@ -87,15 +93,19 @@ export async function store(
     const { put } = await import("@vercel/blob");
 
     const blob = await put(`cv/${filename}`, bytes, {
-      access: "public",
+      access: "private",
       contentType,
-      /* Vercel Blob appends a random suffix, so the URL is unguessable even
-         though the bucket is technically public. The download route is still
-         session-gated — this is defence in depth, not the only control. */
+      /* A random suffix keeps pathnames unguessable even though access is
+         already authenticated — defence in depth, and it removes any chance of
+         two references colliding. */
       addRandomSuffix: true,
     });
 
-    return { key: blob.url, driver: "blob", size: bytes.length };
+    return {
+      key: `${BLOB_PREFIX}${blob.pathname}`,
+      driver: "blob",
+      size: bytes.length,
+    };
   }
 
   await mkdir(DISK_DIR, { recursive: true });
@@ -109,6 +119,30 @@ export async function store(
 /* ------------------------------------------------------------------- read */
 
 export async function read(key: string): Promise<Buffer> {
+  if (key.startsWith(BLOB_PREFIX)) {
+    const { get } = await import("@vercel/blob");
+
+    const result = await get(key.slice(BLOB_PREFIX.length), {
+      access: "private",
+    });
+
+    if (!result || result.statusCode !== 200) {
+      throw new Error(`Blob not found: ${key.slice(BLOB_PREFIX.length)}`);
+    }
+
+    const chunks: Uint8Array[] = [];
+    const reader = result.stream.getReader();
+
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) chunks.push(value);
+    }
+
+    return Buffer.concat(chunks);
+  }
+
+  /* A plain URL means a blob written before the switch to private access. */
   if (key.startsWith("http://") || key.startsWith("https://")) {
     const response = await fetch(key);
 
@@ -126,9 +160,12 @@ export async function read(key: string): Promise<Buffer> {
 
 /** Used when a retention period expires, or an application is removed. */
 export async function remove(key: string): Promise<void> {
-  if (key.startsWith("http://") || key.startsWith("https://")) {
+  if (key.startsWith(BLOB_PREFIX) || key.startsWith("http")) {
     const { del } = await import("@vercel/blob");
-    await del(key);
+
+    await del(
+      key.startsWith(BLOB_PREFIX) ? key.slice(BLOB_PREFIX.length) : key,
+    );
     return;
   }
 
