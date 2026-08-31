@@ -68,13 +68,23 @@ export default async function ApplicationPage({
           </p>
         </div>
 
-        <a
-          href={`/admin/applications/${application.id}/cv`}
-          className="rounded-control bg-navy hover:bg-brand inline-flex items-center gap-2 px-5 py-3 font-semibold text-white transition-colors"
-        >
-          <Download size={16} aria-hidden="true" />
-          Download CV
-        </a>
+        {application.cvPath ? (
+          <a
+            href={`/admin/applications/${application.id}/cv`}
+            className="rounded-control bg-navy hover:bg-brand inline-flex items-center gap-2 px-5 py-3 font-semibold text-white transition-colors"
+          >
+            <Download size={16} aria-hidden="true" />
+            Download CV
+          </a>
+        ) : (
+          <p className="rounded-card border-warn/30 bg-warn/5 max-w-xs border px-4 py-3 text-sm leading-relaxed">
+            <strong className="text-navy">CV not stored.</strong>{" "}
+            <span className="text-muted">
+              Blob storage wasn&rsquo;t configured when this arrived — the file
+              is on the notification email.
+            </span>
+          </p>
+        )}
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">

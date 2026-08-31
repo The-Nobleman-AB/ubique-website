@@ -11,7 +11,7 @@ import {
   type Row,
 } from "@/lib/email";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
-import { store } from "@/lib/storage";
+import { StorageNotConfiguredError, store } from "@/lib/storage";
 import { applicationSchema, fieldErrors, validateCv } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -118,7 +118,12 @@ export async function POST(request: Request) {
 
   const bytes = Buffer.from(await cvFile.arrayBuffer());
 
-  let stored;
+  /* Storage failing must not cost us the candidate. The CV bytes are already
+     in memory and go out as an email attachment regardless, so the recruiter
+     still receives it — losing the application record as well would turn a
+     configuration problem into a lost applicant. */
+  let stored: Awaited<ReturnType<typeof store>> | null = null;
+  let storageError: string | null = null;
 
   try {
     stored = await store(
@@ -127,14 +132,16 @@ export async function POST(request: Request) {
       cvFile.type || "application/pdf",
     );
   } catch (error) {
-    console.error("[apply] Could not store CV:", error);
+    storageError =
+      error instanceof StorageNotConfiguredError
+        ? error.message
+        : error instanceof Error
+          ? error.message
+          : "unknown error";
 
-    return NextResponse.json(
-      {
-        error:
-          "We couldn't save your CV. Please try again, or email it to careers@ubique-systems.com.",
-      },
-      { status: 500 },
+    console.error(
+      `[apply] CV storage failed for ${ref} — saving the application anyway, ` +
+        `CV will only exist on the notification email. Cause: ${storageError}`,
     );
   }
 
@@ -158,7 +165,9 @@ export async function POST(request: Request) {
       cvFilename: safeName,
       cvMimeType: cvFile.type || "application/pdf",
       cvSize: cvFile.size,
-      cvPath: stored.key,
+      /* Empty means "never stored" — the download route explains that rather
+         than 404ing at a recruiter. */
+      cvPath: stored?.key ?? "",
       consent: true,
     },
   });

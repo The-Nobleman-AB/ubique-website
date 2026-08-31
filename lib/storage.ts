@@ -20,10 +20,26 @@ import path from "node:path";
 
 const DISK_DIR = path.join(process.cwd(), "storage", "cv");
 
-export type StorageDriver = "blob" | "disk";
+export type StorageDriver = "blob" | "disk" | "none";
+
+export class StorageNotConfiguredError extends Error {
+  constructor() {
+    super(
+      "No blob storage configured. Add a Blob store in the Vercel dashboard " +
+        "(Storage → Create → Blob), then redeploy so BLOB_READ_WRITE_TOKEN " +
+        "reaches the running functions.",
+    );
+    this.name = "StorageNotConfiguredError";
+  }
+}
 
 export function activeDriver(): StorageDriver {
-  return process.env.BLOB_READ_WRITE_TOKEN ? "blob" : "disk";
+  if (process.env.BLOB_READ_WRITE_TOKEN) return "blob";
+
+  /* Writing to disk in production is not a fallback, it's a guaranteed EROFS —
+     serverless filesystems are read-only. Saying so beats attempting a write
+     that cannot succeed and reporting the syscall error. */
+  return process.env.NODE_ENV === "production" ? "none" : "disk";
 }
 
 export interface StoredFile {
@@ -40,7 +56,11 @@ export async function store(
   bytes: Buffer,
   contentType: string,
 ): Promise<StoredFile> {
-  if (activeDriver() === "blob") {
+  const driver = activeDriver();
+
+  if (driver === "none") throw new StorageNotConfiguredError();
+
+  if (driver === "blob") {
     const { put } = await import("@vercel/blob");
 
     const blob = await put(`cv/${filename}`, bytes, {

@@ -33,6 +33,19 @@ export async function GET(
     return new NextResponse("Not found", { status: 404 });
   }
 
+  /* An empty path means storage was misconfigured when this arrived. The CV
+     exists — on the notification email — so say that rather than implying the
+     candidate never sent one. */
+  if (!application.cvPath) {
+    return new NextResponse(
+      "This CV was never stored: blob storage wasn't configured when the " +
+        "application arrived. The file is attached to the notification email " +
+        "for this application. Add a Blob store and redeploy so future " +
+        "uploads are kept.",
+      { status: 409, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+    );
+  }
+
   try {
     const file = await read(application.cvPath);
 
