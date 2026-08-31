@@ -9,7 +9,7 @@ import {
   BriefcaseBusiness,
 } from "lucide-react";
 
-import { Job } from "@/data/jobs";
+import type { Job } from "@/lib/job-types";
 
 interface WhatYouGainProps {
   job: Job;
@@ -59,190 +59,59 @@ const benefits = [
   },
 ];
 
-export default function WhatYouGain({
-  job,
-}: WhatYouGainProps) {
+export default function WhatYouGain({ job }: WhatYouGainProps) {
   return (
-    <section
-      className="
-      py-28
-      bg-[#F8FAFC]
-      "
-    >
-      <div
-        className="
-        max-w-7xl
-        mx-auto
-        px-6
-        "
-      >
-        <div
-          className="
-          grid
-          lg:grid-cols-12
-          gap-20
-          "
-        >
+    <section className="section-y bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid gap-20 lg:grid-cols-12">
           {/* Left */}
 
-          <div
-            className="
-            lg:col-span-4
-            "
-          >
-            <p
-              className="
-              uppercase
-              tracking-[0.35em]
-              font-semibold
-              text-[#12B76A]
-              "
-            >
-              WHAT YOU'LL GAIN
-            </p>
+          <div className="lg:col-span-4">
+            <p className="eyebrow text-accent">What you'll gain</p>
 
-            <h2
-              className="
-              mt-6
-              text-5xl
-              lg:text-6xl
-              font-black
-              tracking-[-0.04em]
-              leading-[0.95]
-              text-[#071B3A]
-              "
-            >
-              More Than
-              Just A Job.
+            <h2 className="display-2 text-navy mt-4 font-bold">
+              More Than Just A Job.
             </h2>
 
-            <p
-              className="
-              mt-8
-              text-xl
-              leading-9
-              text-gray-600
-              "
-            >
-              We're committed to helping every
-              team member grow professionally,
-              personally and technically while
-              working on meaningful projects.
+            <p className="text-muted mt-8 text-xl leading-relaxed">
+              We're committed to helping every team member grow professionally,
+              personally and technically while working on meaningful projects.
             </p>
           </div>
 
           {/* Right */}
 
-          <div
-            className="
-            lg:col-span-8
-            grid
-            md:grid-cols-2
-            gap-8
-            "
-          >
+          <div className="grid gap-8 md:grid-cols-2 lg:col-span-8">
             {benefits.map((benefit) => {
-
               const Icon = benefit.icon;
 
               return (
-
                 <article
                   key={benefit.title}
-                  className="
-                  group
-                  relative
-                  overflow-hidden
-                  rounded-[28px]
-                  border
-                  border-gray-200
-                  bg-white
-                  p-8
-                  transition-all
-                  duration-500
-                  hover:-translate-y-2
-                  hover:border-[#155EEF]/30
-                  hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]
-                  "
+                  className="group rounded-card hover:border-brand/30 border-line relative overflow-hidden border bg-white p-8 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(15,23,42,0.08)]"
                 >
-
-                  <div
-                    className="
-                    flex
-                    h-14
-                    w-14
-                    items-center
-                    justify-center
-                    rounded-2xl
-                    bg-[#EEF4FF]
-                    transition-all
-                    duration-300
-                    group-hover:bg-[#155EEF]
-                    "
-                  >
-
+                  <div className="rounded-control bg-brand-tint group-hover:bg-brand flex h-14 w-14 items-center justify-center transition-all duration-200">
                     <Icon
                       size={28}
-                      className="
-                      text-[#155EEF]
-                      transition-colors
-                      duration-300
-                      group-hover:text-white
-                      "
+                      className="text-brand transition-colors duration-200 group-hover:text-white"
                     />
-
                   </div>
 
-                  <h3
-                    className="
-                    mt-8
-                    text-2xl
-                    font-black
-                    tracking-[-0.03em]
-                    text-[#071B3A]
-                    "
-                  >
+                  <h3 className="text-navy mt-8 text-2xl font-bold">
                     {benefit.title}
                   </h3>
 
-                  <p
-                    className="
-                    mt-5
-                    leading-8
-                    text-gray-600
-                    "
-                  >
+                  <p className="text-muted mt-5 leading-relaxed">
                     {benefit.description}
                   </p>
 
-                  <div
-                    className="
-                    absolute
-                    left-0
-                    bottom-0
-                    h-1
-                    w-0
-                    bg-[#155EEF]
-                    transition-all
-                    duration-500
-                    group-hover:w-full
-                    "
-                  />
-
+                  <div className="bg-brand absolute bottom-0 left-0 h-1 w-0 transition-all duration-500 group-hover:w-full" />
                 </article>
-
               );
-
             })}
-
           </div>
-
         </div>
-
       </div>
-
     </section>
-
   );
-
 }

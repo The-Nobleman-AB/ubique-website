@@ -1,21 +1,245 @@
 @import "tailwindcss";
 
-:root {
+/* ==========================================================================
+   BRAND TOKENS
 
-  --ubique-navy: #071B3A;
+   Every brand colour, radius and display size lives here and nowhere else.
+   Components reference them as utilities (bg-navy, text-brand, rounded-card,
+   display-1) — never as raw hex. Changing a brand colour is a one-line edit.
+   ========================================================================== */
 
-  --ubique-blue: #155EEF;
+@theme {
+  /* --- Core palette --- */
+  --color-navy: #071b3a;
+  --color-navy-mid: #0b2b59;
+  --color-navy-soft: #0d3f99;
 
-  --ubique-green: #12B76A;
+  --color-brand: #155eef;
+  --color-brand-dark: #0e4cd3;
+  --color-brand-light: #2e90fa;
+  --color-brand-tint: #eef4ff;
+  --color-sky: #8fd8ff;
 
-  --ubique-bg: #F8FAFC;
+  --color-accent: #12b76a;
+  --color-accent-dark: #0e9355;
+  --color-accent-tint: #ecfdf3;
 
-  --ubique-dark: #101828;
+  /* --- Neutrals (slightly blue-biased, to sit with the navy) --- */
+  --color-ink: #101828;
+  --color-muted: #667085;
+  --color-surface: #f8fafc;
+  --color-line: #e4e7ec;
 
-  --ubique-gray: #667085;
+  /* --- Categorical accents ---
+     Used only to tell one technology practice from another. Deliberately
+     separate from the brand palette so they never read as a brand colour. */
+  --color-cat-sky: #3b82f6;
+  --color-cat-violet: #7c3aed;
+  --color-cat-amber: #f97316;
+  --color-cat-teal: #0f766e;
+
+  /* --- Semantic --- */
+  --color-danger: #d92d20;
+  --color-warn: #f79009;
+
+  /* --- Radius scale: three values, not fourteen --- */
+  --radius-pill: 9999px;
+  --radius-control: 1rem; /* buttons, inputs, chips        */
+  --radius-card: 1.5rem; /* cards, panels, media          */
+  --radius-panel: 2.25rem; /* large feature panels          */
+
+  /* --- Shadows --- */
+  --shadow-card:
+    0 1px 2px rgb(16 24 40 / 0.04), 0 8px 24px rgb(16 24 40 / 0.06);
+  --shadow-lift:
+    0 12px 32px rgb(16 24 40 / 0.1), 0 2px 6px rgb(16 24 40 / 0.04);
+  --shadow-panel: 0 24px 64px rgb(7 27 58 / 0.14);
 }
 
-body {
-  background: var(--ubique-bg);
-  color: var(--ubique-dark);
+/* ==========================================================================
+   FLUID DISPLAY TYPE
+
+   Replaces the old `text-7xl lg:text-8xl` pairs. These scale continuously
+   with the viewport, so there is no breakpoint where the headline is 72px
+   on a 375px screen.
+   ========================================================================== */
+
+@utility display-1 {
+  font-size: clamp(2.5rem, 1.4rem + 4.6vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+@utility display-2 {
+  font-size: clamp(2rem, 1.35rem + 2.7vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+@utility display-3 {
+  font-size: clamp(1.625rem, 1.25rem + 1.6vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@utility display-4 {
+  font-size: clamp(1.375rem, 1.15rem + 0.95vw, 1.875rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* Big numerals — metrics, counters, stat tiles. */
+@utility stat-xl {
+  font-size: clamp(2.75rem, 1.7rem + 4.4vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility stat-lg {
+  font-size: clamp(2rem, 1.5rem + 2.1vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Oversized decorative numerals and quote marks that sit behind content.
+   Fluid, so a 120px watermark doesn't dominate a phone screen. */
+@utility watermark {
+  font-size: clamp(3.5rem, 2rem + 7vw, 9rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The uppercase letterspaced label used above most section headings. */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   SECTION RHYTHM
+
+   Three values. Each one steps down on small screens so two stacked
+   sections don't produce 320px of dead air on a phone.
+   ========================================================================== */
+
+@utility section-y {
+  padding-block: 4.5rem;
+  @media (width >= 768px) {
+    padding-block: 7rem;
+  }
+}
+
+@utility section-y-lg {
+  padding-block: 5.5rem;
+  @media (width >= 768px) {
+    padding-block: 9rem;
+  }
+}
+
+@utility section-y-sm {
+  padding-block: 3.5rem;
+  @media (width >= 768px) {
+    padding-block: 5rem;
+  }
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Fixed 80px header — anchor targets shouldn't hide underneath it. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* A visible focus ring on everything, in one place, instead of relying on
+     the browser default over navy backgrounds where it disappears. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* On dark sections the blue ring has too little contrast — use white. */
+  .on-dark :focus-visible,
+  [data-surface="dark"] :focus-visible {
+    outline-color: #ffffff;
+  }
+
+  /* Headings should never sit on an awkward orphan line. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ==========================================================================
+   COMPONENTS
+   ========================================================================== */
+
+@layer components {
+  /* Keyboard users shouldn't have to tab through seven nav items on every
+     page before reaching content. */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -100%;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-control);
+    background: var(--color-brand);
+    color: #ffffff;
+    font-weight: 600;
+    transition: top 150ms ease;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* ==========================================================================
+   MOTION
+
+   Respect the OS setting. Nothing on this site conveys meaning through
+   motion, so it is all safe to switch off.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

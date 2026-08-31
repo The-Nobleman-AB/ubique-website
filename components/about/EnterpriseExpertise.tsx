@@ -1,311 +1,52 @@
-"use client";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
-const expertise = [
-  {
-    number: "01",
-    title: "Enterprise Applications",
-    description:
-      "Supporting organisations with specialist talent across SAP, Oracle, Microsoft Dynamics and other enterprise platforms that power business operations.",
-  },
-  {
-    number: "02",
-    title: "Cloud & Infrastructure",
-    description:
-      "Helping businesses build secure, scalable cloud environments with expertise spanning AWS, Azure, Google Cloud and modern infrastructure technologies.",
-  },
-  {
-    number: "03",
-    title: "Data, AI & Analytics",
-    description:
-      "Connecting organisations with specialists in artificial intelligence, machine learning, business intelligence and advanced analytics.",
-  },
-  {
-    number: "04",
-    title: "Cybersecurity",
-    description:
-      "Building resilient organisations through professionals specialising in cyber defence, governance, risk, compliance and information security.",
-  },
-  {
-    number: "05",
-    title: "Engineering & Product",
-    description:
-      "Supporting digital product development through software engineering, architecture, DevOps, QA and modern development practices.",
-  },
-  {
-    number: "06",
-    title: "Digital Transformation",
-    description:
-      "Helping organisations assemble multidisciplinary teams capable of delivering complex digital transformation initiatives.",
-  },
-];
+import SectionHeader from "@/components/ui/SectionHeader";
+import { practices } from "@/data/practices";
 
+/**
+ * What we cover — sourced from data/practices.ts rather than a second
+ * hardcoded list, so it can't drift from the services pages.
+ */
 export default function EnterpriseExpertise() {
   return (
-    <section
-      className="
-      py-36
-      bg-[#F8FAFC]
-      "
-    >
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="section-y bg-navy" data-surface="dark">
+      <div className="mx-auto max-w-7xl px-6">
+        <SectionHeader
+          tone="dark"
+          eyebrow="What we cover"
+          title="Seven practices, one bench"
+          lead="Expertise organised the way the work arrives — by platform, with a standing team behind each one."
+          action={{
+            label: "Explore each practice",
+            href: "/services/technology-practices",
+          }}
+        />
 
-        {/* Heading */}
-
-        <div
-          className="
-          grid
-          lg:grid-cols-12
-          gap-16
-          items-end
-          "
-        >
-
-          <div className="lg:col-span-5">
-
-            <p
-              className="
-              uppercase
-              tracking-[0.35em]
-              text-[#12B76A]
-              font-semibold
-              "
-            >
-              ENTERPRISE EXPERTISE
-            </p>
-
-            <h2
-              className="
-              mt-6
-              text-5xl
-              lg:text-6xl
-              font-black
-              leading-[0.95]
-              tracking-[-0.03em]
-              text-[#071B3A]
-              "
-            >
-              Expertise
-              Built Around
-              Technology.
-            </h2>
-
-          </div>
-
-          <div className="lg:col-span-7">
-
-            <p
-              className="
-              text-xl
-              leading-9
-              text-gray-600
-              "
-            >
-              Technology continues to evolve.
-              Our expertise evolves with it.
-              We partner with organisations to
-              identify specialists across the
-              technologies shaping modern business.
-            </p>
-
-          </div>
-
-        </div>
-
-        {/* Expertise Grid */}
-
-        <div className="mt-24">
-
-          {expertise.map((item) => (
-
-            <div
-              key={item.number}
-              className="
-              grid
-              lg:grid-cols-12
-              gap-10
-              items-center
-              py-14
-              border-b
-              border-gray-200
-              group
-              "
-            >
-
-              {/* Number */}
-
-              <div className="lg:col-span-2">
-
-                <div
-                  className="
-                  text-[72px]
-                  lg:text-[92px]
-                  font-black
-                  leading-none
-                  text-[#155EEF]/10
-                  transition-all
-                  duration-500
-                  group-hover:text-[#155EEF]/25
-                  "
-                >
-                  {item.number}
-                </div>
-
-              </div>
-
-              {/* Title */}
-
-              <div className="lg:col-span-4">
-
-                <h3
-                  className="
-                  text-3xl
-                  lg:text-4xl
-                  font-black
-                  leading-tight
-                  text-[#071B3A]
-                  "
-                >
-                  {item.title}
+        <ul className="mt-14 grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+          {practices.map((practice) => (
+            <li key={practice.slug}>
+              <Link
+                href={`/services/technology-practices#${practice.slug}`}
+                className="group hover:border-accent/60 block border-t border-white/15 pt-5 transition-colors"
+              >
+                <h3 className="group-hover:text-accent flex items-center gap-2 text-lg font-semibold text-white">
+                  {practice.shortName}
+                  <ArrowRight
+                    size={15}
+                    aria-hidden="true"
+                    className="opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                  />
                 </h3>
 
-              </div>
-
-              {/* Description */}
-
-              <div className="lg:col-span-6">
-
-                <p
-                  className="
-                  text-lg
-                  leading-9
-                  text-gray-600
-                  "
-                >
-                  {item.description}
+                <p className="mt-2 leading-relaxed text-white/60">
+                  {practice.summary}
                 </p>
-              </div>
-
-            </div>
-
+              </Link>
+            </li>
           ))}
-
-        </div>
-
-        {/* Capability Statement */}
-
-        <div
-          className="
-          mt-32
-          rounded-[40px]
-          overflow-hidden
-          border
-          border-[#E4E7EC]
-          bg-white
-          "
-        >
-
-          <div
-            className="
-            grid
-            lg:grid-cols-12
-            "
-          >
-
-            {/* Left */}
-
-            <div
-              className="
-              lg:col-span-4
-              bg-[#071B3A]
-              p-12
-              lg:p-16
-              flex
-              items-center
-              "
-            >
-
-              <div>
-
-                <p
-                  className="
-                  uppercase
-                  tracking-[0.35em]
-                  text-[#12B76A]
-                  font-semibold
-                  "
-                >
-                  OUR CAPABILITY
-                </p>
-
-                <h3
-                  className="
-                  mt-6
-                  text-5xl
-                  lg:text-[52px]
-                  font-black
-                  leading-[0.98]
-		  tracking-[-0.02em]
-                  text-white
-                  "
-                >
-                  Technology
-                  Never
-                  Stands Still.
-                </h3>
-
-              </div>
-
-            </div>
-
-            {/* Right */}
-
-            <div
-              className="
-              lg:col-span-8
-              p-12
-              lg:p-16
-              flex
-              flex-col
-              justify-center
-              "
-            >
-
-              <p
-                className="
-                text-2xl
-                leading-relaxed
-                text-[#071B3A]
-                "
-              >
-                Neither do we.
-              </p>
-
-              <p
-                className="
-                mt-8
-                text-xl
-                leading-9
-                text-gray-600
-                max-w-4xl
-                "
-              >
-                As technology continues to evolve, so do the
-                skills organisations require. Our teams stay
-                closely connected with emerging technologies,
-                evolving workforce trends and changing business
-                priorities, enabling us to connect clients with
-                specialists who create lasting impact rather than
-                simply filling immediate hiring needs.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
+        </ul>
       </div>
-
     </section>
   );
 }

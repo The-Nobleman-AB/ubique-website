@@ -1,115 +1,41 @@
 export default function IndiaStats() {
   return (
-    <section className="py-32 bg-white">
-
-      <div className="max-w-7xl mx-auto px-6">
-
+    <section className="section-y bg-white">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
+          <p className="eyebrow text-brand">India by the numbers</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.3em]
-            text-[#155EEF]
-            "
-          >
-            INDIA BY THE NUMBERS
-          </p>
-
-          <h2
-            className="
-            text-6xl
-            font-black
-            mt-6
-            "
-          >
-            One Of The World's
-            Largest Talent Markets
+          <h2 className="display-2 mt-4 font-bold">
+            One Of The World's Largest Talent Markets
           </h2>
-
         </div>
 
-        <div
-          className="
-          grid
-          lg:grid-cols-4
-          gap-8
-          mt-20
-          "
-        >
-
+        <div className="mt-20 grid gap-8 lg:grid-cols-4">
           <div>
-            <div
-              className="
-              text-7xl
-              font-black
-              text-[#155EEF]
-              "
-            >
-              5M+
-            </div>
+            <div className="display-1 text-brand font-bold">5M+</div>
 
-            <p className="mt-4 text-gray-500">
-              Technology Professionals
-            </p>
-
+            <p className="text-muted mt-4">Technology Professionals</p>
           </div>
 
           <div>
-            <div
-              className="
-              text-7xl
-              font-black
-              text-[#155EEF]
-              "
-            >
-              1.5M+
-            </div>
+            <div className="display-1 text-brand font-bold">1.5M+</div>
 
-            <p className="mt-4 text-gray-500">
-              Engineering Graduates
-            </p>
-
+            <p className="text-muted mt-4">Engineering Graduates</p>
           </div>
 
           <div>
-            <div
-              className="
-              text-7xl
-              font-black
-              text-[#12B76A]
-              "
-            >
-              #1
-            </div>
+            <div className="display-1 text-accent font-bold">#1</div>
 
-            <p className="mt-4 text-gray-500">
-              Global IT Services Hub
-            </p>
-
+            <p className="text-muted mt-4">Global IT Services Hub</p>
           </div>
 
           <div>
-            <div
-              className="
-              text-7xl
-              font-black
-              text-[#12B76A]
-              "
-            >
-              24/7
-            </div>
+            <div className="display-1 text-accent font-bold">24/7</div>
 
-            <p className="mt-4 text-gray-500">
-              Global Delivery Capability
-            </p>
-
+            <p className="text-muted mt-4">Global Delivery Capability</p>
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

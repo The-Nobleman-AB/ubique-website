@@ -33,89 +33,34 @@ const cities = [
 
 export default function IndiaTalentDistribution() {
   return (
-    <section className="py-32 bg-[#071B3A]">
+    <section className="section-y bg-navy">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-accent">Talent distribution</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#12B76A]
-          "
-        >
-          TALENT DISTRIBUTION
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          text-white
-          mt-6
-          "
-        >
+        <h2 className="display-2 mt-4 font-bold text-white">
           Key Technology Talent Hubs
         </h2>
 
         <div className="mt-20 space-y-10">
-
           {cities.map((city) => (
             <div key={city.city}>
+              <div className="mb-3 flex justify-between text-white">
+                <span className="font-semibold">{city.city}</span>
 
-              <div
-                className="
-                flex
-                justify-between
-                text-white
-                mb-3
-                "
-              >
-                <span className="font-semibold">
-                  {city.city}
-                </span>
-
-                <span>
-                  {city.percentage}
-                </span>
+                <span>{city.percentage}</span>
               </div>
 
-              <div
-                className="
-                h-4
-                bg-white/10
-                rounded-full
-                overflow-hidden
-                "
-              >
+              <div className="h-4 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className={`
-                  ${city.width}
-                  h-full
-                  bg-gradient-to-r
-                  from-[#155EEF]
-                  to-[#12B76A]
-                  `}
+                  className={` ${city.width} from-brand to-accent h-full bg-gradient-to-r`}
                 />
               </div>
 
-              <div
-                className="
-                text-white/60
-                mt-2
-                text-sm
-                "
-              >
-                {city.focus}
-              </div>
-
+              <div className="mt-2 text-sm text-white/60">{city.focus}</div>
             </div>
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
 }

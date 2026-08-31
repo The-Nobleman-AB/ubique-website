@@ -27,85 +27,33 @@ const skills = [
 
 export default function IndiaDemandIndex() {
   return (
-    <section className="py-32 bg-white">
+    <section className="section-y bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Demand index</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          DEMAND INDEX
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          mt-6
-          "
-        >
-          Most In-Demand Skills
-        </h2>
+        <h2 className="display-2 mt-4 font-bold">Most In-Demand Skills</h2>
 
         <div className="mt-20 space-y-8">
-
           {skills.map((item) => (
             <div key={item.skill}>
+              <div className="mb-3 flex justify-between">
+                <span className="text-lg font-semibold">{item.skill}</span>
 
-              <div
-                className="
-                flex
-                justify-between
-                mb-3
-                "
-              >
-                <span
-                  className="
-                  font-semibold
-                  text-lg
-                  "
-                >
-                  {item.skill}
-                </span>
-
-                <span>
-                  {item.score}
-                </span>
-
+                <span>{item.score}</span>
               </div>
 
-              <div
-                className="
-                h-5
-                bg-gray-100
-                rounded-full
-                overflow-hidden
-                "
-              >
+              <div className="bg-surface h-5 overflow-hidden rounded-full">
                 <div
                   style={{
                     width: `${item.score}%`,
                   }}
-                  className="
-                  h-full
-                  bg-gradient-to-r
-                  from-[#155EEF]
-                  to-[#12B76A]
-                  "
+                  className="from-brand to-accent h-full bg-gradient-to-r"
                 />
               </div>
-
             </div>
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
 }

@@ -25,234 +25,85 @@ const cities = [
 
 export default function IndiaTalentClusters() {
   return (
-    <section className="py-32 bg-white">
+    <section className="section-y bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Talent ecosystem</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          TALENT ECOSYSTEM
-        </p>
-
-        <h2
-          className="
-          text-5xl
-          lg:text-6xl
-          font-black
-          mt-6
-          "
-        >
-          India's Leading
-          Technology Hubs
+        <h2 className="display-2 mt-4 font-bold">
+          India's Leading Technology Hubs
         </h2>
 
         {/* Featured Bangalore */}
 
-        <div
-          className="
-          mt-20
-          grid
-          lg:grid-cols-2
-          gap-16
-          items-center
-          "
-        >
-
+        <div className="mt-20 grid items-center gap-16 lg:grid-cols-2">
           <div>
-
-            <div
-              className="
-              rounded-[32px]
-              overflow-hidden
-              shadow-xl
-              "
-            >
+            <div className="rounded-card overflow-hidden shadow-xl">
               <Image
                 src="/images/countries/bangalore.jpg"
                 alt="Bangalore Technology Hub"
                 width={1200}
                 height={800}
-                className="
-                w-full
-                h-[500px]
-                object-cover
-                "
+                className="h-[500px] w-full object-cover"
               />
             </div>
-
           </div>
 
           <div>
-
-            <div
-              className="
-              inline-flex
-              px-4
-              py-2
-              rounded-full
-              bg-[#155EEF]/10
-              text-[#155EEF]
-              font-semibold
-              "
-            >
+            <div className="bg-brand/10 text-brand inline-flex rounded-full px-4 py-2 font-semibold">
               Featured Hub
             </div>
 
-            <h3
-              className="
-              text-5xl
-              font-black
-              mt-6
-              "
-            >
-              Bangalore
-            </h3>
+            <h3 className="display-2 mt-6 font-bold">Bangalore</h3>
 
-            <p
-              className="
-              text-xl
-              text-gray-600
-              mt-8
-              leading-relaxed
-              "
-            >
-              Often referred to as India's Silicon Valley,
-              Bangalore is home to global technology firms,
-              AI startups, cloud engineering teams and
-              some of the country's strongest software
-              engineering talent pools.
+            <p className="text-muted mt-8 text-xl leading-relaxed">
+              Often referred to as India's Silicon Valley, Bangalore is home to
+              global technology firms, AI startups, cloud engineering teams and
+              some of the country's strongest software engineering talent pools.
             </p>
 
-            <div
-              className="
-              grid
-              grid-cols-2
-              gap-8
-              mt-10
-              "
-            >
-
+            <div className="mt-10 grid grid-cols-2 gap-8">
               <div>
+                <div className="text-brand text-3xl font-bold">Very High</div>
 
-                <div
-                  className="
-                  text-3xl
-                  font-black
-                  text-[#155EEF]
-                  "
-                >
-                  Very High
-                </div>
-
-                <div className="text-gray-500 mt-2">
-                  Talent Availability
-                </div>
-
+                <div className="text-muted mt-2">Talent Availability</div>
               </div>
 
               <div>
+                <div className="text-accent text-3xl font-bold">High</div>
 
-                <div
-                  className="
-                  text-3xl
-                  font-black
-                  text-[#12B76A]
-                  "
-                >
-                  High
-                </div>
-
-                <div className="text-gray-500 mt-2">
-                  Global Demand
-                </div>
-
+                <div className="text-muted mt-2">Global Demand</div>
               </div>
-
             </div>
 
-            <div
-              className="
-              flex
-              flex-wrap
-              gap-3
-              mt-10
-              "
-            >
+            <div className="mt-10 flex flex-wrap gap-3">
+              <span className="bg-surface rounded-full px-4 py-2">AI</span>
 
-              <span className="px-4 py-2 rounded-full bg-gray-100">
-                AI
-              </span>
+              <span className="bg-surface rounded-full px-4 py-2">Cloud</span>
 
-              <span className="px-4 py-2 rounded-full bg-gray-100">
-                Cloud
-              </span>
-
-              <span className="px-4 py-2 rounded-full bg-gray-100">
+              <span className="bg-surface rounded-full px-4 py-2">
                 Product Engineering
               </span>
 
-              <span className="px-4 py-2 rounded-full bg-gray-100">
-                SaaS
-              </span>
-
+              <span className="bg-surface rounded-full px-4 py-2">SaaS</span>
             </div>
-
           </div>
-
         </div>
 
         {/* Secondary Cities */}
 
-        <div
-          className="
-          grid
-          md:grid-cols-2
-          lg:grid-cols-5
-          gap-6
-          mt-20
-          "
-        >
+        <div className="mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
           {cities.map((city) => (
             <div
               key={city.city}
-              className="
-              border
-              border-gray-200
-              rounded-[24px]
-              p-6
-              hover:shadow-lg
-              transition
-              "
+              className="rounded-card border-line hover:shadow-lift border p-6 transition"
             >
-              <h4
-                className="
-                text-2xl
-                font-bold
-                "
-              >
-                {city.city}
-              </h4>
+              <h4 className="text-2xl font-bold">{city.city}</h4>
 
-              <p
-                className="
-                text-gray-500
-                mt-3
-                "
-              >
-                {city.focus}
-              </p>
-
+              <p className="text-muted mt-3">{city.focus}</p>
             </div>
           ))}
         </div>
-
       </div>
-
     </section>
   );
 }

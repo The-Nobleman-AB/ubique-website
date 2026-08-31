@@ -23,77 +23,29 @@ const pillars = [
 
 export default function IndiaWhyUbique() {
   return (
-    <section className="py-32 bg-[#071B3A]">
+    <section className="section-y bg-navy">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-accent">Why UBIQUE</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#12B76A]
-          "
-        >
-          WHY UBIQUE
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          text-white
-          mt-6
-          "
-        >
-          Why Organizations Partner
-          With Ubique India
+        <h2 className="display-2 mt-4 font-bold text-white">
+          Why Organizations Partner With Ubique India
         </h2>
 
-        <div
-          className="
-          grid
-          md:grid-cols-2
-          gap-8
-          mt-20
-          "
-        >
+        <div className="mt-20 grid gap-8 md:grid-cols-2">
           {pillars.map((pillar) => (
             <div
               key={pillar.title}
-              className="
-              bg-white/5
-              border
-              border-white/10
-              rounded-[32px]
-              p-10
-              "
+              className="rounded-card border border-white/10 bg-white/5 p-10"
             >
-              <h3
-                className="
-                text-3xl
-                font-bold
-                text-white
-                "
-              >
-                {pillar.title}
-              </h3>
+              <h3 className="text-3xl font-bold text-white">{pillar.title}</h3>
 
-              <p
-                className="
-                text-white/70
-                mt-6
-                leading-relaxed
-                "
-              >
+              <p className="mt-6 leading-relaxed text-white/70">
                 {pillar.description}
               </p>
-
             </div>
           ))}
         </div>
-
       </div>
-
     </section>
   );
 }

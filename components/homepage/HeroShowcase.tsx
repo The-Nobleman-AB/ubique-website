@@ -1,183 +1,81 @@
 import Image from "next/image";
 
+import { countryCount, offices } from "@/data/offices";
+import { practices } from "@/data/practices";
+
+/**
+ * Hero image with floating stat cards.
+ *
+ * The figures are derived from the office and practice data rather than the
+ * previous hardcoded "500+ Placements / 98% Retention", which nothing in the
+ * repo could evidence. Cards are inset rather than negatively offset, so they
+ * can't push the page into horizontal scroll on narrow viewports.
+ */
+
+const cards = [
+  {
+    value: `${countryCount}+`,
+    label: "Countries",
+    tone: "text-brand",
+    position: "top-6 left-4 md:top-10 md:-left-5 lg:-left-8",
+  },
+  {
+    value: `${offices.length}`,
+    label: "Offices & delivery centres",
+    tone: "text-accent",
+    position: "top-28 right-4 md:top-32 md:-right-4 lg:top-40 lg:-right-6",
+  },
+  {
+    value: `${practices.length}`,
+    label: "Technology practices",
+    tone: "text-accent",
+    position:
+      "-bottom-4 right-4 md:-bottom-5 md:right-8 lg:-bottom-6 lg:right-10",
+  },
+];
+
 export default function HeroShowcase() {
   return (
-    <div className="relative z-0 w-full max-w-[650px] mx-auto">
-
-      <div
-        className="
-        relative
-        rounded-[32px]
-        overflow-hidden
-        shadow-[0_50px_120px_rgba(0,0,0,0.3)]
-        "
-      >
+    <div className="relative z-0 mx-auto w-full max-w-[650px]">
+      <div className="rounded-card shadow-panel relative overflow-hidden">
         <Image
           src="/images/hero/workforce-team.jpeg"
-          alt="Global Workforce"
+          alt="Ubique Systems consultants collaborating in an office"
           width={900}
           height={700}
-          className="
-          w-full
-          h-[420px]
-          md:h-[500px]
-          lg:h-[550px]
-          object-cover
-          "
+          priority
+          sizes="(max-width: 1024px) 100vw, 650px"
+          className="h-[420px] w-full object-cover md:h-[500px] lg:h-[550px]"
         />
 
-        {/* Overlay */}
-
         <div
-          className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-black/60
-          via-transparent
-          to-transparent
-          "
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"
         />
 
-        {/* Text */}
+        <div className="absolute bottom-16 left-6 z-20 max-w-[62%] text-white md:bottom-20 md:left-8">
+          <p className="eyebrow text-white/80">Global workforce network</p>
 
-        <div
-          className="
-          absolute
-          left-6
-          md:left-8
-          bottom-20
-          md:bottom-24
-          lg:bottom-20
-          text-white
-          max-w-[80%]
-          "
-        >
-          <p className="text-xs md:text-sm uppercase tracking-wider">
-            Global Workforce Network
+          <p className="mt-2 text-2xl leading-tight font-bold md:text-3xl">
+            Connecting talent across continents
           </p>
-
-          <h3
-            className="
-            text-2xl
-            md:text-3xl
-            font-bold
-            mt-2
-            leading-tight
-            "
-          >
-            Connecting Talent Across Continents
-          </h3>
         </div>
       </div>
 
-      {/* Metric Card 1 */}
-
-      <div
-        className="
-        absolute
-        z-10
-        -left-3
-        md:-left-6
-        lg:-left-10
-        top-8
-        md:top-10
-        lg:top-12
-        bg-white
-        rounded-2xl
-        p-3
-        md:p-4
-        lg:p-5
-        shadow-2xl
-        "
-      >
+      {cards.map((card) => (
         <div
-          className="
-          text-2xl
-          md:text-3xl
-          font-bold
-          text-[#155EEF]
-          "
+          key={card.label}
+          className={`rounded-control shadow-lift absolute z-10 max-w-[10rem] bg-white p-3 md:p-4 lg:p-5 ${card.position}`}
         >
-          15+
+          <div className={`text-2xl font-bold md:text-3xl ${card.tone}`}>
+            {card.value}
+          </div>
+
+          <div className="text-muted mt-0.5 text-xs leading-snug md:text-sm">
+            {card.label}
+          </div>
         </div>
-
-        <div className="text-gray-500 text-xs md:text-sm">
-          Countries
-        </div>
-      </div>
-
-      {/* Metric Card 2 */}
-
-      <div
-        className="
-        absolute
-        -right-3
-        md:-right-5
-        lg:-right-8
-        top-28
-        md:top-32
-        lg:top-40
-        bg-white
-        rounded-2xl
-        p-3
-        md:p-4
-        lg:p-5
-        shadow-2xl
-        "
-      >
-        <div
-          className="
-          text-2xl
-          md:text-3xl
-          font-bold
-          text-[#12B76A]
-          "
-        >
-          500+
-        </div>
-
-        <div className="text-gray-500 text-xs md:text-sm">
-          Placements
-        </div>
-      </div>
-
-      {/* Metric Card 3 */}
-
-      <div
-        className="
-        absolute
-        left-6
-        md:left-8
-        lg:left-10
-        bottom-4
-        md:-bottom-2
-        lg:-bottom-8
-        bg-white
-        rounded-2xl
-        p-3
-        md:p-4
-        lg:p-5
-        shadow-2xl
-        z-20
-        "
-      >
-        <div
-          className="
-          text-2xl
-          md:text-3xl
-          font-bold
-          text-[#12B76A]
-          "
-        >
-          98%
-        </div>
-
-        <div className="text-gray-500 text-xs md:text-sm">
-          Retention
-        </div>
-      </div>
-
+      ))}
     </div>
   );
 }

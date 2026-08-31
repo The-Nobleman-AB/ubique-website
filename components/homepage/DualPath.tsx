@@ -1,88 +1,29 @@
 "use client";
 import Link from "next/link";
 
+import SectionHeader from "@/components/ui/SectionHeader";
+
 import { ArrowRight } from "lucide-react";
 
 export default function DualPath() {
   return (
-    <section className="py-40 bg-[#F8FAFC]">
+    <section className="section-y-lg bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <SectionHeader
+          eyebrow="Who we help"
+          title="Built for both sides of the talent equation"
+        />
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <div className="text-center">
-
-          <p
-            className="
-            uppercase
-            tracking-[0.3em]
-            text-[#155EEF]
-            font-semibold
-            "
-          >
-            WHO WE HELP
-          </p>
-
-          <h2
-            className="
-            text-6xl
-            font-black
-            mt-4
-            "
-          >
-            Built For Both Sides
-            <br />
-            Of The Talent Equation
-          </h2>
-
-        </div>
-
-        <div
-          className="
-          grid
-          lg:grid-cols-2
-          gap-8
-          mt-20
-          "
-        >
-
+        <div className="mt-20 grid gap-8 lg:grid-cols-2">
           {/* Employers */}
 
-          <div
-            className="
-            bg-[#071B3A]
-            rounded-[32px]
-            p-12
-            relative
-            overflow-hidden
-            "
-          >
-
-            <div
-              className="
-              absolute
-              top-0
-              right-0
-              w-60
-              h-60
-              bg-blue-500/20
-              blur-[100px]
-              "
-            />
+          <div className="bg-navy rounded-card relative overflow-hidden p-12">
+            <div className="bg-brand/20 absolute top-0 right-0 h-60 w-60 blur-[100px]" />
 
             <div className="relative z-10">
+              <p className="text-accent font-semibold">For employers</p>
 
-              <p className="text-[#12B76A] font-semibold">
-                FOR EMPLOYERS
-              </p>
-
-              <h3
-                className="
-                text-white
-                text-5xl
-                font-black
-                mt-6
-                "
-              >
+              <h3 className="display-2 mt-6 font-bold text-white">
                 Build
                 <br />
                 World-Class
@@ -90,90 +31,33 @@ export default function DualPath() {
                 Teams
               </h3>
 
-              <p
-                className="
-                text-white/70
-                mt-8
-                text-lg
-                max-w-md
-                "
-              >
-                Access highly skilled professionals
-                across technology, engineering,
-                consulting and business functions.
+              <p className="mt-8 max-w-md text-lg text-white/70">
+                Access highly skilled professionals across technology,
+                engineering, consulting and business functions.
               </p>
 
-          <Link
-            href="/contact"
-            className="
-            group
-            mt-10
-            inline-flex
-            items-center
-            gap-2
-            font-semibold
-            text-[#12B76A]
-            transition-all
-            duration-300
-            hover:gap-3
-            "
-          >
-            Hire Talent
-
-            <ArrowRight
-              size={18}
-              className="
-              transition-transform
-              duration-300
-              group-hover:translate-x-1
-              "
-            />
-          </Link>
-              
-
+              <Link
+                href="/contact"
+                className="group text-accent mt-10 inline-flex items-center gap-2 font-semibold transition-all duration-200 hover:gap-3"
+              >
+                Hire Talent
+                <ArrowRight
+                  size={18}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
             </div>
-
           </div>
 
           {/* Candidates */}
 
-          <div
-            className="
-            bg-white
-            border
-            border-gray-200
-            rounded-[32px]
-            p-12
-            relative
-            overflow-hidden
-            "
-          >
-
-            <div
-              className="
-              absolute
-              top-0
-              right-0
-              w-60
-              h-60
-              bg-green-500/10
-              blur-[100px]
-              "
-            />
+          <div className="rounded-card border-line relative overflow-hidden border bg-white p-12">
+            <div className="bg-accent/10 absolute top-0 right-0 h-60 w-60 blur-[100px]" />
 
             <div className="relative z-10">
+              <p className="text-brand font-semibold">For candidates</p>
 
-              <p className="text-[#155EEF] font-semibold">
-                FOR CANDIDATES
-              </p>
-
-              <h3
-                className="
-                text-5xl
-                font-black
-                mt-6
-                "
-              >
+              <h3 className="display-2 mt-6 font-bold">
                 Build
                 <br />
                 Global
@@ -181,55 +65,25 @@ export default function DualPath() {
                 Careers
               </h3>
 
-              <p
-                className="
-                text-gray-500
-                mt-8
-                text-lg
-                max-w-md
-                "
-              >
-                Discover international opportunities,
-                career guidance and access to leading
-                employers worldwide.
+              <p className="text-muted mt-8 max-w-md text-lg">
+                Discover international opportunities, career guidance and access
+                to leading employers worldwide.
               </p>
 
-          <Link
-            href="/careers"
-            className="
-            group
-            mt-10
-            inline-flex
-            items-center
-            gap-2
-            font-semibold
-            text-[#155EEF]
-            transition-all
-            duration-300
-            hover:gap-3
-            "
-          >
-            Explore Opportunities
-
-            <ArrowRight
-              size={18}
-              className="
-              transition-transform
-              duration-300
-              group-hover:translate-x-1
-              "
-            />
-          </Link>
-              
-
+              <Link
+                href="/careers"
+                className="group text-brand mt-10 inline-flex items-center gap-2 font-semibold transition-all duration-200 hover:gap-3"
+              >
+                Explore Opportunities
+                <ArrowRight
+                  size={18}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

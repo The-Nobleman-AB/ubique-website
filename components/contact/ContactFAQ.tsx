@@ -35,209 +35,71 @@ export default function ContactFAQ() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section
-      className="
-      py-36
-      bg-white
-      "
-    >
-      <div className="max-w-5xl mx-auto px-6">
-
+    <section className="section-y-lg bg-white">
+      <div className="mx-auto max-w-5xl px-6">
         <div className="text-center">
+          <p className="eyebrow text-accent">Frequently asked questions</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.35em]
-            text-[#12B76A]
-            font-semibold
-            "
-          >
-            FREQUENTLY ASKED QUESTIONS
-          </p>
-
-          <h2
-            className="
-            mt-6
-            text-5xl
-            lg:text-6xl
-            font-black
-            leading-[0.95]
-            tracking-[-0.03em]
-            text-[#071B3A]
-            "
-          >
-            Answers Before
-            We Even Speak.
+          <h2 className="display-2 text-navy mt-4 font-bold">
+            Answers Before We Even Speak.
           </h2>
 
-          <p
-            className="
-            mt-8
-            text-xl
-            leading-9
-            text-gray-600
-            max-w-3xl
-            mx-auto
-            "
-          >
-            Here are some of the questions we're most
-            frequently asked by organisations looking
-            to partner with Ubique.
+          <p className="text-muted mx-auto mt-8 max-w-3xl text-xl leading-relaxed">
+            Here are some of the questions we're most frequently asked by
+            organisations looking to partner with Ubique.
           </p>
-
         </div>
 
         <div className="mt-20 space-y-5">
-
           {faqs.map((faq, index) => (
-
             <div
               key={faq.question}
-              className="
-              rounded-[28px]
-              border
-              border-gray-200
-              overflow-hidden
-              transition-all
-              duration-300
-              "
+              className="rounded-card border-line overflow-hidden border transition-all duration-200"
             >
-
               <button
-                onClick={() =>
-                  setOpen(open === index ? -1 : index)
-                }
-                className="
-                w-full
-                flex
-                items-center
-                justify-between
-                text-left
-                px-8
-                py-7
-                "
+                onClick={() => setOpen(open === index ? -1 : index)}
+                className="flex w-full items-center justify-between px-8 py-7 text-left"
               >
-
-                <span
-                  className="
-                  text-2xl
-                  font-black
-                  text-[#071B3A]
-                  pr-6
-                  "
-                >
+                <span className="text-navy pr-6 text-2xl font-bold">
                   {faq.question}
                 </span>
 
                 <ChevronDown
                   size={26}
-                  className={`
-                    transition-transform
-                    duration-300
-                    ${
-                      open === index
-                        ? "rotate-180 text-[#155EEF]"
-                        : "text-gray-400"
-                    }
-                  `}
+                  className={`transition-transform duration-200 ${
+                    open === index ? "text-brand rotate-180" : "text-muted/70"
+                  } `}
                 />
-
               </button>
 
               {open === index && (
-                <div
-                  className="
-                  px-8
-                  pb-8
-                  "
-                >
+                <div className="px-8 pb-8">
+                  <div className="bg-surface mb-7 h-px" />
 
-                  <div
-                    className="
-                    h-px
-                    bg-gray-200
-                    mb-7
-                    "
-                  />
-
-                  <p
-                    className="
-                    text-lg
-                    leading-8
-                    text-gray-600
-                    "
-                  >
+                  <p className="text-muted text-lg leading-relaxed">
                     {faq.answer}
                   </p>
-
                 </div>
               )}
-
             </div>
-
           ))}
-
         </div>
 
         {/* Bottom Note */}
 
-        <div
-          className="
-          mt-24
-          rounded-[36px]
-          bg-[#071B3A]
-          px-10
-          py-12
-          lg:px-14
-          lg:py-14
-          text-center
-          "
-        >
+        <div className="rounded-panel bg-navy mt-24 px-10 py-12 text-center lg:px-14 lg:py-14">
+          <p className="eyebrow text-accent">STILL HAVE QUESTIONS?</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.35em]
-            text-[#12B76A]
-            font-semibold
-            "
-          >
-            STILL HAVE QUESTIONS?
-          </p>
-
-          <h3
-            className="
-            mt-5
-            text-4xl
-            lg:text-5xl
-            font-black
-            leading-tight
-            text-white
-            "
-          >
+          <h3 className="display-3 mt-4 font-bold text-white">
             We'd Love To Hear From You.
           </h3>
 
-          <p
-            className="
-            mt-6
-            max-w-3xl
-            mx-auto
-            text-lg
-            leading-8
-            text-white/70
-            "
-          >
-            Whether you're exploring recruitment solutions,
-            workforce consulting or simply want to learn
-            more about Ubique, our team is here to help.
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/70">
+            Whether you're exploring recruitment solutions, workforce consulting
+            or simply want to learn more about Ubique, our team is here to help.
           </p>
-
         </div>
-
       </div>
-
     </section>
   );
 }

@@ -1,84 +1,24 @@
 export default function IndiaReportCTA() {
   return (
-    <section
-      className="
-      py-32
-      bg-[#071B3A]
-      "
-    >
-      <div
-        className="
-        max-w-5xl
-        mx-auto
-        px-6
-        "
-      >
+    <section className="section-y bg-navy">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="rounded-panel from-brand to-accent bg-gradient-to-br p-16 text-center">
+          <p className="eyebrow text-white/80">Free report</p>
 
-        <div
-          className="
-          rounded-[40px]
-          bg-gradient-to-br
-          from-[#155EEF]
-          to-[#12B76A]
-          p-16
-          text-center
-          "
-        >
-
-          <p
-            className="
-            uppercase
-            tracking-[0.3em]
-            text-white/80
-            "
-          >
-            FREE REPORT
-          </p>
-
-          <h2
-            className="
-            text-5xl
-            lg:text-6xl
-            font-black
-            text-white
-            mt-6
-            "
-          >
+          <h2 className="display-2 mt-4 font-bold text-white">
             India Talent Guide 2026
           </h2>
 
-          <p
-            className="
-            text-white/90
-            text-xl
-            mt-8
-            max-w-3xl
-            mx-auto
-            "
-          >
-            Salary benchmarks, hiring timelines,
-            talent availability and market insights
-            for technology hiring in India.
+          <p className="mx-auto mt-8 max-w-3xl text-xl text-white/90">
+            Salary benchmarks, hiring timelines, talent availability and market
+            insights for technology hiring in India.
           </p>
 
-          <button
-            className="
-            mt-10
-            px-8
-            py-4
-            rounded-xl
-            bg-white
-            text-[#071B3A]
-            font-semibold
-            "
-          >
+          <button className="rounded-control text-navy mt-10 bg-white px-8 py-4 font-semibold">
             Download Report
           </button>
-
         </div>
-
       </div>
-
     </section>
   );
 }

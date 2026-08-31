@@ -1,278 +1,114 @@
-"use client";
-
 import Link from "next/link";
-import {
-  Globe2,
-  Building2,
-  Zap,
-  Handshake,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-const pillars = [
-  {
-    icon: Globe2,
-    title: "Global Reach",
-    description:
-      "Supporting organisations across Asia-Pacific, Europe and the Americas through our international delivery network.",
-  },
-  {
-    icon: Building2,
-    title: "Industry Expertise",
-    description:
-      "Deep consulting and workforce experience across technology, manufacturing, banking, healthcare, retail and automotive.",
-  },
-  {
-    icon: Zap,
-    title: "Agile Delivery",
-    description:
-      "Rapid access to specialist consultants and talent, enabling organisations to scale with confidence.",
-  },
-  {
-    icon: Handshake,
-    title: "Long-Term Partnership",
-    description:
-      "Building trusted relationships focused on sustainable growth, quality delivery and measurable business outcomes.",
-  },
-];
+import { caseStudies } from "@/data/case-studies";
+import { practices } from "@/data/practices";
 
+/**
+ * Case studies.
+ *
+ * Renders nothing until `data/case-studies.ts` has a real, approved entry —
+ * see the note in that file. Until then the homepage carries the practices
+ * section instead, which is sourced from real data.
+ */
 export default function CaseStudies() {
+  if (caseStudies.length === 0) return null;
+
   return (
-    <section className="bg-white py-40">
-
+    <section className="section-y bg-white">
       <div className="mx-auto max-w-7xl px-6">
-
-        {/* Header */}
-
-        <div className="text-center">
-
-          <p
-            className="
-            font-semibold
-            uppercase
-            tracking-[0.3em]
-            text-[#155EEF]
-            "
-          >
-            WHY UBIQUE
-          </p>
-
-          <h2
-            className="
-            mt-4
-            text-5xl
-            font-black
-            lg:text-6xl
-            "
-          >
-            Why Leading Organisations
-            <br />
-            Choose Ubique
-          </h2>
-
-          <p
-            className="
-            mx-auto
-            mt-8
-            max-w-3xl
-            text-xl
-            leading-9
-            text-gray-500
-            "
-          >
-            Combining technology consulting, workforce expertise
-            and regional delivery capabilities to help businesses
-            transform, scale and succeed.
-          </p>
-
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <p className="eyebrow text-brand">Client work</p>
+            <h2 className="display-2 text-navy mt-4 font-bold">
+              What this looks like in practice
+            </h2>
+          </div>
         </div>
 
-        {/* Pillars */}
-
-        <div
-          className="
-          mt-20
-          grid
-          gap-8
-          md:grid-cols-2
-          lg:grid-cols-4
-          "
-        >
-
-          {pillars.map((pillar) => {
-
-            const Icon = pillar.icon;
-
-            return (
-
-              <div
-                key={pillar.title}
-                className="
-                group
-                rounded-[32px]
-                border
-                border-gray-200
-                bg-white
-                p-10
-                transition-all
-                duration-300
-                hover:-translate-y-2
-                hover:border-[#155EEF]/20
-                hover:shadow-2xl
-                "
-              >
-
-                <div
-                  className="
-                  flex
-                  h-16
-                  w-16
-                  items-center
-                  justify-center
-                  rounded-2xl
-                  bg-[#EEF4FF]
-                  text-[#155EEF]
-                  transition-all
-                  duration-300
-                  group-hover:bg-[#155EEF]
-                  group-hover:text-white
-                  "
-                >
-
-                  <Icon size={30} />
-
-                </div>
-
-                <h3
-                  className="
-                  mt-8
-                  text-2xl
-                  font-bold
-                  "
-                >
-                  {pillar.title}
-                </h3>
-
-                <p
-                  className="
-                  mt-5
-                  leading-8
-                  text-gray-500
-                  "
-                >
-                  {pillar.description}
+        <ul className="mt-14 flex flex-col gap-8">
+          {caseStudies.map((study) => (
+            <li
+              key={study.slug}
+              className="rounded-panel border-line bg-surface grid gap-10 border p-8 md:p-12 lg:grid-cols-12"
+            >
+              <div className="lg:col-span-7">
+                <p className="eyebrow text-brand">
+                  {study.industry} · {study.region}
                 </p>
 
+                <h3 className="display-3 text-navy mt-4 font-bold">
+                  {study.client}
+                </h3>
+
+                <p className="text-navy mt-5 text-lg leading-relaxed">
+                  {study.challenge}
+                </p>
+
+                <p className="text-muted mt-4 leading-relaxed">
+                  {study.approach}
+                </p>
+
+                <ul className="mt-7 flex flex-wrap gap-2">
+                  {study.practiceSlugs.map((slug) => {
+                    const practice = practices.find((p) => p.slug === slug);
+                    if (!practice) return null;
+
+                    return (
+                      <li key={slug}>
+                        <Link
+                          href={`/services/technology-practices#${slug}`}
+                          className="rounded-pill bg-brand-tint text-brand hover:bg-brand inline-block px-3 py-1.5 text-sm font-medium hover:text-white"
+                        >
+                          {practice.shortName}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
 
-            );
+              <div className="lg:col-span-5">
+                <dl className="rounded-card border-line bg-line grid grid-cols-2 gap-px overflow-hidden border">
+                  {study.results.map((result) => (
+                    <div key={result.label} className="bg-white px-5 py-6">
+                      <dd className="stat-lg text-brand font-bold">
+                        {result.value}
+                      </dd>
+                      <dt className="text-muted mt-2 text-sm leading-snug">
+                        {result.label}
+                      </dt>
+                    </div>
+                  ))}
+                </dl>
 
-          })}
+                {study.quote && (
+                  <blockquote className="rounded-card bg-navy mt-6 p-7 text-white">
+                    <p className="leading-relaxed">
+                      &ldquo;{study.quote.text}&rdquo;
+                    </p>
+                    <footer className="mt-5 text-sm text-white/60">
+                      <span className="font-semibold text-white">
+                        {study.quote.author}
+                      </span>
+                      <br />
+                      {study.quote.role}
+                    </footer>
+                  </blockquote>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
 
-        </div>
-
-        {/* CTA Banner */}
-
-        <div
-          className="
-          mt-20
-          overflow-hidden
-          rounded-[40px]
-          bg-gradient-to-r
-          from-[#071B3A]
-          via-[#0C2F63]
-          to-[#155EEF]
-          p-14
-          lg:flex
-          lg:items-center
-          lg:justify-between
-          "
+        <Link
+          href="/contact"
+          className="text-brand mt-10 inline-flex items-center gap-2 font-semibold underline-offset-4 hover:underline"
         >
-
-          <div>
-
-            <p
-              className="
-              font-semibold
-              uppercase
-              tracking-[0.25em]
-              text-[#12B76A]
-              "
-            >
-              READY TO GROW?
-            </p>
-
-            <h3
-              className="
-              mt-4
-              max-w-2xl
-              text-4xl
-              font-black
-              leading-tight
-              text-white
-              lg:text-5xl
-              "
-            >
-              Let's Build Your
-              Next Success Story
-            </h3>
-
-            <p
-              className="
-              mt-6
-              max-w-2xl
-              text-lg
-              leading-8
-              text-blue-100
-              "
-            >
-              Whether you're expanding your technology teams,
-              delivering transformation programmes or looking
-              for specialist consulting expertise, we're ready
-              to help.
-            </p>
-
-          </div>
-
-          <div className="mt-10 lg:mt-0">
-
-            <Link
-              href="/contact"
-              className="
-              group
-              inline-flex
-              items-center
-              gap-3
-              rounded-2xl
-              bg-white
-              px-8
-              py-4
-              font-semibold
-              text-[#071B3A]
-              transition-all
-              duration-300
-              hover:scale-[1.03]
-              "
-            >
-              Talk To Our Experts
-
-              <ArrowRight
-                size={20}
-                className="
-                transition-transform
-                duration-300
-                group-hover:translate-x-1
-                "
-              />
-
-            </Link>
-
-          </div>
-
-        </div>
-
+          Talk to us about a similar programme
+          <ArrowRight size={16} aria-hidden="true" />
+        </Link>
       </div>
-
     </section>
   );
 }

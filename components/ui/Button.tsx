@@ -7,83 +7,77 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const buttonVariants = cva(
-
   `
   inline-flex
   items-center
   justify-center
   gap-2
-  rounded-2xl
+  rounded-control
   font-semibold
   transition-all
-  duration-300
+  duration-200
   disabled:pointer-events-none
   disabled:opacity-50
   focus-visible:outline-none
   focus-visible:ring-2
-  focus-visible:ring-[#155EEF]
+  focus-visible:ring-brand
   focus-visible:ring-offset-2
   active:scale-[0.98]
   `,
 
   {
-
     variants: {
-
       variant: {
-
         primary: `
-          bg-[#071B3A]
+          bg-navy
           text-white
-          hover:bg-[#155EEF]
+          hover:bg-brand
         `,
 
         secondary: `
           border
-          border-gray-300
+          border-line
           bg-white
-          text-[#071B3A]
-          hover:border-[#155EEF]
-          hover:text-[#155EEF]
+          text-navy
+          hover:border-brand
+          hover:text-brand
         `,
 
         success: `
-          bg-[#12B76A]
+          bg-accent
           text-white
           hover:brightness-110
         `,
 
         danger: `
-          bg-[#D92D20]
+          bg-danger
           text-white
           hover:brightness-110
         `,
 
         warning: `
-          bg-[#F79009]
+          bg-warn
           text-white
           hover:brightness-110
         `,
 
         outline: `
           border
-          border-[#155EEF]
-          bg-[#EEF4FF]
-          text-[#155EEF]
-          hover:bg-[#155EEF]
+          border-brand
+          bg-brand-tint
+          text-brand
+          hover:bg-brand
           hover:text-white
         `,
 
         ghost: `
           bg-transparent
-          text-[#071B3A]
-          hover:bg-[#F8FAFC]
+          text-navy
+          hover:bg-surface
         `,
-
       },
 
       size: {
-
         sm: `
           h-10
           px-4
@@ -107,46 +101,36 @@ const buttonVariants = cva(
           px-10
           text-xl
         `,
-
       },
 
       fullWidth: {
-
         true: "w-full",
 
         false: "",
-
       },
-
     },
 
     defaultVariants: {
-
       variant: "primary",
 
       size: "md",
 
       fullWidth: false,
-
     },
-
-  }
-
+  },
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-
   leftIcon?: React.ReactNode;
 
   rightIcon?: React.ReactNode;
 
   loading?: boolean;
-
 }
 export default function Button({
-
   className,
 
   variant,
@@ -166,11 +150,8 @@ export default function Button({
   disabled,
 
   ...props
-
 }: ButtonProps) {
-
   return (
-
     <button
       className={cn(
         buttonVariants({
@@ -178,25 +159,18 @@ export default function Button({
           size,
           fullWidth,
         }),
-        className
+        className,
       )}
       disabled={disabled || loading}
       {...props}
     >
-
       {loading && (
-
         <svg
-          className="
-          h-5
-          w-5
-          animate-spin
-          "
+          className="h-5 w-5 animate-spin"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
         >
-
           <circle
             className="opacity-25"
             cx="12"
@@ -219,29 +193,16 @@ export default function Button({
               h4z
             "
           />
-
         </svg>
-
       )}
 
       {!loading && leftIcon}
 
-      <span>
-
-        {children}
-
-      </span>
+      <span>{children}</span>
 
       {!loading && rightIcon}
-
     </button>
-
   );
-
 }
 
-export {
-
-  buttonVariants,
-
-};
+export { buttonVariants };

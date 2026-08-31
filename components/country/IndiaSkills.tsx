@@ -45,125 +45,47 @@ const skills = [
 
 export default function IndiaSkills() {
   return (
-    <section className="py-32 bg-[#F8FAFC]">
+    <section className="section-y bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Skills landscape</p>
 
-      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="display-2 mt-4 font-bold">High-Demand Skill Areas</h2>
 
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          SKILLS LANDSCAPE
+        <p className="text-muted mt-6 max-w-4xl text-xl">
+          India's talent ecosystem continues to evolve, with strong demand
+          across enterprise technology, cloud, AI and software engineering
+          disciplines.
         </p>
 
-        <h2
-          className="
-          text-6xl
-          font-black
-          mt-6
-          "
-        >
-          High-Demand Skill Areas
-        </h2>
-
-        <p
-          className="
-          text-xl
-          text-gray-600
-          mt-6
-          max-w-4xl
-          "
-        >
-          India's talent ecosystem continues to evolve,
-          with strong demand across enterprise technology,
-          cloud, AI and software engineering disciplines.
-        </p>
-
-        <div
-          className="
-          grid
-          lg:grid-cols-2
-          gap-8
-          mt-20
-          "
-        >
+        <div className="mt-20 grid gap-8 lg:grid-cols-2">
           {skills.map((skill) => (
             <div
               key={skill.title}
-              className="
-              bg-white
-              rounded-[32px]
-              p-8
-              border
-              border-gray-200
-              hover:shadow-xl
-              transition-all
-              duration-300
-              "
+              className="rounded-card border-line hover:shadow-lift border bg-white p-8 transition-all duration-200"
             >
-              <div className="flex justify-between items-start">
+              <div className="flex items-start justify-between">
+                <h3 className="text-3xl font-bold">{skill.title}</h3>
 
-                <h3
-                  className="
-                  text-3xl
-                  font-bold
-                  "
-                >
-                  {skill.title}
-                </h3>
-
-                <span
-                  className="
-                  px-4
-                  py-2
-                  rounded-full
-                  bg-[#155EEF]/10
-                  text-[#155EEF]
-                  text-sm
-                  font-semibold
-                  "
-                >
+                <span className="bg-brand/10 text-brand rounded-full px-4 py-2 text-sm font-semibold">
                   {skill.demand}
                 </span>
-
               </div>
 
-              <p
-                className="
-                text-gray-600
-                mt-6
-                leading-relaxed
-                "
-              >
+              <p className="text-muted mt-6 leading-relaxed">
                 {skill.description}
               </p>
 
-              <div
-                className="
-                mt-8
-                pt-6
-                border-t
-                border-gray-100
-                "
-              >
-                <div className="text-sm text-gray-500">
+              <div className="border-line mt-8 border-t pt-6">
+                <div className="text-muted text-sm">
                   Typical Experience Range
                 </div>
 
-                <div className="font-semibold mt-2">
-                  {skill.experience}
-                </div>
+                <div className="mt-2 font-semibold">{skill.experience}</div>
               </div>
-
             </div>
           ))}
         </div>
-
       </div>
-
     </section>
   );
 }

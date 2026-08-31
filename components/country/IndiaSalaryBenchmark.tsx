@@ -28,79 +28,32 @@ const salaries = [
 
 export default function IndiaSalaryBenchmark() {
   return (
-    <section className="py-32 bg-[#F8FAFC]">
+    <section className="section-y bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Salary benchmarks</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          SALARY BENCHMARKS
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          mt-6
-          "
-        >
-          Technology Talent
-          Compensation Snapshot
+        <h2 className="display-2 mt-4 font-bold">
+          Technology Talent Compensation Snapshot
         </h2>
 
         <div className="mt-20 space-y-8">
-
           {salaries.map((item) => (
             <div key={item.role}>
+              <div className="mb-3 flex justify-between">
+                <span className="font-semibold">{item.role}</span>
 
-              <div
-                className="
-                flex
-                justify-between
-                mb-3
-                "
-              >
-                <span className="font-semibold">
-                  {item.role}
-                </span>
-
-                <span className="text-[#155EEF] font-bold">
-                  {item.salary}
-                </span>
-
+                <span className="text-brand font-bold">{item.salary}</span>
               </div>
 
-              <div
-                className="
-                h-5
-                rounded-full
-                bg-white
-                overflow-hidden
-                "
-              >
+              <div className="h-5 overflow-hidden rounded-full bg-white">
                 <div
-                  className={`
-                  ${item.width}
-                  h-full
-                  bg-gradient-to-r
-                  from-[#155EEF]
-                  to-[#12B76A]
-                  `}
+                  className={` ${item.width} from-brand to-accent h-full bg-gradient-to-r`}
                 />
               </div>
-
             </div>
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
 }

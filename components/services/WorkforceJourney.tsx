@@ -30,11 +30,7 @@ const journey = [
     headline: "A Workforce Strategy Built Around You",
     description:
       "Rather than applying a standard recruitment process, we design a hiring roadmap aligned to your timelines, budget, workforce model and long-term growth ambitions.",
-    points: [
-      "Hiring Strategy",
-      "Delivery Model",
-      "Growth Roadmap",
-    ],
+    points: ["Hiring Strategy", "Delivery Model", "Growth Roadmap"],
     icon: Lightbulb,
     accent: "#12B76A",
   },
@@ -72,11 +68,7 @@ const journey = [
     headline: "Seamless Hiring & Onboarding",
     description:
       "From interview scheduling to onboarding coordination, we manage every stage with transparency and speed so your teams remain focused on delivery.",
-    points: [
-      "Interview Management",
-      "Offer Support",
-      "Onboarding",
-    ],
+    points: ["Interview Management", "Offer Support", "Onboarding"],
     icon: Rocket,
     accent: "#155EEF",
   },
@@ -86,11 +78,7 @@ const journey = [
     headline: "Long-Term Workforce Partnership",
     description:
       "Our relationship extends well beyond placement, supporting workforce expansion, retention strategies and future hiring initiatives as your organisation evolves.",
-    points: [
-      "Workforce Scaling",
-      "Retention",
-      "Strategic Partnership",
-    ],
+    points: ["Workforce Scaling", "Retention", "Strategic Partnership"],
     icon: Handshake,
     accent: "#12B76A",
   },
@@ -98,161 +86,66 @@ const journey = [
 
 export default function WorkforceJourney() {
   return (
-    <section className="py-40 bg-[#071B3A] overflow-hidden relative">
+    <section className="section-y-lg bg-navy relative overflow-hidden">
+      <div className="bg-brand/10 absolute top-0 left-1/2 h-[900px] w-[900px] -translate-x-1/2 rounded-full blur-[200px]" />
 
-      <div
-        className="
-        absolute
-        top-0
-        left-1/2
-        -translate-x-1/2
-        w-[900px]
-        h-[900px]
-        rounded-full
-        bg-[#155EEF]/10
-        blur-[200px]
-        "
-      />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="max-w-4xl">
+          <p className="eyebrow text-accent">Our methodology</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.35em]
-            text-[#12B76A]
-            font-semibold
-            "
-          >
-            OUR METHODOLOGY
-          </p>
-
-          <h2
-            className="
-            mt-6
-            text-6xl
-            lg:text-7xl
-            font-black
-            leading-[0.95]
-            text-white
-            "
-          >
+          <h2 className="display-2 mt-4 font-bold text-white">
             One Proven Process.
             <br />
-            Infinite Workforce
-            Possibilities.
+            Infinite Workforce Possibilities.
           </h2>
 
-          <p
-            className="
-            mt-10
-            text-xl
-            text-white/70
-            leading-relaxed
-            max-w-3xl
-            "
-          >
-            Successful workforce transformation isn't driven by
-            recruitment alone. It's driven by a structured,
-            repeatable methodology that aligns people, technology
-            and business objectives from day one.
+          <p className="mt-10 max-w-3xl text-xl leading-relaxed text-white/70">
+            Successful workforce transformation isn't driven by recruitment
+            alone. It's driven by a structured, repeatable methodology that
+            aligns people, technology and business objectives from day one.
           </p>
-
         </div>
 
         <div className="mt-28 space-y-32">
-
           {journey.map((step, index) => {
-
             const Icon = step.icon;
 
             return (
-
               <div
                 key={step.id}
-                className="
-                grid
-                lg:grid-cols-12
-                gap-12
-                items-start
-                "
+                className="grid items-start gap-12 lg:grid-cols-12"
               >
-
                 {/* Left */}
 
                 <div className="lg:col-span-3">
-
-                  <div
-                    className="
-                    sticky
-                    top-32
-                    "
-                  >
-
-                    <div
-                      className="
-                      text-[120px]
-                      lg:text-[160px]
-                      font-black
-                      leading-none
-                      text-white/5
-                      "
-                    >
+                  <div className="sticky top-32">
+                    <div className="watermark font-bold text-white/5">
                       {step.id}
                     </div>
 
                     <div className="-mt-16">
-
                       <div
-                        className="uppercase tracking-[0.35em] text-sm font-semibold"
+                        className="eyebrow"
                         style={{
                           color: step.accent,
                         }}
                       >
-                        STEP {step.id}
+                        Step {step.id}
                       </div>
 
-                      <h3
-                        className="
-                        text-5xl
-                        font-black
-                        text-white
-                        mt-4
-                        "
-                      >
+                      <h3 className="display-2 mt-4 font-bold text-white">
                         {step.title}
                       </h3>
-
                     </div>
-
                   </div>
-
                 </div>
 
                 {/* Right */}
 
                 <div className="lg:col-span-9">
-
-                  <div
-                    className="
-                    border-l-2
-                    border-white/10
-                    pl-10
-                    "
-                  >
-
+                  <div className="border-l-2 border-white/10 pl-10">
                     <div
-                      className="
-                      w-20
-                      h-20
-                      rounded-3xl
-                      flex
-                      items-center
-                      justify-center
-                      mb-10
-                      "
+                      className="rounded-card mb-10 flex h-20 w-20 items-center justify-center"
                       style={{
                         background: `${step.accent}20`,
                       }}
@@ -265,250 +158,83 @@ export default function WorkforceJourney() {
                       />
                     </div>
 
-                    <h4
-                      className="
-                      text-5xl
-                      font-black
-                      text-white
-                      leading-tight
-                      max-w-3xl
-                      "
-                    >
+                    <h4 className="display-2 max-w-3xl font-bold text-white">
                       {step.headline}
                     </h4>
 
-                    <p
-                      className="
-                      mt-8
-                      text-xl
-                      leading-relaxed
-                      text-white/70
-                      max-w-3xl
-                      "
-                    >
+                    <p className="mt-8 max-w-3xl text-xl leading-relaxed text-white/70">
                       {step.description}
                     </p>
 
-                    <div
-                      className="
-                      mt-14
-                      grid
-                      md:grid-cols-3
-                      gap-0
-                      border
-                      border-white/10
-                      rounded-[28px]
-                      overflow-hidden
-                      "
-                    >
-
+                    <div className="rounded-card mt-14 grid gap-0 overflow-hidden border border-white/10 md:grid-cols-3">
                       {step.points.map((point) => (
                         <div
                           key={point}
-                          className="
-                          bg-white/5
-                          backdrop-blur-xl
-                          p-8
-                          border-r
-                          last:border-r-0
-                          border-white/10
-                          hover:bg-white/10
-                          transition-all
-                          duration-500
-                          "
+                          className="border-r border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all duration-500 last:border-r-0 hover:bg-white/10"
                         >
                           <div
-                            className="
-                            w-3
-                            h-3
-                            rounded-full
-                            mb-6
-                            "
+                            className="mb-6 h-3 w-3 rounded-full"
                             style={{
                               backgroundColor: step.accent,
                             }}
                           />
 
-                          <p
-                            className="
-                            text-white
-                            text-lg
-                            font-semibold
-                            leading-relaxed
-                            "
-                          >
+                          <p className="text-lg leading-relaxed font-semibold text-white">
                             {point}
                           </p>
                         </div>
                       ))}
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
             );
-
           })}
-
         </div>
 
         {/* Closing Statement */}
 
-        <div
-          className="
-          mt-40
-          rounded-[40px]
-          border
-          border-white/10
-          bg-white/[0.04]
-          backdrop-blur-xl
-          overflow-hidden
-          "
-        >
-
-          <div
-            className="
-            grid
-            lg:grid-cols-12
-            "
-          >
-
+        <div className="rounded-panel mt-40 overflow-hidden border border-white/10 bg-white/[0.04] backdrop-blur-xl">
+          <div className="grid lg:grid-cols-12">
             {/* Left */}
 
-            <div
-              className="
-              lg:col-span-7
-              p-12
-              lg:p-16
-              "
-            >
+            <div className="p-12 lg:col-span-7 lg:p-16">
+              <p className="eyebrow text-accent">The UBIQUE difference</p>
 
-              <p
-                className="
-                uppercase
-                tracking-[0.35em]
-                text-[#12B76A]
-                font-semibold
-                "
-              >
-                THE UBIQUE DIFFERENCE
-              </p>
-
-              <h3
-                className="
-                mt-6
-                text-5xl
-                lg:text-6xl
-                font-black
-                text-white
-                leading-[1]
-                "
-              >
+              <h3 className="display-2 mt-4 font-bold text-white">
                 Recruitment Is
                 <br />
                 Only One Step.
               </h3>
 
-              <p
-                className="
-                mt-8
-                text-xl
-                text-white/70
-                leading-relaxed
-                max-w-3xl
-                "
-              >
-                We don't simply fill vacancies.
-                We help organisations design workforce
-                strategies, access global talent,
-                reduce hiring risk and build teams
-                capable of driving long-term business
+              <p className="mt-8 max-w-3xl text-xl leading-relaxed text-white/70">
+                We don't simply fill vacancies. We help organisations design
+                workforce strategies, access global talent, reduce hiring risk
+                and build teams capable of driving long-term business
                 transformation.
               </p>
-
             </div>
 
             {/* Right */}
 
-            <div
-              className="
-              lg:col-span-5
-              bg-gradient-to-br
-              from-[#155EEF]
-              to-[#12B76A]
-              p-12
-              lg:p-16
-              flex
-              items-center
-              justify-center
-              "
-            >
-
+            <div className="from-brand to-accent flex items-center justify-center bg-gradient-to-br p-12 lg:col-span-5 lg:p-16">
               <div className="text-center">
+                <div className="display-1 font-bold text-white">15+</div>
 
-                <div
-                  className="
-                  text-7xl
-                  font-black
-                  text-white
-                  "
-                >
-                  15+
-                </div>
-
-                <p
-                  className="
-                  mt-3
-                  text-white/90
-                  text-xl
-                  "
-                >
+                <p className="mt-3 text-xl text-white/90">
                   Countries Supported
                 </p>
 
-                <div
-                  className="
-                  w-16
-                  h-[2px]
-                  bg-white/40
-                  mx-auto
-                  my-8
-                  "
-                />
+                <div className="mx-auto my-8 h-[2px] w-16 bg-white/40" />
 
-                <div
-                  className="
-                  text-5xl
-                  font-black
-                  text-white
-                  "
-                >
-                  Global
-                </div>
+                <div className="display-2 font-bold text-white">Global</div>
 
-                <p
-                  className="
-                  mt-2
-                  text-white/80
-                  "
-                >
-                  Workforce Expertise
-                </p>
-
+                <p className="mt-2 text-white/80">Workforce Expertise</p>
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

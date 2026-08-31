@@ -1,12 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Cpu,
-  Users,
-  Briefcase,
-  ArrowRight,
-} from "lucide-react";
+
+import SectionHeader from "@/components/ui/SectionHeader";
+import { Cpu, Users, Briefcase, ArrowRight } from "lucide-react";
 
 const services = [
   {
@@ -31,191 +28,61 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="bg-white py-40">
-
+    <section className="section-y-lg bg-white">
       <div className="mx-auto max-w-7xl px-6">
+        <SectionHeader
+          eyebrow="Services"
+          title="Solutions built for growth"
+          lead="Consulting, resourcing and managed delivery that help organisations transform, grow and scale globally."
+          action={{ label: "All services", href: "/services" }}
+        />
 
-        <div className="text-center">
-
-          <p
-            className="
-              font-semibold
-              uppercase
-              tracking-[0.3em]
-              text-[#155EEF]
-            "
-          >
-            SERVICES
-          </p>
-
-          <h2
-            className="
-              mt-4
-              text-5xl
-              font-black
-              lg:text-6xl
-            "
-          >
-            Solutions Built
-            <br />
-            For Growth
-          </h2>
-
-          <p
-            className="
-              mx-auto
-              mt-6
-              max-w-3xl
-              text-xl
-              leading-8
-              text-gray-500
-            "
-          >
-            Delivering technology consulting, HR consulting and
-            workforce solutions that help organisations transform,
-            grow and scale globally.
-          </p>
-
-        </div>
-
-        <div
-          className="
-            mt-20
-            grid
-            gap-8
-            lg:grid-cols-3
-          "
-        >
-
+        <div className="mt-20 grid gap-8 lg:grid-cols-3">
           {services.map((service) => {
-
             const Icon = service.icon;
 
             return (
-
               <div
                 key={service.title}
-                className="
-                  group
-                  relative
-                  overflow-hidden
-                  rounded-[32px]
-                  bg-[#071B3A]
-                  p-10
-                  transition-all
-                  duration-300
-                  hover:-translate-y-2
-                  hover:shadow-2xl
-                "
+                className="group rounded-card bg-navy hover:shadow-lift relative overflow-hidden p-10 transition-all duration-200"
               >
-
                 {/* Background Glow */}
 
-                <div
-                  className="
-                    absolute
-                    right-0
-                    top-0
-                    h-44
-                    w-44
-                    rounded-full
-                    bg-[#155EEF]/20
-                    blur-3xl
-                  "
-                />
+                <div className="bg-brand/20 absolute top-0 right-0 h-44 w-44 rounded-full blur-3xl" />
 
                 <div className="relative z-10">
-
-                  <div
-                    className="
-                      flex
-                      h-16
-                      w-16
-                      items-center
-                      justify-center
-                      rounded-2xl
-                      bg-white/10
-                      transition-all
-                      duration-300
-                      group-hover:bg-white/15
-                    "
-                  >
-
-                    <Icon
-                      size={30}
-                      className="text-white"
-                    />
-
+                  <div className="rounded-control flex h-16 w-16 items-center justify-center bg-white/10 transition-all duration-200 group-hover:bg-white/15">
+                    <Icon size={30} className="text-white" />
                   </div>
 
-                  <h3
-                    className="
-                      mt-8
-                      text-3xl
-                      font-bold
-                      text-white
-                    "
-                  >
+                  <h3 className="mt-8 text-3xl font-bold text-white">
                     {service.title}
                   </h3>
 
-                  <p
-                    className="
-                      mt-5
-                      leading-8
-                      text-white/75
-                    "
-                  >
+                  <p className="mt-5 leading-relaxed text-white/75">
                     {service.description}
                   </p>
-
                 </div>
-
               </div>
-
             );
-
           })}
-
         </div>
 
         {/* Explore Services */}
 
         <div className="mt-16 flex justify-center">
-
           <Link
             href="/services#services-overview"
-            className="
-              group
-              inline-flex
-              items-center
-              gap-3
-              text-lg
-              font-semibold
-              text-[#155EEF]
-              transition-all
-              duration-300
-              hover:gap-4
-            "
+            className="group text-brand inline-flex items-center gap-3 text-lg font-semibold transition-all duration-200 hover:gap-4"
           >
-
             Explore All Services
-
             <ArrowRight
               size={20}
-              className="
-                transition-transform
-                duration-300
-                group-hover:translate-x-1
-              "
+              className="transition-transform duration-200 group-hover:translate-x-1"
             />
-
           </Link>
-
         </div>
-
       </div>
-
     </section>
   );
 }

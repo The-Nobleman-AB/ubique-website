@@ -19,73 +19,25 @@ const phases = [
 
 export default function IndiaHiringTimeline() {
   return (
-    <section className="py-32 bg-[#F8FAFC]">
+    <section className="section-y bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Hiring timeline</p>
 
-      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="display-2 mt-4 font-bold">Typical Hiring Journey</h2>
 
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          HIRING TIMELINE
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          mt-6
-          "
-        >
-          Typical Hiring Journey
-        </h2>
-
-        <div
-          className="
-          grid
-          md:grid-cols-4
-          gap-8
-          mt-20
-          "
-        >
+        <div className="mt-20 grid gap-8 md:grid-cols-4">
           {phases.map((phase) => (
             <div
               key={phase.week}
-              className="
-              bg-white
-              rounded-[32px]
-              p-8
-              shadow-sm
-              "
+              className="rounded-card bg-white p-8 shadow-sm"
             >
-              <div
-                className="
-                text-[#155EEF]
-                font-bold
-                "
-              >
-                {phase.week}
-              </div>
+              <div className="text-brand font-bold">{phase.week}</div>
 
-              <div
-                className="
-                text-2xl
-                font-bold
-                mt-4
-                "
-              >
-                {phase.title}
-              </div>
-
+              <div className="mt-4 text-2xl font-bold">{phase.title}</div>
             </div>
           ))}
         </div>
-
       </div>
-
     </section>
   );
 }

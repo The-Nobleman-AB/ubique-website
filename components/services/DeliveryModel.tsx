@@ -54,151 +54,62 @@ const steps = [
 
 export default function DeliveryModel() {
   return (
-    <section className="py-36 bg-white">
-
-      <div className="max-w-7xl mx-auto px-6">
-
+    <section id="delivery" className="section-y-lg bg-white">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-4xl">
+          <p className="eyebrow text-accent">Global delivery model</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.3em]
-            text-[#12B76A]
-            font-semibold
-            "
-          >
-            GLOBAL DELIVERY MODEL
-          </p>
-
-          <h2
-            className="
-            text-5xl
-            lg:text-6xl
-            font-black
-            mt-6
-            "
-          >
-            A Structured Process
-            Built Around
-            Successful Hiring
+          <h2 className="display-2 mt-4 font-bold">
+            A Structured Process Built Around Successful Hiring
           </h2>
 
-          <p
-            className="
-            mt-8
-            text-xl
-            text-gray-600
-            leading-relaxed
-            "
-          >
-            Every engagement follows a consistent
-            methodology that balances speed,
-            quality and long-term business value.
+          <p className="text-muted mt-8 text-xl leading-relaxed">
+            Every engagement follows a consistent methodology that balances
+            speed, quality and long-term business value.
           </p>
-
         </div>
 
         <div className="mt-24">
-
           {steps.map((step, index) => {
-
             const Icon = step.icon;
 
             return (
-
               <div
                 key={step.number}
-                className="
-                grid
-                lg:grid-cols-12
-                gap-8
-                py-10
-                border-t
-                border-gray-200
-                items-start
-                "
+                className="border-line grid items-start gap-8 border-t py-10 lg:grid-cols-12"
               >
-
                 {/* Number */}
 
                 <div className="lg:col-span-2">
-
-                  <div
-                    className="
-                    text-5xl
-                    font-black
-                    text-[#155EEF]
-                    "
-                  >
+                  <div className="display-2 text-brand font-bold">
                     {step.number}
                   </div>
-
                 </div>
 
                 {/* Icon */}
 
                 <div className="lg:col-span-2">
-
-                  <div
-                    className="
-                    w-16
-                    h-16
-                    rounded-2xl
-                    bg-[#F2F6FF]
-                    flex
-                    items-center
-                    justify-center
-                    "
-                  >
-
-                    <Icon
-                      className="text-[#155EEF]"
-                      size={30}
-                    />
-
+                  <div className="rounded-control bg-brand-tint flex h-16 w-16 items-center justify-center">
+                    <Icon className="text-brand" size={30} />
                   </div>
-
                 </div>
 
                 {/* Content */}
 
                 <div className="lg:col-span-8">
+                  <h3 className="text-3xl font-bold">{step.title}</h3>
 
-                  <h3
-                    className="
-                    text-3xl
-                    font-black
-                    "
-                  >
-                    {step.title}
-                  </h3>
-
-                  <p
-                    className="
-                    mt-4
-                    text-gray-600
-                    leading-relaxed
-                    text-lg
-                    "
-                  >
+                  <p className="text-muted mt-4 text-lg leading-relaxed">
                     {step.description}
                   </p>
-
                 </div>
-
               </div>
-
             );
-
           })}
 
-          <div className="border-t border-gray-200"></div>
-
+          <div className="border-line border-t"></div>
         </div>
-
       </div>
-
     </section>
   );
 }

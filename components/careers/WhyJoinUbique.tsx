@@ -46,197 +46,65 @@ const reasons = [
 
 export default function WhyJoinUbique() {
   return (
-    <section
-      className="
-      py-36
-      bg-[#F8FAFC]
-      "
-    >
-      <div className="max-w-7xl mx-auto px-6">
-
-        <div
-          className="
-          grid
-          lg:grid-cols-12
-          gap-20
-          "
-        >
-
+    <section className="section-y-lg bg-surface">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid gap-20 lg:grid-cols-12">
           {/* Left */}
 
-          <div
-            className="
-            lg:col-span-4
-            lg:sticky
-            lg:top-28
-            self-start
-            "
-          >
+          <div className="self-start lg:sticky lg:top-28 lg:col-span-4">
+            <p className="eyebrow text-accent">Why UBIQUE</p>
 
-            <p
-              className="
-              uppercase
-              tracking-[0.35em]
-              font-semibold
-              text-[#12B76A]
-              "
-            >
-              WHY UBIQUE
-            </p>
-
-            <h2
-              className="
-              mt-6
-              text-5xl
-              lg:text-6xl
-              font-black
-              tracking-[-0.04em]
-              leading-[0.95]
-              text-[#071B3A]
-              "
-            >
-              Build a
-              Career,
-              Not Just
-              a Job.
+            <h2 className="display-2 text-navy mt-4 font-bold">
+              Build a Career, Not Just a Job.
             </h2>
 
-            <p
-              className="
-              mt-10
-              text-xl
-              leading-9
-              text-gray-600
-              "
-            >
-              The strongest careers are built through
-              meaningful work, continuous learning,
-              supportive teams and the freedom to grow.
-              That's the environment we're committed to
-              creating every day.
+            <p className="text-muted mt-10 text-xl leading-relaxed">
+              The strongest careers are built through meaningful work,
+              continuous learning, supportive teams and the freedom to grow.
+              That's the environment we're committed to creating every day.
             </p>
-
           </div>
 
           {/* Right */}
 
-          <div
-            className="
-            lg:col-span-8
-            "
-          >
+          <div className="lg:col-span-8">
             {reasons.map((reason, index) => (
-
               <article
                 key={reason.number}
-                className={`
-                  group
-                  relative
-                  py-12
-                  transition-all
-                  duration-500
-
-                  ${
-                    index !== reasons.length - 1
-                      ? "border-b border-gray-200"
-                      : ""
-                  }
-                `}
+                className={`group relative py-12 transition-all duration-500 ${
+                  index !== reasons.length - 1 ? "border-line border-b" : ""
+                } `}
               >
-
-                <div
-                  className="
-                  grid
-                  grid-cols-[90px_1fr]
-                  gap-8
-                  items-start
-                  "
-                >
-
+                <div className="grid grid-cols-[90px_1fr] items-start gap-8">
                   {/* Number */}
 
                   <div>
-
-                    <span
-                      className="
-                      text-4xl
-                      font-black
-                      tracking-[-0.03em]
-                      text-gray-300
-                      transition-all
-                      duration-300
-                      group-hover:text-[#155EEF]
-                      "
-                    >
+                    <span className="group-hover:text-brand display-3 text-muted/70 font-bold transition-all duration-200">
                       {reason.number}
                     </span>
-
                   </div>
 
                   {/* Content */}
 
                   <div>
-
-                    <h3
-                      className="
-                      text-3xl
-                      lg:text-4xl
-                      font-black
-                      tracking-[-0.03em]
-                      text-[#071B3A]
-                      transition-all
-                      duration-300
-                      group-hover:translate-x-2
-                      "
-                    >
+                    <h3 className="display-4 text-navy font-bold transition-all duration-200 group-hover:translate-x-2">
                       {reason.title}
                     </h3>
 
-                    <p
-                      className="
-                      mt-6
-                      max-w-3xl
-                      text-lg
-                      leading-8
-                      text-gray-600
-                      transition-colors
-                      duration-300
-                      group-hover:text-gray-800
-                      "
-                    >
+                    <p className="text-muted group-hover:text-navy mt-6 max-w-3xl text-lg leading-relaxed transition-colors duration-200">
                       {reason.description}
                     </p>
-
                   </div>
-
                 </div>
 
                 {/* Hover Line */}
 
-                <div
-                  className="
-                  absolute
-                  left-0
-                  bottom-0
-                  h-[2px]
-                  w-0
-                  bg-[#155EEF]
-                  transition-all
-                  duration-500
-                  group-hover:w-full
-                  "
-                />
-
+                <div className="bg-brand absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-500 group-hover:w-full" />
               </article>
-
             ))}
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

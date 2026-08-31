@@ -27,124 +27,51 @@ const models = [
 
 export default function IndiaHiringModels() {
   return (
-    <section className="py-32 bg-white">
-
-      <div className="max-w-7xl mx-auto px-6">
-
+    <section className="section-y bg-white">
+      <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
 
         <div className="max-w-4xl">
+          <p className="eyebrow text-accent">Engagement models</p>
 
-          <p
-            className="
-            uppercase
-            tracking-[0.3em]
-            text-[#12B76A]
-            font-semibold
-            "
-          >
-            ENGAGEMENT MODELS
-          </p>
-
-          <h2
-            className="
-            text-5xl
-            lg:text-6xl
-            font-black
-            mt-6
-            "
-          >
-            Choose The Right
-            Hiring Strategy
+          <h2 className="display-2 mt-4 font-bold">
+            Choose The Right Hiring Strategy
           </h2>
 
-          <p
-            className="
-            text-xl
-            text-gray-600
-            mt-8
-            "
-          >
-            Flexible engagement models designed
-            to support organizations at different
-            stages of growth and transformation.
+          <p className="text-muted mt-8 text-xl">
+            Flexible engagement models designed to support organizations at
+            different stages of growth and transformation.
           </p>
-
         </div>
 
         {/* Timeline */}
 
         <div className="mt-24">
-
           {models.map((model, index) => (
-            <div
-              key={model.number}
-              className="
-              border-t
-              border-gray-200
-              py-12
-              "
-            >
-              <div
-                className="
-                grid
-                lg:grid-cols-12
-                gap-8
-                items-start
-                "
-              >
-
+            <div key={model.number} className="border-line border-t py-12">
+              <div className="grid items-start gap-8 lg:grid-cols-12">
                 <div className="lg:col-span-2">
-
-                  <div
-                    className="
-                    text-5xl
-                    font-black
-                    text-[#155EEF]
-                    "
-                  >
+                  <div className="display-2 text-brand font-bold">
                     {model.number}
                   </div>
-
                 </div>
 
                 <div className="lg:col-span-4">
-
-                  <h3
-                    className="
-                    text-3xl
-                    font-black
-                    "
-                  >
-                    {model.title}
-                  </h3>
-
+                  <h3 className="text-3xl font-bold">{model.title}</h3>
                 </div>
 
                 <div className="lg:col-span-6">
-
-                  <p
-                    className="
-                    text-lg
-                    text-gray-600
-                    leading-relaxed
-                    "
-                  >
+                  <p className="text-muted text-lg leading-relaxed">
                     {model.description}
                   </p>
-
                 </div>
-
               </div>
             </div>
           ))}
 
-          <div className="border-t border-gray-200"></div>
-
+          <div className="border-line border-t"></div>
         </div>
-
       </div>
-
     </section>
   );
 }

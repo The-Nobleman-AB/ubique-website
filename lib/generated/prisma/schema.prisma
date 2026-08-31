@@ -1,0 +1,156 @@
+// Ubique Systems — data model
+//
+// Provider is SQLite so the site runs with zero setup on a laptop. Every model
+// below is Postgres-compatible: switch `provider` to "postgresql" and point
+// DATABASE_URL at a managed instance to deploy. Nothing here uses a
+// SQLite-only type.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// Someone who can sign in to /admin.
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("editor") // "owner" | "editor"
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  sessions Session[]
+  notes    ApplicationNote[]
+}
+
+/// A signed-in browser session. Deleted on sign-out and swept when expired.
+model Session {
+  token     String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// A published (or draft) vacancy.
+model Job {
+  id    String @id @default(cuid())
+  /// URL segment — /careers/<slug>. Unique and stable once published.
+  slug  String @unique
+  title String
+
+  department     String
+  location       String
+  employmentType String // Full Time | Contract | Part Time ...
+  workplace      String // On-site | Hybrid | Remote
+  experience     String
+
+  description String
+
+  /// JSON string arrays. SQLite has no native array type; Postgres would use
+  /// String[]. Read and written through the helpers in lib/jobs.ts so callers
+  /// always see real arrays.
+  responsibilities String @default("[]")
+  requirements     String @default("[]")
+  technologies     String @default("[]")
+
+  /// DRAFT hides it everywhere. OPEN publishes it. CLOSED keeps the page
+  /// alive for existing links but stops applications.
+  status String @default("DRAFT")
+
+  postedAt     DateTime  @default(now())
+  validThrough DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  applications Application[]
+
+  @@index([status])
+  @@index([postedAt])
+}
+
+/// A candidate's submission against a job.
+model Application {
+  id        String @id @default(cuid())
+  /// Human-quotable reference shown to the candidate and in the notification.
+  reference String @unique
+
+  jobId String
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  location  String
+
+  linkedin  String @default("")
+  coverNote String @default("")
+
+  /// CV lives on disk (or object storage); the row keeps the metadata.
+  cvFilename String
+  cvMimeType String
+  cvSize     Int
+  cvPath     String
+
+  consent Boolean @default(false)
+
+  /// NEW | REVIEWING | SHORTLISTED | INTERVIEWING | OFFERED | REJECTED | HIRED
+  status String @default("NEW")
+
+  /// Set when the notification email actually went out.
+  notifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes ApplicationNote[]
+
+  @@index([jobId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+}
+
+/// Recruiter comment on an application.
+model ApplicationNote {
+  id            String @id @default(cuid())
+  applicationId String
+  authorId      String
+
+  body String
+
+  createdAt DateTime @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  author      AdminUser   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+}
+
+/// Newsletter signup from the site footer.
+model Subscriber {
+  id    String @id @default(cuid())
+  email String @unique
+
+  /// Which page they subscribed from — useful for judging what draws people in.
+  source String @default("footer")
+
+  /// Unsubscribe happens by token, never by guessing the row id.
+  unsubscribeToken String    @unique
+  unsubscribedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

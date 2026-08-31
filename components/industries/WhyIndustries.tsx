@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Search,
-  Lightbulb,
-  Settings2,
-  Handshake,
-} from "lucide-react";
+import { Search, Lightbulb, Settings2, Handshake } from "lucide-react";
 
 const process = [
   {
@@ -36,104 +31,56 @@ const process = [
 
 export default function WhyIndustries() {
   return (
-    <section className="py-28 bg-white">
-
+    <section className="section-y bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
         <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow text-brand">Our Approach</p>
 
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#155EEF]">
-            Our Approach
-          </p>
-
-          <h2 className="mt-5 text-5xl font-black tracking-[-0.04em] text-[#071B3A]">
+          <h2 className="display-2 text-navy mt-4 font-bold">
             How We Support
             <br />
             Every Industry
           </h2>
 
-          <p className="mt-8 text-lg leading-9 text-gray-600">
+          <p className="text-muted mt-8 text-lg leading-relaxed">
             Every engagement follows a structured approach that combines
             industry understanding, technology expertise and collaborative
             delivery to achieve long-term business value.
           </p>
-
         </div>
 
         <div className="relative mt-24">
-
           {/* Desktop connecting line */}
 
-          <div className="absolute left-0 right-0 top-10 hidden h-[2px] bg-[#E4E7EC] lg:block" />
+          <div className="bg-line absolute top-10 right-0 left-0 hidden h-[2px] lg:block" />
 
           <div className="relative grid gap-12 lg:grid-cols-4">
-
             {process.map((step, index) => {
-
               const Icon = step.icon;
 
               return (
-
-                <div
-                  key={step.title}
-                  className="text-center"
-                >
-
-                  <div
-                    className="
-                      mx-auto
-                      flex
-                      h-20
-                      w-20
-                      items-center
-                      justify-center
-                      rounded-full
-                      bg-[#155EEF]
-                      text-white
-                      shadow-lg
-                    "
-                  >
-
+                <div key={step.title} className="text-center">
+                  <div className="bg-brand mx-auto flex h-20 w-20 items-center justify-center rounded-full text-white shadow-lg">
                     <Icon size={34} />
-
                   </div>
 
-                  <div
-                    className="
-                      mt-6
-                      inline-flex
-                      rounded-full
-                      bg-[#EEF4FF]
-                      px-4
-                      py-1
-                      text-sm
-                      font-bold
-                      text-[#155EEF]
-                    "
-                  >
+                  <div className="bg-brand-tint text-brand mt-6 inline-flex rounded-full px-4 py-1 text-sm font-bold">
                     Step {index + 1}
                   </div>
 
-                  <h3 className="mt-6 text-2xl font-bold text-[#071B3A]">
+                  <h3 className="text-navy mt-6 text-2xl font-bold">
                     {step.title}
                   </h3>
 
-                  <p className="mt-5 leading-8 text-gray-600">
+                  <p className="text-muted mt-5 leading-relaxed">
                     {step.description}
                   </p>
-
                 </div>
-
               );
-
             })}
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

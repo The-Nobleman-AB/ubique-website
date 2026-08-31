@@ -23,51 +23,16 @@ const comparisons = [
 
 export default function IndiaCostAdvantage() {
   return (
-    <section className="py-32 bg-white">
+    <section className="section-y bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <p className="eyebrow text-brand">Cost advantage</p>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        <p
-          className="
-          uppercase
-          tracking-[0.3em]
-          text-[#155EEF]
-          "
-        >
-          COST ADVANTAGE
-        </p>
-
-        <h2
-          className="
-          text-6xl
-          font-black
-          mt-6
-          "
-        >
-          Global Talent.
-          Better Economics.
+        <h2 className="display-2 mt-4 font-bold">
+          Global Talent. Better Economics.
         </h2>
 
-        <div
-          className="
-          mt-20
-          rounded-[40px]
-          overflow-hidden
-          border
-          border-gray-200
-          "
-        >
-
-          <div
-            className="
-            grid
-            grid-cols-3
-            bg-[#071B3A]
-            text-white
-            p-6
-            font-semibold
-            "
-          >
+        <div className="rounded-panel border-line mt-20 overflow-hidden border">
+          <div className="bg-navy grid grid-cols-3 p-6 font-semibold text-white">
             <div>Role</div>
             <div>India</div>
             <div>Typical Western Europe</div>
@@ -76,29 +41,17 @@ export default function IndiaCostAdvantage() {
           {comparisons.map((item) => (
             <div
               key={item.role}
-              className="
-              grid
-              grid-cols-3
-              p-6
-              border-t
-              border-gray-100
-              "
+              className="border-line grid grid-cols-3 border-t p-6"
             >
               <div>{item.role}</div>
 
-              <div className="text-[#12B76A] font-bold">
-                {item.india}
-              </div>
+              <div className="text-accent font-bold">{item.india}</div>
 
               <div>{item.europe}</div>
-
             </div>
           ))}
-
         </div>
-
       </div>
-
     </section>
   );
 }

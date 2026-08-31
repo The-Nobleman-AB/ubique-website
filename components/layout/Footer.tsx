@@ -1,240 +1,211 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+
+import NewsletterSignup from "./NewsletterSignup";
+import { footerNavigation } from "@/data/navigation";
+import { countryCount, headquarters, regionalInboxes } from "@/data/offices";
+import { siteConfig } from "@/lib/site";
+
+const social = [
+  { name: "LinkedIn", href: siteConfig.social.linkedin },
+  { name: "X", href: siteConfig.social.twitter },
+  { name: "Facebook", href: siteConfig.social.facebook },
+];
+
+const legal = [
+  { name: "Privacy Policy", href: "/legal/privacy" },
+  { name: "Cookie Policy", href: "/legal/cookies" },
+  { name: "Terms of Use", href: "/legal/terms" },
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-[#071B3A] text-white pt-24 pb-10">
+    <footer className="bg-navy text-white" data-surface="dark">
+      <div className="mx-auto max-w-7xl px-6 pt-20 pb-10">
+        <div className="grid gap-12 lg:grid-cols-12">
+          {/* ------------------------------------------------ brand */}
 
-      <div className="mx-auto max-w-7xl px-6">
-
-        <div className="grid gap-16 lg:grid-cols-4">
-
-          {/* Company Intro */}
-
-          <div>
-
-            <h2 className="text-3xl font-black">
-              UBIQUE
-            </h2>
-
-            <p className="mt-6 max-w-sm leading-8 text-white/70">
-              Enterprise consulting, technology solutions
-              and workforce expertise supporting
-              organisations across global markets.
+          <div className="lg:col-span-4">
+            <p className="text-2xl font-bold tracking-tight">
+              UBIQUE<span className="text-accent">.</span>
             </p>
 
-          </div>
+            <p className="mt-5 max-w-sm leading-relaxed text-white/70">
+              An ISO 27001-certified IT recruitment and consulting partner,
+              helping organisations build specialist technology teams across{" "}
+              {countryCount}+ countries.
+            </p>
 
-          {/* Company */}
-
-          <div>
-
-            <h4 className="mb-5 font-bold">
-              Company
-            </h4>
-
-            <div className="flex flex-col gap-3">
-
-              <Link
-                href="/about"
-                className="text-white/70 transition hover:text-white"
-              >
-                About
-              </Link>
-
-              <Link
-                href="/careers"
-                className="text-white/70 transition hover:text-white"
-              >
-                Careers
-              </Link>
-
-              <Link
-                href="/insights"
-                className="text-white/70 transition hover:text-white"
-              >
-                News & Insights
-              </Link>
-
-              <Link
-                href="/contact"
-                className="text-white/70 transition hover:text-white"
-              >
-                Contact
-              </Link>
-
-            </div>
-
-            <div className="my-6 h-px w-16 bg-white/15" />
-
-            <h5 className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
-              Regions
-            </h5>
-
-            <div className="flex flex-col gap-3">
-
-              <Link
-                href="/countries"
-                className="text-white/70 transition hover:text-white"
-              >
-                Global Presence
-              </Link>
-
-              <Link
-                href="/countries/apac"
-                className="text-white/70 transition hover:text-white"
-              >
-                Asia-Pacific
-              </Link>
-
-              <Link
-                href="/countries/india"
-                className="text-white/70 transition hover:text-white"
-              >
-                India
-              </Link>
-
-              <Link
-                href="/countries/europe"
-                className="text-white/70 transition hover:text-white"
-              >
-                Europe
-              </Link>
-
-              <Link
-                href="/countries/americas"
-                className="text-white/70 transition hover:text-white"
-              >
-                Americas
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* Services */}
-
-          <div>
-
-            <h4 className="mb-5 font-bold">
-              Services
-            </h4>
-
-            <div className="flex flex-col gap-3">
-
-              <Link
-                href="/services"
-                className="text-white/70 transition hover:text-white"
-              >
-                Overview
-              </Link>
-
-              <Link
-                href="/services#technology"
-                className="text-white/70 transition hover:text-white"
-              >
-                Technology Consulting
-              </Link>
-
-              <Link
-                href="/services#hr"
-                className="text-white/70 transition hover:text-white"
-              >
-                HR Consulting
-              </Link>
-
-              <Link
-                href="/services#staffing"
-                className="text-white/70 transition hover:text-white"
-              >
-                Staffing Solutions
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* Contact */}
-
-          <div>
-
-            <h4 className="mb-5 font-bold">
-              Contact
-            </h4>
-
-            <div className="space-y-5 text-white/70">
-
-              <div className="flex items-start gap-3">
-
-                <Mail
-                  size={18}
-                  className="mt-1 shrink-0"
-                />
-
-                <span>
-                  info@ubique-systems.com
-                </span>
-
+            {/* ISO 27001 — a procurement gate for enterprise buyers and the
+                first question any security team asks. */}
+            <div className="rounded-card mt-7 inline-flex items-start gap-3 border border-white/15 bg-white/5 px-4 py-3">
+              <ShieldCheck
+                size={20}
+                aria-hidden="true"
+                className="text-accent mt-0.5 shrink-0"
+              />
+              <div>
+                <p className="text-sm font-semibold">ISO/IEC 27001 certified</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-white/60">
+                  Independently audited information security management.
+                </p>
               </div>
+            </div>
 
-              <div className="flex items-start gap-3">
+            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2">
+              {social.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-sm text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                <Phone
-                  size={18}
-                  className="mt-1 shrink-0"
-                />
+          {/* ------------------------------------------------ link columns */}
 
-                <span>
-                  +44 XX XXXX XXXX
-                </span>
+          <div className="grid gap-10 sm:grid-cols-3 lg:col-span-5">
+            {footerNavigation.map((column) => (
+              <nav key={column.heading} aria-label={column.heading}>
+                <h2 className="eyebrow text-white/50">{column.heading}</h2>
 
-              </div>
+                <ul className="mt-4 flex flex-col gap-2.5">
+                  {column.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
 
-              <div className="flex items-start gap-3">
+          {/* ------------------------------------------------ contact */}
 
+          <div className="lg:col-span-3">
+            <h2 className="eyebrow text-white/50">Global Headquarters</h2>
+
+            <address className="mt-4 flex flex-col gap-3 text-sm text-white/70 not-italic">
+              <span className="flex items-start gap-3">
                 <MapPin
-                  size={18}
-                  className="mt-1 shrink-0"
+                  size={16}
+                  aria-hidden="true"
+                  className="mt-0.5 shrink-0"
                 />
-
                 <span>
-                  Global Headquarters
+                  {headquarters.address[0]}
                   <br />
-                  Kolkata, India
+                  {headquarters.city} — {headquarters.postcode}
+                  <br />
+                  {headquarters.country}
                 </span>
+              </span>
 
-              </div>
+              {headquarters.phone && (
+                <a
+                  href={`tel:${headquarters.phone}`}
+                  className="flex items-center gap-3 underline-offset-4 transition-colors hover:text-white hover:underline"
+                >
+                  <Phone size={16} aria-hidden="true" className="shrink-0" />
+                  {headquarters.phoneDisplay}
+                </a>
+              )}
 
-            </div>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="flex items-center gap-3 underline-offset-4 transition-colors hover:text-white hover:underline"
+              >
+                <Mail size={16} aria-hidden="true" className="shrink-0" />
+                {siteConfig.email}
+              </a>
+            </address>
 
+            <Link
+              href="/contact#offices"
+              className="text-accent mt-4 inline-block text-sm font-semibold underline-offset-4 hover:underline"
+            >
+              Every office, address and number →
+            </Link>
           </div>
-
         </div>
 
-        {/* Bottom */}
+        {/* -------------------------------------------------- newsletter */}
 
-        <div className="mt-16 border-t border-white/10 pt-8">
+        <div className="mt-14 grid gap-10 border-t border-white/10 pt-10 lg:grid-cols-2">
+          <div>
+            <h2 className="eyebrow text-white/50">Stay in touch</h2>
+            <div className="mt-4 max-w-md">
+              <NewsletterSignup />
+            </div>
+          </div>
 
-          <p className="text-center text-sm uppercase tracking-[0.2em] text-white/60">
-            Enterprise Consulting • Technology Solutions • Workforce Expertise
+          <div className="lg:justify-self-end">
+            <h2 className="eyebrow text-white/50">For contractors & clients</h2>
+            <a
+              href={siteConfig.external.timesheets}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="rounded-control mt-4 inline-flex items-center gap-2 border border-white/15 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/10"
+            >
+              Timesheet Portal
+              <ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        {/* -------------------------------------------------- inboxes */}
+
+        <div className="mt-14 border-t border-white/10 pt-8">
+          <h2 className="eyebrow text-white/50">Regional enquiries</h2>
+
+          <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+            {regionalInboxes.map((inbox) => (
+              <li key={inbox.email} className="text-sm">
+                <span className="text-white/50">{inbox.label}</span>{" "}
+                <a
+                  href={`mailto:${inbox.email}`}
+                  className="text-white/80 underline-offset-4 transition-colors hover:text-white hover:underline"
+                >
+                  {inbox.email}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* -------------------------------------------------- bottom */}
+
+        <div className="mt-10 flex flex-col gap-5 border-t border-white/10 pt-8 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
+          <p>
+            © {new Date().getFullYear()} {siteConfig.legalName}. All rights
+            reserved.
           </p>
 
-          <div className="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-white/50 md:flex-row">
-
-            <p>
-              © 2026 Ubique Systems Pvt. Ltd. All Rights Reserved.
-            </p>
-
-            <p>
-              Global Headquarters • Kolkata, India
-            </p>
-
-          </div>
-
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {legal.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="underline-offset-4 transition-colors hover:text-white hover:underline"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-
       </div>
-
     </footer>
   );
 }
