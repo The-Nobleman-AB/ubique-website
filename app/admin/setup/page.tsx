@@ -31,7 +31,7 @@ export default async function SetupPage() {
 
           <p className="text-muted mt-3 leading-relaxed">
             This database has no admin yet. Set one up and you&rsquo;ll be
-            signed straight in.
+            signed straight in as the owner.
           </p>
         </div>
 
@@ -44,12 +44,10 @@ export default async function SetupPage() {
             className="text-accent mt-0.5 shrink-0"
           />
           <p className="text-muted text-sm leading-relaxed">
-            This page closes itself permanently once the first account exists.
-            After that, add or reset accounts with{" "}
-            <code className="border-line rounded border bg-white px-1.5 py-0.5 text-xs">
-              npm run admin:create
-            </code>
-            .
+            This first account is the <strong>owner</strong> — it can invite
+            colleagues and hand the owner role to any of them. This page closes
+            itself permanently once it exists; everyone after you joins through
+            an invite.
           </p>
         </div>
       </div>

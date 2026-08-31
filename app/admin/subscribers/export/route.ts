@@ -22,7 +22,11 @@ export async function GET() {
   const csv = [
     "email,source,subscribed_at",
     ...subscribers.map((s) =>
-      [escape(s.email), escape(s.source), escape(s.createdAt.toISOString())].join(","),
+      [
+        escape(s.email),
+        escape(s.source),
+        escape(s.createdAt.toISOString()),
+      ].join(","),
     ),
   ].join("\n");
 

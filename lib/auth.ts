@@ -130,6 +130,25 @@ export async function requireUser(): Promise<SessionUser> {
   return user;
 }
 
+/**
+ * Owner-only pages and actions.
+ *
+ * Two roles: `owner` administers the admin itself — adding people, changing
+ * roles, removing accounts. `editor` does the actual work: roles, applications,
+ * subscribers. Every editor capability is available to an owner too.
+ */
+export async function requireOwner(): Promise<SessionUser> {
+  const user = await requireUser();
+
+  if (user.role !== "owner") redirect("/admin?error=owner-only");
+
+  return user;
+}
+
+export function isOwner(user: { role: string } | null): boolean {
+  return user?.role === "owner";
+}
+
 /** Remove expired rows. Called opportunistically on login. */
 export async function sweepSessions(): Promise<void> {
   await prisma.session.deleteMany({

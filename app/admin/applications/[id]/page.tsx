@@ -191,7 +191,8 @@ export default async function ApplicationPage({
                       {note.body}
                     </p>
                     <p className="text-muted mt-2 text-xs">
-                      {note.author.name} · {formatDate(note.createdAt)}
+                      {note.author?.name ?? "Removed user"} ·{" "}
+                      {formatDate(note.createdAt)}
                     </p>
                   </li>
                 ))}

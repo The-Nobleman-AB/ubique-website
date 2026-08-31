@@ -39,6 +39,15 @@ export type Application = $Result.DefaultSelection<Prisma.$ApplicationPayload>
  */
 export type ApplicationNote = $Result.DefaultSelection<Prisma.$ApplicationNotePayload>
 /**
+ * Model AdminInvite
+ * A pending invitation to join the admin.
+ * 
+ * Invites exist so an owner never has to know anyone else's password: the
+ * invitee follows a one-time link and sets their own. The link can be sent by
+ * any channel — it doesn't depend on the site's email being configured.
+ */
+export type AdminInvite = $Result.DefaultSelection<Prisma.$AdminInvitePayload>
+/**
  * Model Subscriber
  * Newsletter signup from the site footer.
  */
@@ -214,6 +223,16 @@ export class PrismaClient<
     * ```
     */
   get applicationNote(): Prisma.ApplicationNoteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adminInvite`: Exposes CRUD operations for the **AdminInvite** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdminInvites
+    * const adminInvites = await prisma.adminInvite.findMany()
+    * ```
+    */
+  get adminInvite(): Prisma.AdminInviteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.subscriber`: Exposes CRUD operations for the **Subscriber** model.
@@ -676,6 +695,7 @@ export namespace Prisma {
     Job: 'Job',
     Application: 'Application',
     ApplicationNote: 'ApplicationNote',
+    AdminInvite: 'AdminInvite',
     Subscriber: 'Subscriber'
   };
 
@@ -692,7 +712,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "adminUser" | "session" | "job" | "application" | "applicationNote" | "subscriber"
+      modelProps: "adminUser" | "session" | "job" | "application" | "applicationNote" | "adminInvite" | "subscriber"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1066,6 +1086,80 @@ export namespace Prisma {
           }
         }
       }
+      AdminInvite: {
+        payload: Prisma.$AdminInvitePayload<ExtArgs>
+        fields: Prisma.AdminInviteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdminInviteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdminInviteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          findFirst: {
+            args: Prisma.AdminInviteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdminInviteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          findMany: {
+            args: Prisma.AdminInviteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>[]
+          }
+          create: {
+            args: Prisma.AdminInviteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          createMany: {
+            args: Prisma.AdminInviteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdminInviteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>[]
+          }
+          delete: {
+            args: Prisma.AdminInviteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          update: {
+            args: Prisma.AdminInviteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          deleteMany: {
+            args: Prisma.AdminInviteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdminInviteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdminInviteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>[]
+          }
+          upsert: {
+            args: Prisma.AdminInviteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminInvitePayload>
+          }
+          aggregate: {
+            args: Prisma.AdminInviteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdminInvite>
+          }
+          groupBy: {
+            args: Prisma.AdminInviteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdminInviteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdminInviteCountArgs<ExtArgs>
+            result: $Utils.Optional<AdminInviteCountAggregateOutputType> | number
+          }
+        }
+      }
       Subscriber: {
         payload: Prisma.$SubscriberPayload<ExtArgs>
         fields: Prisma.SubscriberFieldRefs
@@ -1268,6 +1362,7 @@ export namespace Prisma {
     job?: JobOmit
     application?: ApplicationOmit
     applicationNote?: ApplicationNoteOmit
+    adminInvite?: AdminInviteOmit
     subscriber?: SubscriberOmit
   }
 
@@ -1351,11 +1446,13 @@ export namespace Prisma {
   export type AdminUserCountOutputType = {
     sessions: number
     notes: number
+    invites: number
   }
 
   export type AdminUserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | AdminUserCountOutputTypeCountSessionsArgs
     notes?: boolean | AdminUserCountOutputTypeCountNotesArgs
+    invites?: boolean | AdminUserCountOutputTypeCountInvitesArgs
   }
 
   // Custom InputTypes
@@ -1381,6 +1478,13 @@ export namespace Prisma {
    */
   export type AdminUserCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApplicationNoteWhereInput
+  }
+
+  /**
+   * AdminUserCountOutputType without action
+   */
+  export type AdminUserCountOutputTypeCountInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminInviteWhereInput
   }
 
 
@@ -1632,6 +1736,7 @@ export namespace Prisma {
     createdAt?: boolean
     sessions?: boolean | AdminUser$sessionsArgs<ExtArgs>
     notes?: boolean | AdminUser$notesArgs<ExtArgs>
+    invites?: boolean | AdminUser$invitesArgs<ExtArgs>
     _count?: boolean | AdminUserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["adminUser"]>
 
@@ -1669,6 +1774,7 @@ export namespace Prisma {
   export type AdminUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | AdminUser$sessionsArgs<ExtArgs>
     notes?: boolean | AdminUser$notesArgs<ExtArgs>
+    invites?: boolean | AdminUser$invitesArgs<ExtArgs>
     _count?: boolean | AdminUserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminUserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1679,6 +1785,7 @@ export namespace Prisma {
     objects: {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       notes: Prisma.$ApplicationNotePayload<ExtArgs>[]
+      invites: Prisma.$AdminInvitePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2084,6 +2191,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sessions<T extends AdminUser$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, AdminUser$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notes<T extends AdminUser$notesArgs<ExtArgs> = {}>(args?: Subset<T, AdminUser$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    invites<T extends AdminUser$invitesArgs<ExtArgs> = {}>(args?: Subset<T, AdminUser$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2558,6 +2666,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationNoteScalarFieldEnum | ApplicationNoteScalarFieldEnum[]
+  }
+
+  /**
+   * AdminUser.invites
+   */
+  export type AdminUser$invitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    where?: AdminInviteWhereInput
+    orderBy?: AdminInviteOrderByWithRelationInput | AdminInviteOrderByWithRelationInput[]
+    cursor?: AdminInviteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminInviteScalarFieldEnum | AdminInviteScalarFieldEnum[]
   }
 
   /**
@@ -6329,7 +6461,7 @@ export namespace Prisma {
   export type ApplicationNoteGroupByOutputType = {
     id: string
     applicationId: string
-    authorId: string
+    authorId: string | null
     body: string
     createdAt: Date
     _count: ApplicationNoteCountAggregateOutputType | null
@@ -6358,7 +6490,7 @@ export namespace Prisma {
     body?: boolean
     createdAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }, ExtArgs["result"]["applicationNote"]>
 
   export type ApplicationNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6368,7 +6500,7 @@ export namespace Prisma {
     body?: boolean
     createdAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }, ExtArgs["result"]["applicationNote"]>
 
   export type ApplicationNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6378,7 +6510,7 @@ export namespace Prisma {
     body?: boolean
     createdAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }, ExtArgs["result"]["applicationNote"]>
 
   export type ApplicationNoteSelectScalar = {
@@ -6392,27 +6524,32 @@ export namespace Prisma {
   export type ApplicationNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "authorId" | "body" | "createdAt", ExtArgs["result"]["applicationNote"]>
   export type ApplicationNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }
   export type ApplicationNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }
   export type ApplicationNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
-    author?: boolean | AdminUserDefaultArgs<ExtArgs>
+    author?: boolean | ApplicationNote$authorArgs<ExtArgs>
   }
 
   export type $ApplicationNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ApplicationNote"
     objects: {
       application: Prisma.$ApplicationPayload<ExtArgs>
-      author: Prisma.$AdminUserPayload<ExtArgs>
+      author: Prisma.$AdminUserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       applicationId: string
-      authorId: string
+      /**
+       * Null once the author's account is removed. Notes are institutional
+       * record — losing a screening comment because someone left the company is
+       * worse than showing "Removed user" against it.
+       */
+      authorId: string | null
       body: string
       createdAt: Date
     }, ExtArgs["result"]["applicationNote"]>
@@ -6810,7 +6947,7 @@ export namespace Prisma {
   export interface Prisma__ApplicationNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    author<T extends AdminUserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminUserDefaultArgs<ExtArgs>>): Prisma__AdminUserClient<$Result.GetResult<Prisma.$AdminUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    author<T extends ApplicationNote$authorArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationNote$authorArgs<ExtArgs>>): Prisma__AdminUserClient<$Result.GetResult<Prisma.$AdminUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7246,6 +7383,25 @@ export namespace Prisma {
   }
 
   /**
+   * ApplicationNote.author
+   */
+  export type ApplicationNote$authorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminUser
+     */
+    select?: AdminUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminUser
+     */
+    omit?: AdminUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminUserInclude<ExtArgs> | null
+    where?: AdminUserWhereInput
+  }
+
+  /**
    * ApplicationNote without action
    */
   export type ApplicationNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7261,6 +7417,1124 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ApplicationNoteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AdminInvite
+   */
+
+  export type AggregateAdminInvite = {
+    _count: AdminInviteCountAggregateOutputType | null
+    _min: AdminInviteMinAggregateOutputType | null
+    _max: AdminInviteMaxAggregateOutputType | null
+  }
+
+  export type AdminInviteMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    role: string | null
+    token: string | null
+    invitedById: string | null
+    expiresAt: Date | null
+    acceptedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AdminInviteMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    role: string | null
+    token: string | null
+    invitedById: string | null
+    expiresAt: Date | null
+    acceptedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type AdminInviteCountAggregateOutputType = {
+    id: number
+    email: number
+    name: number
+    role: number
+    token: number
+    invitedById: number
+    expiresAt: number
+    acceptedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AdminInviteMinAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    role?: true
+    token?: true
+    invitedById?: true
+    expiresAt?: true
+    acceptedAt?: true
+    createdAt?: true
+  }
+
+  export type AdminInviteMaxAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    role?: true
+    token?: true
+    invitedById?: true
+    expiresAt?: true
+    acceptedAt?: true
+    createdAt?: true
+  }
+
+  export type AdminInviteCountAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    role?: true
+    token?: true
+    invitedById?: true
+    expiresAt?: true
+    acceptedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AdminInviteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminInvite to aggregate.
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminInvites to fetch.
+     */
+    orderBy?: AdminInviteOrderByWithRelationInput | AdminInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdminInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdminInvites
+    **/
+    _count?: true | AdminInviteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdminInviteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdminInviteMaxAggregateInputType
+  }
+
+  export type GetAdminInviteAggregateType<T extends AdminInviteAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdminInvite]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdminInvite[P]>
+      : GetScalarType<T[P], AggregateAdminInvite[P]>
+  }
+
+
+
+
+  export type AdminInviteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminInviteWhereInput
+    orderBy?: AdminInviteOrderByWithAggregationInput | AdminInviteOrderByWithAggregationInput[]
+    by: AdminInviteScalarFieldEnum[] | AdminInviteScalarFieldEnum
+    having?: AdminInviteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdminInviteCountAggregateInputType | true
+    _min?: AdminInviteMinAggregateInputType
+    _max?: AdminInviteMaxAggregateInputType
+  }
+
+  export type AdminInviteGroupByOutputType = {
+    id: string
+    email: string
+    name: string
+    role: string
+    token: string
+    invitedById: string
+    expiresAt: Date
+    acceptedAt: Date | null
+    createdAt: Date
+    _count: AdminInviteCountAggregateOutputType | null
+    _min: AdminInviteMinAggregateOutputType | null
+    _max: AdminInviteMaxAggregateOutputType | null
+  }
+
+  type GetAdminInviteGroupByPayload<T extends AdminInviteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdminInviteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdminInviteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdminInviteGroupByOutputType[P]>
+            : GetScalarType<T[P], AdminInviteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdminInviteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    role?: boolean
+    token?: boolean
+    invitedById?: boolean
+    expiresAt?: boolean
+    acceptedAt?: boolean
+    createdAt?: boolean
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminInvite"]>
+
+  export type AdminInviteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    role?: boolean
+    token?: boolean
+    invitedById?: boolean
+    expiresAt?: boolean
+    acceptedAt?: boolean
+    createdAt?: boolean
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminInvite"]>
+
+  export type AdminInviteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    role?: boolean
+    token?: boolean
+    invitedById?: boolean
+    expiresAt?: boolean
+    acceptedAt?: boolean
+    createdAt?: boolean
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminInvite"]>
+
+  export type AdminInviteSelectScalar = {
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    role?: boolean
+    token?: boolean
+    invitedById?: boolean
+    expiresAt?: boolean
+    acceptedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type AdminInviteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "role" | "token" | "invitedById" | "expiresAt" | "acceptedAt" | "createdAt", ExtArgs["result"]["adminInvite"]>
+  export type AdminInviteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }
+  export type AdminInviteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }
+  export type AdminInviteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invitedBy?: boolean | AdminUserDefaultArgs<ExtArgs>
+  }
+
+  export type $AdminInvitePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdminInvite"
+    objects: {
+      invitedBy: Prisma.$AdminUserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      name: string
+      role: string
+      /**
+       * Random, single-use, and the only thing that authorises acceptance.
+       */
+      token: string
+      invitedById: string
+      expiresAt: Date
+      acceptedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["adminInvite"]>
+    composites: {}
+  }
+
+  type AdminInviteGetPayload<S extends boolean | null | undefined | AdminInviteDefaultArgs> = $Result.GetResult<Prisma.$AdminInvitePayload, S>
+
+  type AdminInviteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdminInviteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdminInviteCountAggregateInputType | true
+    }
+
+  export interface AdminInviteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdminInvite'], meta: { name: 'AdminInvite' } }
+    /**
+     * Find zero or one AdminInvite that matches the filter.
+     * @param {AdminInviteFindUniqueArgs} args - Arguments to find a AdminInvite
+     * @example
+     * // Get one AdminInvite
+     * const adminInvite = await prisma.adminInvite.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdminInviteFindUniqueArgs>(args: SelectSubset<T, AdminInviteFindUniqueArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdminInvite that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdminInviteFindUniqueOrThrowArgs} args - Arguments to find a AdminInvite
+     * @example
+     * // Get one AdminInvite
+     * const adminInvite = await prisma.adminInvite.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdminInviteFindUniqueOrThrowArgs>(args: SelectSubset<T, AdminInviteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminInvite that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteFindFirstArgs} args - Arguments to find a AdminInvite
+     * @example
+     * // Get one AdminInvite
+     * const adminInvite = await prisma.adminInvite.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdminInviteFindFirstArgs>(args?: SelectSubset<T, AdminInviteFindFirstArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminInvite that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteFindFirstOrThrowArgs} args - Arguments to find a AdminInvite
+     * @example
+     * // Get one AdminInvite
+     * const adminInvite = await prisma.adminInvite.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdminInviteFindFirstOrThrowArgs>(args?: SelectSubset<T, AdminInviteFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdminInvites that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdminInvites
+     * const adminInvites = await prisma.adminInvite.findMany()
+     * 
+     * // Get first 10 AdminInvites
+     * const adminInvites = await prisma.adminInvite.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adminInviteWithIdOnly = await prisma.adminInvite.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdminInviteFindManyArgs>(args?: SelectSubset<T, AdminInviteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdminInvite.
+     * @param {AdminInviteCreateArgs} args - Arguments to create a AdminInvite.
+     * @example
+     * // Create one AdminInvite
+     * const AdminInvite = await prisma.adminInvite.create({
+     *   data: {
+     *     // ... data to create a AdminInvite
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdminInviteCreateArgs>(args: SelectSubset<T, AdminInviteCreateArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdminInvites.
+     * @param {AdminInviteCreateManyArgs} args - Arguments to create many AdminInvites.
+     * @example
+     * // Create many AdminInvites
+     * const adminInvite = await prisma.adminInvite.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdminInviteCreateManyArgs>(args?: SelectSubset<T, AdminInviteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdminInvites and returns the data saved in the database.
+     * @param {AdminInviteCreateManyAndReturnArgs} args - Arguments to create many AdminInvites.
+     * @example
+     * // Create many AdminInvites
+     * const adminInvite = await prisma.adminInvite.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdminInvites and only return the `id`
+     * const adminInviteWithIdOnly = await prisma.adminInvite.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdminInviteCreateManyAndReturnArgs>(args?: SelectSubset<T, AdminInviteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdminInvite.
+     * @param {AdminInviteDeleteArgs} args - Arguments to delete one AdminInvite.
+     * @example
+     * // Delete one AdminInvite
+     * const AdminInvite = await prisma.adminInvite.delete({
+     *   where: {
+     *     // ... filter to delete one AdminInvite
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdminInviteDeleteArgs>(args: SelectSubset<T, AdminInviteDeleteArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdminInvite.
+     * @param {AdminInviteUpdateArgs} args - Arguments to update one AdminInvite.
+     * @example
+     * // Update one AdminInvite
+     * const adminInvite = await prisma.adminInvite.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdminInviteUpdateArgs>(args: SelectSubset<T, AdminInviteUpdateArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdminInvites.
+     * @param {AdminInviteDeleteManyArgs} args - Arguments to filter AdminInvites to delete.
+     * @example
+     * // Delete a few AdminInvites
+     * const { count } = await prisma.adminInvite.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdminInviteDeleteManyArgs>(args?: SelectSubset<T, AdminInviteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdminInvites
+     * const adminInvite = await prisma.adminInvite.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdminInviteUpdateManyArgs>(args: SelectSubset<T, AdminInviteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminInvites and returns the data updated in the database.
+     * @param {AdminInviteUpdateManyAndReturnArgs} args - Arguments to update many AdminInvites.
+     * @example
+     * // Update many AdminInvites
+     * const adminInvite = await prisma.adminInvite.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdminInvites and only return the `id`
+     * const adminInviteWithIdOnly = await prisma.adminInvite.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdminInviteUpdateManyAndReturnArgs>(args: SelectSubset<T, AdminInviteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdminInvite.
+     * @param {AdminInviteUpsertArgs} args - Arguments to update or create a AdminInvite.
+     * @example
+     * // Update or create a AdminInvite
+     * const adminInvite = await prisma.adminInvite.upsert({
+     *   create: {
+     *     // ... data to create a AdminInvite
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdminInvite we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdminInviteUpsertArgs>(args: SelectSubset<T, AdminInviteUpsertArgs<ExtArgs>>): Prisma__AdminInviteClient<$Result.GetResult<Prisma.$AdminInvitePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdminInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteCountArgs} args - Arguments to filter AdminInvites to count.
+     * @example
+     * // Count the number of AdminInvites
+     * const count = await prisma.adminInvite.count({
+     *   where: {
+     *     // ... the filter for the AdminInvites we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdminInviteCountArgs>(
+      args?: Subset<T, AdminInviteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdminInviteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdminInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdminInviteAggregateArgs>(args: Subset<T, AdminInviteAggregateArgs>): Prisma.PrismaPromise<GetAdminInviteAggregateType<T>>
+
+    /**
+     * Group by AdminInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminInviteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdminInviteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdminInviteGroupByArgs['orderBy'] }
+        : { orderBy?: AdminInviteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdminInviteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdminInviteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdminInvite model
+   */
+  readonly fields: AdminInviteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdminInvite.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdminInviteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    invitedBy<T extends AdminUserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminUserDefaultArgs<ExtArgs>>): Prisma__AdminUserClient<$Result.GetResult<Prisma.$AdminUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdminInvite model
+   */
+  interface AdminInviteFieldRefs {
+    readonly id: FieldRef<"AdminInvite", 'String'>
+    readonly email: FieldRef<"AdminInvite", 'String'>
+    readonly name: FieldRef<"AdminInvite", 'String'>
+    readonly role: FieldRef<"AdminInvite", 'String'>
+    readonly token: FieldRef<"AdminInvite", 'String'>
+    readonly invitedById: FieldRef<"AdminInvite", 'String'>
+    readonly expiresAt: FieldRef<"AdminInvite", 'DateTime'>
+    readonly acceptedAt: FieldRef<"AdminInvite", 'DateTime'>
+    readonly createdAt: FieldRef<"AdminInvite", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdminInvite findUnique
+   */
+  export type AdminInviteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminInvite to fetch.
+     */
+    where: AdminInviteWhereUniqueInput
+  }
+
+  /**
+   * AdminInvite findUniqueOrThrow
+   */
+  export type AdminInviteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminInvite to fetch.
+     */
+    where: AdminInviteWhereUniqueInput
+  }
+
+  /**
+   * AdminInvite findFirst
+   */
+  export type AdminInviteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminInvite to fetch.
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminInvites to fetch.
+     */
+    orderBy?: AdminInviteOrderByWithRelationInput | AdminInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminInvites.
+     */
+    cursor?: AdminInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminInvites.
+     */
+    distinct?: AdminInviteScalarFieldEnum | AdminInviteScalarFieldEnum[]
+  }
+
+  /**
+   * AdminInvite findFirstOrThrow
+   */
+  export type AdminInviteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminInvite to fetch.
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminInvites to fetch.
+     */
+    orderBy?: AdminInviteOrderByWithRelationInput | AdminInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminInvites.
+     */
+    cursor?: AdminInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminInvites.
+     */
+    distinct?: AdminInviteScalarFieldEnum | AdminInviteScalarFieldEnum[]
+  }
+
+  /**
+   * AdminInvite findMany
+   */
+  export type AdminInviteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminInvites to fetch.
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminInvites to fetch.
+     */
+    orderBy?: AdminInviteOrderByWithRelationInput | AdminInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdminInvites.
+     */
+    cursor?: AdminInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminInvites.
+     */
+    distinct?: AdminInviteScalarFieldEnum | AdminInviteScalarFieldEnum[]
+  }
+
+  /**
+   * AdminInvite create
+   */
+  export type AdminInviteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdminInvite.
+     */
+    data: XOR<AdminInviteCreateInput, AdminInviteUncheckedCreateInput>
+  }
+
+  /**
+   * AdminInvite createMany
+   */
+  export type AdminInviteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdminInvites.
+     */
+    data: AdminInviteCreateManyInput | AdminInviteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminInvite createManyAndReturn
+   */
+  export type AdminInviteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdminInvites.
+     */
+    data: AdminInviteCreateManyInput | AdminInviteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminInvite update
+   */
+  export type AdminInviteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdminInvite.
+     */
+    data: XOR<AdminInviteUpdateInput, AdminInviteUncheckedUpdateInput>
+    /**
+     * Choose, which AdminInvite to update.
+     */
+    where: AdminInviteWhereUniqueInput
+  }
+
+  /**
+   * AdminInvite updateMany
+   */
+  export type AdminInviteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdminInvites.
+     */
+    data: XOR<AdminInviteUpdateManyMutationInput, AdminInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminInvites to update
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * Limit how many AdminInvites to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminInvite updateManyAndReturn
+   */
+  export type AdminInviteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * The data used to update AdminInvites.
+     */
+    data: XOR<AdminInviteUpdateManyMutationInput, AdminInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminInvites to update
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * Limit how many AdminInvites to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminInvite upsert
+   */
+  export type AdminInviteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdminInvite to update in case it exists.
+     */
+    where: AdminInviteWhereUniqueInput
+    /**
+     * In case the AdminInvite found by the `where` argument doesn't exist, create a new AdminInvite with this data.
+     */
+    create: XOR<AdminInviteCreateInput, AdminInviteUncheckedCreateInput>
+    /**
+     * In case the AdminInvite was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdminInviteUpdateInput, AdminInviteUncheckedUpdateInput>
+  }
+
+  /**
+   * AdminInvite delete
+   */
+  export type AdminInviteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
+    /**
+     * Filter which AdminInvite to delete.
+     */
+    where: AdminInviteWhereUniqueInput
+  }
+
+  /**
+   * AdminInvite deleteMany
+   */
+  export type AdminInviteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminInvites to delete
+     */
+    where?: AdminInviteWhereInput
+    /**
+     * Limit how many AdminInvites to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminInvite without action
+   */
+  export type AdminInviteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminInvite
+     */
+    select?: AdminInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminInvite
+     */
+    omit?: AdminInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInviteInclude<ExtArgs> | null
   }
 
 
@@ -8379,6 +9653,21 @@ export namespace Prisma {
   export type ApplicationNoteScalarFieldEnum = (typeof ApplicationNoteScalarFieldEnum)[keyof typeof ApplicationNoteScalarFieldEnum]
 
 
+  export const AdminInviteScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    name: 'name',
+    role: 'role',
+    token: 'token',
+    invitedById: 'invitedById',
+    expiresAt: 'expiresAt',
+    acceptedAt: 'acceptedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type AdminInviteScalarFieldEnum = (typeof AdminInviteScalarFieldEnum)[keyof typeof AdminInviteScalarFieldEnum]
+
+
   export const SubscriberScalarFieldEnum: {
     id: 'id',
     email: 'email',
@@ -8499,6 +9788,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AdminUser"> | Date | string
     sessions?: SessionListRelationFilter
     notes?: ApplicationNoteListRelationFilter
+    invites?: AdminInviteListRelationFilter
   }
 
   export type AdminUserOrderByWithRelationInput = {
@@ -8511,6 +9801,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     notes?: ApplicationNoteOrderByRelationAggregateInput
+    invites?: AdminInviteOrderByRelationAggregateInput
   }
 
   export type AdminUserWhereUniqueInput = Prisma.AtLeast<{
@@ -8526,6 +9817,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AdminUser"> | Date | string
     sessions?: SessionListRelationFilter
     notes?: ApplicationNoteListRelationFilter
+    invites?: AdminInviteListRelationFilter
   }, "id" | "email">
 
   export type AdminUserOrderByWithAggregationInput = {
@@ -8855,17 +10147,17 @@ export namespace Prisma {
     NOT?: ApplicationNoteWhereInput | ApplicationNoteWhereInput[]
     id?: StringFilter<"ApplicationNote"> | string
     applicationId?: StringFilter<"ApplicationNote"> | string
-    authorId?: StringFilter<"ApplicationNote"> | string
+    authorId?: StringNullableFilter<"ApplicationNote"> | string | null
     body?: StringFilter<"ApplicationNote"> | string
     createdAt?: DateTimeFilter<"ApplicationNote"> | Date | string
     application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
-    author?: XOR<AdminUserScalarRelationFilter, AdminUserWhereInput>
+    author?: XOR<AdminUserNullableScalarRelationFilter, AdminUserWhereInput> | null
   }
 
   export type ApplicationNoteOrderByWithRelationInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    authorId?: SortOrder
+    authorId?: SortOrderInput | SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     application?: ApplicationOrderByWithRelationInput
@@ -8878,17 +10170,17 @@ export namespace Prisma {
     OR?: ApplicationNoteWhereInput[]
     NOT?: ApplicationNoteWhereInput | ApplicationNoteWhereInput[]
     applicationId?: StringFilter<"ApplicationNote"> | string
-    authorId?: StringFilter<"ApplicationNote"> | string
+    authorId?: StringNullableFilter<"ApplicationNote"> | string | null
     body?: StringFilter<"ApplicationNote"> | string
     createdAt?: DateTimeFilter<"ApplicationNote"> | Date | string
     application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
-    author?: XOR<AdminUserScalarRelationFilter, AdminUserWhereInput>
+    author?: XOR<AdminUserNullableScalarRelationFilter, AdminUserWhereInput> | null
   }, "id">
 
   export type ApplicationNoteOrderByWithAggregationInput = {
     id?: SortOrder
     applicationId?: SortOrder
-    authorId?: SortOrder
+    authorId?: SortOrderInput | SortOrder
     body?: SortOrder
     createdAt?: SortOrder
     _count?: ApplicationNoteCountOrderByAggregateInput
@@ -8902,9 +10194,84 @@ export namespace Prisma {
     NOT?: ApplicationNoteScalarWhereWithAggregatesInput | ApplicationNoteScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ApplicationNote"> | string
     applicationId?: StringWithAggregatesFilter<"ApplicationNote"> | string
-    authorId?: StringWithAggregatesFilter<"ApplicationNote"> | string
+    authorId?: StringNullableWithAggregatesFilter<"ApplicationNote"> | string | null
     body?: StringWithAggregatesFilter<"ApplicationNote"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ApplicationNote"> | Date | string
+  }
+
+  export type AdminInviteWhereInput = {
+    AND?: AdminInviteWhereInput | AdminInviteWhereInput[]
+    OR?: AdminInviteWhereInput[]
+    NOT?: AdminInviteWhereInput | AdminInviteWhereInput[]
+    id?: StringFilter<"AdminInvite"> | string
+    email?: StringFilter<"AdminInvite"> | string
+    name?: StringFilter<"AdminInvite"> | string
+    role?: StringFilter<"AdminInvite"> | string
+    token?: StringFilter<"AdminInvite"> | string
+    invitedById?: StringFilter<"AdminInvite"> | string
+    expiresAt?: DateTimeFilter<"AdminInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"AdminInvite"> | Date | string | null
+    createdAt?: DateTimeFilter<"AdminInvite"> | Date | string
+    invitedBy?: XOR<AdminUserScalarRelationFilter, AdminUserWhereInput>
+  }
+
+  export type AdminInviteOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    role?: SortOrder
+    token?: SortOrder
+    invitedById?: SortOrder
+    expiresAt?: SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    invitedBy?: AdminUserOrderByWithRelationInput
+  }
+
+  export type AdminInviteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email?: string
+    token?: string
+    AND?: AdminInviteWhereInput | AdminInviteWhereInput[]
+    OR?: AdminInviteWhereInput[]
+    NOT?: AdminInviteWhereInput | AdminInviteWhereInput[]
+    name?: StringFilter<"AdminInvite"> | string
+    role?: StringFilter<"AdminInvite"> | string
+    invitedById?: StringFilter<"AdminInvite"> | string
+    expiresAt?: DateTimeFilter<"AdminInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"AdminInvite"> | Date | string | null
+    createdAt?: DateTimeFilter<"AdminInvite"> | Date | string
+    invitedBy?: XOR<AdminUserScalarRelationFilter, AdminUserWhereInput>
+  }, "id" | "email" | "token">
+
+  export type AdminInviteOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    role?: SortOrder
+    token?: SortOrder
+    invitedById?: SortOrder
+    expiresAt?: SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AdminInviteCountOrderByAggregateInput
+    _max?: AdminInviteMaxOrderByAggregateInput
+    _min?: AdminInviteMinOrderByAggregateInput
+  }
+
+  export type AdminInviteScalarWhereWithAggregatesInput = {
+    AND?: AdminInviteScalarWhereWithAggregatesInput | AdminInviteScalarWhereWithAggregatesInput[]
+    OR?: AdminInviteScalarWhereWithAggregatesInput[]
+    NOT?: AdminInviteScalarWhereWithAggregatesInput | AdminInviteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdminInvite"> | string
+    email?: StringWithAggregatesFilter<"AdminInvite"> | string
+    name?: StringWithAggregatesFilter<"AdminInvite"> | string
+    role?: StringWithAggregatesFilter<"AdminInvite"> | string
+    token?: StringWithAggregatesFilter<"AdminInvite"> | string
+    invitedById?: StringWithAggregatesFilter<"AdminInvite"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"AdminInvite"> | Date | string
+    acceptedAt?: DateTimeNullableWithAggregatesFilter<"AdminInvite"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AdminInvite"> | Date | string
   }
 
   export type SubscriberWhereInput = {
@@ -8974,6 +10341,7 @@ export namespace Prisma {
     createdAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     notes?: ApplicationNoteCreateNestedManyWithoutAuthorInput
+    invites?: AdminInviteCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserUncheckedCreateInput = {
@@ -8986,6 +10354,7 @@ export namespace Prisma {
     createdAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     notes?: ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
+    invites?: AdminInviteUncheckedCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserUpdateInput = {
@@ -8998,6 +10367,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     notes?: ApplicationNoteUpdateManyWithoutAuthorNestedInput
+    invites?: AdminInviteUpdateManyWithoutInvitedByNestedInput
   }
 
   export type AdminUserUncheckedUpdateInput = {
@@ -9010,6 +10380,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     notes?: ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
+    invites?: AdminInviteUncheckedUpdateManyWithoutInvitedByNestedInput
   }
 
   export type AdminUserCreateManyInput = {
@@ -9396,13 +10767,13 @@ export namespace Prisma {
     body: string
     createdAt?: Date | string
     application: ApplicationCreateNestedOneWithoutNotesInput
-    author: AdminUserCreateNestedOneWithoutNotesInput
+    author?: AdminUserCreateNestedOneWithoutNotesInput
   }
 
   export type ApplicationNoteUncheckedCreateInput = {
     id?: string
     applicationId: string
-    authorId: string
+    authorId?: string | null
     body: string
     createdAt?: Date | string
   }
@@ -9412,13 +10783,13 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     application?: ApplicationUpdateOneRequiredWithoutNotesNestedInput
-    author?: AdminUserUpdateOneRequiredWithoutNotesNestedInput
+    author?: AdminUserUpdateOneWithoutNotesNestedInput
   }
 
   export type ApplicationNoteUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9426,7 +10797,7 @@ export namespace Prisma {
   export type ApplicationNoteCreateManyInput = {
     id?: string
     applicationId: string
-    authorId: string
+    authorId?: string | null
     body: string
     createdAt?: Date | string
   }
@@ -9440,8 +10811,91 @@ export namespace Prisma {
   export type ApplicationNoteUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteCreateInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+    invitedBy: AdminUserCreateNestedOneWithoutInvitesInput
+  }
+
+  export type AdminInviteUncheckedCreateInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    invitedById: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminInviteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invitedBy?: AdminUserUpdateOneRequiredWithoutInvitesNestedInput
+  }
+
+  export type AdminInviteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    invitedById?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteCreateManyInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    invitedById: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminInviteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    invitedById?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9557,6 +11011,12 @@ export namespace Prisma {
     none?: ApplicationNoteWhereInput
   }
 
+  export type AdminInviteListRelationFilter = {
+    every?: AdminInviteWhereInput
+    some?: AdminInviteWhereInput
+    none?: AdminInviteWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9567,6 +11027,10 @@ export namespace Prisma {
   }
 
   export type ApplicationNoteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdminInviteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9861,9 +11325,29 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type ApplicationScalarRelationFilter = {
     is?: ApplicationWhereInput
     isNot?: ApplicationWhereInput
+  }
+
+  export type AdminUserNullableScalarRelationFilter = {
+    is?: AdminUserWhereInput | null
+    isNot?: AdminUserWhereInput | null
   }
 
   export type ApplicationNoteCountOrderByAggregateInput = {
@@ -9887,6 +11371,60 @@ export namespace Prisma {
     applicationId?: SortOrder
     authorId?: SortOrder
     body?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type AdminInviteCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    role?: SortOrder
+    token?: SortOrder
+    invitedById?: SortOrder
+    expiresAt?: SortOrder
+    acceptedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminInviteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    role?: SortOrder
+    token?: SortOrder
+    invitedById?: SortOrder
+    expiresAt?: SortOrder
+    acceptedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminInviteMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    role?: SortOrder
+    token?: SortOrder
+    invitedById?: SortOrder
+    expiresAt?: SortOrder
+    acceptedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -9931,6 +11469,13 @@ export namespace Prisma {
     connect?: ApplicationNoteWhereUniqueInput | ApplicationNoteWhereUniqueInput[]
   }
 
+  export type AdminInviteCreateNestedManyWithoutInvitedByInput = {
+    create?: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput> | AdminInviteCreateWithoutInvitedByInput[] | AdminInviteUncheckedCreateWithoutInvitedByInput[]
+    connectOrCreate?: AdminInviteCreateOrConnectWithoutInvitedByInput | AdminInviteCreateOrConnectWithoutInvitedByInput[]
+    createMany?: AdminInviteCreateManyInvitedByInputEnvelope
+    connect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9943,6 +11488,13 @@ export namespace Prisma {
     connectOrCreate?: ApplicationNoteCreateOrConnectWithoutAuthorInput | ApplicationNoteCreateOrConnectWithoutAuthorInput[]
     createMany?: ApplicationNoteCreateManyAuthorInputEnvelope
     connect?: ApplicationNoteWhereUniqueInput | ApplicationNoteWhereUniqueInput[]
+  }
+
+  export type AdminInviteUncheckedCreateNestedManyWithoutInvitedByInput = {
+    create?: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput> | AdminInviteCreateWithoutInvitedByInput[] | AdminInviteUncheckedCreateWithoutInvitedByInput[]
+    connectOrCreate?: AdminInviteCreateOrConnectWithoutInvitedByInput | AdminInviteCreateOrConnectWithoutInvitedByInput[]
+    createMany?: AdminInviteCreateManyInvitedByInputEnvelope
+    connect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -9985,6 +11537,20 @@ export namespace Prisma {
     deleteMany?: ApplicationNoteScalarWhereInput | ApplicationNoteScalarWhereInput[]
   }
 
+  export type AdminInviteUpdateManyWithoutInvitedByNestedInput = {
+    create?: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput> | AdminInviteCreateWithoutInvitedByInput[] | AdminInviteUncheckedCreateWithoutInvitedByInput[]
+    connectOrCreate?: AdminInviteCreateOrConnectWithoutInvitedByInput | AdminInviteCreateOrConnectWithoutInvitedByInput[]
+    upsert?: AdminInviteUpsertWithWhereUniqueWithoutInvitedByInput | AdminInviteUpsertWithWhereUniqueWithoutInvitedByInput[]
+    createMany?: AdminInviteCreateManyInvitedByInputEnvelope
+    set?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    disconnect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    delete?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    connect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    update?: AdminInviteUpdateWithWhereUniqueWithoutInvitedByInput | AdminInviteUpdateWithWhereUniqueWithoutInvitedByInput[]
+    updateMany?: AdminInviteUpdateManyWithWhereWithoutInvitedByInput | AdminInviteUpdateManyWithWhereWithoutInvitedByInput[]
+    deleteMany?: AdminInviteScalarWhereInput | AdminInviteScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -10011,6 +11577,20 @@ export namespace Prisma {
     update?: ApplicationNoteUpdateWithWhereUniqueWithoutAuthorInput | ApplicationNoteUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: ApplicationNoteUpdateManyWithWhereWithoutAuthorInput | ApplicationNoteUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: ApplicationNoteScalarWhereInput | ApplicationNoteScalarWhereInput[]
+  }
+
+  export type AdminInviteUncheckedUpdateManyWithoutInvitedByNestedInput = {
+    create?: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput> | AdminInviteCreateWithoutInvitedByInput[] | AdminInviteUncheckedCreateWithoutInvitedByInput[]
+    connectOrCreate?: AdminInviteCreateOrConnectWithoutInvitedByInput | AdminInviteCreateOrConnectWithoutInvitedByInput[]
+    upsert?: AdminInviteUpsertWithWhereUniqueWithoutInvitedByInput | AdminInviteUpsertWithWhereUniqueWithoutInvitedByInput[]
+    createMany?: AdminInviteCreateManyInvitedByInputEnvelope
+    set?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    disconnect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    delete?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    connect?: AdminInviteWhereUniqueInput | AdminInviteWhereUniqueInput[]
+    update?: AdminInviteUpdateWithWhereUniqueWithoutInvitedByInput | AdminInviteUpdateWithWhereUniqueWithoutInvitedByInput[]
+    updateMany?: AdminInviteUpdateManyWithWhereWithoutInvitedByInput | AdminInviteUpdateManyWithWhereWithoutInvitedByInput[]
+    deleteMany?: AdminInviteScalarWhereInput | AdminInviteScalarWhereInput[]
   }
 
   export type AdminUserCreateNestedOneWithoutSessionsInput = {
@@ -10157,12 +11737,32 @@ export namespace Prisma {
     update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutNotesInput, ApplicationUpdateWithoutNotesInput>, ApplicationUncheckedUpdateWithoutNotesInput>
   }
 
-  export type AdminUserUpdateOneRequiredWithoutNotesNestedInput = {
+  export type AdminUserUpdateOneWithoutNotesNestedInput = {
     create?: XOR<AdminUserCreateWithoutNotesInput, AdminUserUncheckedCreateWithoutNotesInput>
     connectOrCreate?: AdminUserCreateOrConnectWithoutNotesInput
     upsert?: AdminUserUpsertWithoutNotesInput
+    disconnect?: AdminUserWhereInput | boolean
+    delete?: AdminUserWhereInput | boolean
     connect?: AdminUserWhereUniqueInput
     update?: XOR<XOR<AdminUserUpdateToOneWithWhereWithoutNotesInput, AdminUserUpdateWithoutNotesInput>, AdminUserUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type AdminUserCreateNestedOneWithoutInvitesInput = {
+    create?: XOR<AdminUserCreateWithoutInvitesInput, AdminUserUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: AdminUserCreateOrConnectWithoutInvitesInput
+    connect?: AdminUserWhereUniqueInput
+  }
+
+  export type AdminUserUpdateOneRequiredWithoutInvitesNestedInput = {
+    create?: XOR<AdminUserCreateWithoutInvitesInput, AdminUserUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: AdminUserCreateOrConnectWithoutInvitesInput
+    upsert?: AdminUserUpsertWithoutInvitesInput
+    connect?: AdminUserWhereUniqueInput
+    update?: XOR<XOR<AdminUserUpdateToOneWithWhereWithoutInvitesInput, AdminUserUpdateWithoutInvitesInput>, AdminUserUncheckedUpdateWithoutInvitesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -10308,6 +11908,37 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     token: string
     expiresAt: Date | string
@@ -10351,6 +11982,38 @@ export namespace Prisma {
 
   export type ApplicationNoteCreateManyAuthorInputEnvelope = {
     data: ApplicationNoteCreateManyAuthorInput | ApplicationNoteCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminInviteCreateWithoutInvitedByInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminInviteUncheckedCreateWithoutInvitedByInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminInviteCreateOrConnectWithoutInvitedByInput = {
+    where: AdminInviteWhereUniqueInput
+    create: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput>
+  }
+
+  export type AdminInviteCreateManyInvitedByInputEnvelope = {
+    data: AdminInviteCreateManyInvitedByInput | AdminInviteCreateManyInvitedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -10402,9 +12065,40 @@ export namespace Prisma {
     NOT?: ApplicationNoteScalarWhereInput | ApplicationNoteScalarWhereInput[]
     id?: StringFilter<"ApplicationNote"> | string
     applicationId?: StringFilter<"ApplicationNote"> | string
-    authorId?: StringFilter<"ApplicationNote"> | string
+    authorId?: StringNullableFilter<"ApplicationNote"> | string | null
     body?: StringFilter<"ApplicationNote"> | string
     createdAt?: DateTimeFilter<"ApplicationNote"> | Date | string
+  }
+
+  export type AdminInviteUpsertWithWhereUniqueWithoutInvitedByInput = {
+    where: AdminInviteWhereUniqueInput
+    update: XOR<AdminInviteUpdateWithoutInvitedByInput, AdminInviteUncheckedUpdateWithoutInvitedByInput>
+    create: XOR<AdminInviteCreateWithoutInvitedByInput, AdminInviteUncheckedCreateWithoutInvitedByInput>
+  }
+
+  export type AdminInviteUpdateWithWhereUniqueWithoutInvitedByInput = {
+    where: AdminInviteWhereUniqueInput
+    data: XOR<AdminInviteUpdateWithoutInvitedByInput, AdminInviteUncheckedUpdateWithoutInvitedByInput>
+  }
+
+  export type AdminInviteUpdateManyWithWhereWithoutInvitedByInput = {
+    where: AdminInviteScalarWhereInput
+    data: XOR<AdminInviteUpdateManyMutationInput, AdminInviteUncheckedUpdateManyWithoutInvitedByInput>
+  }
+
+  export type AdminInviteScalarWhereInput = {
+    AND?: AdminInviteScalarWhereInput | AdminInviteScalarWhereInput[]
+    OR?: AdminInviteScalarWhereInput[]
+    NOT?: AdminInviteScalarWhereInput | AdminInviteScalarWhereInput[]
+    id?: StringFilter<"AdminInvite"> | string
+    email?: StringFilter<"AdminInvite"> | string
+    name?: StringFilter<"AdminInvite"> | string
+    role?: StringFilter<"AdminInvite"> | string
+    token?: StringFilter<"AdminInvite"> | string
+    invitedById?: StringFilter<"AdminInvite"> | string
+    expiresAt?: DateTimeFilter<"AdminInvite"> | Date | string
+    acceptedAt?: DateTimeNullableFilter<"AdminInvite"> | Date | string | null
+    createdAt?: DateTimeFilter<"AdminInvite"> | Date | string
   }
 
   export type AdminUserCreateWithoutSessionsInput = {
@@ -10416,6 +12110,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     notes?: ApplicationNoteCreateNestedManyWithoutAuthorInput
+    invites?: AdminInviteCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserUncheckedCreateWithoutSessionsInput = {
@@ -10427,6 +12122,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     notes?: ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
+    invites?: AdminInviteUncheckedCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserCreateOrConnectWithoutSessionsInput = {
@@ -10454,6 +12150,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: ApplicationNoteUpdateManyWithoutAuthorNestedInput
+    invites?: AdminInviteUpdateManyWithoutInvitedByNestedInput
   }
 
   export type AdminUserUncheckedUpdateWithoutSessionsInput = {
@@ -10465,6 +12162,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
+    invites?: AdminInviteUncheckedUpdateManyWithoutInvitedByNestedInput
   }
 
   export type ApplicationCreateWithoutJobInput = {
@@ -10611,12 +12309,12 @@ export namespace Prisma {
     id?: string
     body: string
     createdAt?: Date | string
-    author: AdminUserCreateNestedOneWithoutNotesInput
+    author?: AdminUserCreateNestedOneWithoutNotesInput
   }
 
   export type ApplicationNoteUncheckedCreateWithoutApplicationInput = {
     id?: string
-    authorId: string
+    authorId?: string | null
     body: string
     createdAt?: Date | string
   }
@@ -10756,6 +12454,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
+    invites?: AdminInviteCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserUncheckedCreateWithoutNotesInput = {
@@ -10767,6 +12466,7 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    invites?: AdminInviteUncheckedCreateNestedManyWithoutInvitedByInput
   }
 
   export type AdminUserCreateOrConnectWithoutNotesInput = {
@@ -10849,6 +12549,7 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    invites?: AdminInviteUpdateManyWithoutInvitedByNestedInput
   }
 
   export type AdminUserUncheckedUpdateWithoutNotesInput = {
@@ -10860,6 +12561,71 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    invites?: AdminInviteUncheckedUpdateManyWithoutInvitedByNestedInput
+  }
+
+  export type AdminUserCreateWithoutInvitesInput = {
+    id?: string
+    email: string
+    name: string
+    passwordHash: string
+    role?: string
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    notes?: ApplicationNoteCreateNestedManyWithoutAuthorInput
+  }
+
+  export type AdminUserUncheckedCreateWithoutInvitesInput = {
+    id?: string
+    email: string
+    name: string
+    passwordHash: string
+    role?: string
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    notes?: ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type AdminUserCreateOrConnectWithoutInvitesInput = {
+    where: AdminUserWhereUniqueInput
+    create: XOR<AdminUserCreateWithoutInvitesInput, AdminUserUncheckedCreateWithoutInvitesInput>
+  }
+
+  export type AdminUserUpsertWithoutInvitesInput = {
+    update: XOR<AdminUserUpdateWithoutInvitesInput, AdminUserUncheckedUpdateWithoutInvitesInput>
+    create: XOR<AdminUserCreateWithoutInvitesInput, AdminUserUncheckedCreateWithoutInvitesInput>
+    where?: AdminUserWhereInput
+  }
+
+  export type AdminUserUpdateToOneWithWhereWithoutInvitesInput = {
+    where?: AdminUserWhereInput
+    data: XOR<AdminUserUpdateWithoutInvitesInput, AdminUserUncheckedUpdateWithoutInvitesInput>
+  }
+
+  export type AdminUserUpdateWithoutInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    notes?: ApplicationNoteUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type AdminUserUncheckedUpdateWithoutInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    notes?: ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -10872,6 +12638,17 @@ export namespace Prisma {
     id?: string
     applicationId: string
     body: string
+    createdAt?: Date | string
+  }
+
+  export type AdminInviteCreateManyInvitedByInput = {
+    id?: string
+    email: string
+    name: string
+    role?: string
+    token: string
+    expiresAt: Date | string
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -10911,6 +12688,39 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteUpdateWithoutInvitedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteUncheckedUpdateWithoutInvitedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminInviteUncheckedUpdateManyWithoutInvitedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11002,7 +12812,7 @@ export namespace Prisma {
 
   export type ApplicationNoteCreateManyApplicationInput = {
     id?: string
-    authorId: string
+    authorId?: string | null
     body: string
     createdAt?: Date | string
   }
@@ -11011,19 +12821,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: AdminUserUpdateOneRequiredWithoutNotesNestedInput
+    author?: AdminUserUpdateOneWithoutNotesNestedInput
   }
 
   export type ApplicationNoteUncheckedUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicationNoteUncheckedUpdateManyWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
+    authorId?: NullableStringFieldUpdateOperationsInput | string | null
     body?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

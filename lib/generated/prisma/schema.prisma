@@ -26,6 +26,7 @@ model AdminUser {
 
   sessions Session[]
   notes    ApplicationNote[]
+  invites  AdminInvite[]     @relation("InvitesSent")
 }
 
 /// A signed-in browser session. Deleted on sign-out and swept when expired.
@@ -124,18 +125,45 @@ model Application {
 
 /// Recruiter comment on an application.
 model ApplicationNote {
-  id            String @id @default(cuid())
+  id            String  @id @default(cuid())
   applicationId String
-  authorId      String
+  /// Null once the author's account is removed. Notes are institutional
+  /// record — losing a screening comment because someone left the company is
+  /// worse than showing "Removed user" against it.
+  authorId      String?
 
   body String
 
   createdAt DateTime @default(now())
 
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-  author      AdminUser   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author      AdminUser?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
   @@index([applicationId])
+}
+
+/// A pending invitation to join the admin.
+///
+/// Invites exist so an owner never has to know anyone else's password: the
+/// invitee follows a one-time link and sets their own. The link can be sent by
+/// any channel — it doesn't depend on the site's email being configured.
+model AdminInvite {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+  role  String @default("editor")
+
+  /// Random, single-use, and the only thing that authorises acceptance.
+  token String @unique
+
+  invitedById String
+  invitedBy   AdminUser @relation("InvitesSent", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([expiresAt])
 }
 
 /// Newsletter signup from the site footer.

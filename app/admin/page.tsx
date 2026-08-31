@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Plus } from "lucide-react";
+import { AlertCircle, ArrowRight, Plus } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -14,8 +14,13 @@ import {
 export const metadata = { title: "Overview" };
 export const dynamic = "force-dynamic";
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
   const user = await requireUser();
+  const { error } = await searchParams;
 
   const [openRoles, draftRoles, totalApplications, newApplications, recent] =
     await Promise.all([
@@ -32,6 +37,25 @@ export default async function AdminDashboard() {
 
   return (
     <>
+      {/* Editors who follow a link into an owner-only screen land back here.
+          Bouncing them without a word reads like a broken link. */}
+      {error === "owner-only" && (
+        <div
+          role="alert"
+          className="rounded-card border-line bg-surface mb-8 flex items-start gap-3 border p-5"
+        >
+          <AlertCircle
+            size={18}
+            aria-hidden="true"
+            className="text-muted mt-0.5 shrink-0"
+          />
+          <p className="text-muted text-sm leading-relaxed">
+            Managing admin accounts is owner-only. Ask an owner if you need
+            access to it.
+          </p>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="display-3 text-navy font-bold">

@@ -7,10 +7,11 @@ import {
   Mail,
   Send,
   ServerCog,
+  ShieldCheck,
   Users,
 } from "lucide-react";
 
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isOwner } from "@/lib/auth";
 import { signOut } from "./actions";
 
 export const metadata: Metadata = {
@@ -27,6 +28,11 @@ const nav = [
   { name: "System", href: "/admin/system", icon: ServerCog },
 ];
 
+/* Owners only. Editors don't see the link, and /admin/users refuses them
+   anyway — hiding a control someone can't use beats letting them find out by
+   being turned away. */
+const ownerNav = [{ name: "Admins", href: "/admin/users", icon: ShieldCheck }];
+
 export default async function AdminLayout({
   children,
 }: {
@@ -39,6 +45,8 @@ export default async function AdminLayout({
   if (!user) {
     return <div className="bg-surface min-h-screen">{children}</div>;
   }
+
+  const items = isOwner(user) ? [...nav, ...ownerNav] : nav;
 
   return (
     <div className="bg-surface min-h-screen">
@@ -53,7 +61,7 @@ export default async function AdminLayout({
 
           <nav aria-label="Admin" className="flex-1">
             <ul className="flex flex-wrap gap-1">
-              {nav.map((item) => (
+              {items.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

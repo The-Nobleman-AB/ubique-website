@@ -13,9 +13,14 @@ import { SESSION_COOKIE } from "@/lib/session-cookie";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  /* Both of these have to work before a session can exist. Each guards itself:
-     setup closes once an admin exists, login needs valid credentials. */
-  if (pathname === "/admin/login" || pathname === "/admin/setup") {
+  /* These have to work before a session can exist. Each guards itself: setup
+     closes once an admin exists, login needs valid credentials, and an invite
+     link is a single-use token that the page validates and expires. */
+  if (
+    pathname === "/admin/login" ||
+    pathname === "/admin/setup" ||
+    pathname.startsWith("/admin/invite/")
+  ) {
     return NextResponse.next();
   }
 
