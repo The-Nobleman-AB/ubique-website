@@ -15,6 +15,7 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { serialiseList, uniqueSlug } from "@/lib/jobs";
+import { remove } from "@/lib/storage";
 import { APPLICATION_STATUSES } from "@/lib/application-status";
 
 /**
@@ -82,7 +83,10 @@ const jobSchema = z.object({
   description: z
     .string()
     .trim()
-    .min(40, "Write at least a couple of sentences — this is the summary candidates read first."),
+    .min(
+      40,
+      "Write at least a couple of sentences — this is the summary candidates read first.",
+    ),
   responsibilities: z.string().default(""),
   requirements: z.string().default(""),
   technologies: z.string().default(""),
@@ -145,7 +149,10 @@ export async function createJob(
   const parsed = readJobForm(formData);
 
   if (!parsed.success) {
-    return { error: "Check the highlighted fields.", fieldErrors: fieldErrors(parsed.error) };
+    return {
+      error: "Check the highlighted fields.",
+      fieldErrors: fieldErrors(parsed.error),
+    };
   }
 
   const data = parsed.data;
@@ -183,7 +190,10 @@ export async function updateJob(
   const parsed = readJobForm(formData);
 
   if (!parsed.success) {
-    return { error: "Check the highlighted fields.", fieldErrors: fieldErrors(parsed.error) };
+    return {
+      error: "Check the highlighted fields.",
+      fieldErrors: fieldErrors(parsed.error),
+    };
   }
 
   const data = parsed.data;
@@ -228,26 +238,92 @@ export async function updateJob(
   redirect("/admin/jobs");
 }
 
+/**
+ * Deletes a role, and everything attached to it.
+ *
+ * The database cascades applications and notes away with the job — but a
+ * cascade knows nothing about blob storage, so the CVs would be left behind as
+ * orphaned personal data with no record pointing at them. They have to be
+ * removed explicitly, and before the rows, because once the rows are gone we
+ * no longer know which files to delete.
+ */
 export async function deleteJob(id: string): Promise<void> {
   await requireUser();
 
   const job = await prisma.job.findUnique({
     where: { id },
-    include: { _count: { select: { applications: true } } },
+    include: { applications: { select: { cvPath: true } } },
   });
 
   if (!job) redirect("/admin/jobs");
 
-  /* Applications cascade-delete with the job. Closing keeps the record and the
-     candidates; deleting is only for roles that were never really used. */
-  if (job._count.applications > 0) {
-    redirect(`/admin/jobs/${id}?error=has-applications`);
-  }
+  const files = job.applications
+    .map((application) => application.cvPath)
+    .filter(Boolean);
+
+  const failed = await removeFiles(files);
 
   await prisma.job.delete({ where: { id } });
 
+  console.log(
+    `[admin] Deleted role "${job.title}" with ${job.applications.length} ` +
+      `application(s); removed ${files.length - failed} of ${files.length} CVs.`,
+  );
+
   revalidateJobPages(job.slug);
   redirect("/admin/jobs");
+}
+
+/**
+ * Deletes one application and its CV.
+ *
+ * Recruiters need this for duplicates and test submissions, and candidates can
+ * ask for it under the right to erasure — which the privacy policy promises.
+ */
+export async function deleteApplication(id: string): Promise<void> {
+  await requireUser();
+
+  const application = await prisma.application.findUnique({
+    where: { id },
+    select: { cvPath: true, reference: true, jobId: true },
+  });
+
+  if (!application) redirect("/admin/applications");
+
+  if (application.cvPath) await removeFiles([application.cvPath]);
+
+  await prisma.application.delete({ where: { id } });
+
+  console.log(
+    `[admin] Deleted application ${application.reference} and its CV.`,
+  );
+
+  revalidatePath("/admin/applications");
+  revalidatePath("/admin");
+  redirect("/admin/applications");
+}
+
+/**
+ * Removes files from storage, returning how many failed.
+ *
+ * A storage error must not block the database delete: if someone has asked for
+ * their data to be erased, leaving the record in place because a file delete
+ * failed is the worse outcome. Failures are logged loudly so an orphan can be
+ * cleaned up by hand.
+ */
+async function removeFiles(keys: string[]): Promise<number> {
+  let failed = 0;
+
+  for (const key of keys) {
+    try {
+      await remove(key);
+    } catch (error) {
+      failed += 1;
+      console.error(`[admin] Could not delete stored file ${key}:`, error);
+    }
+  }
+
+  return failed;
 }
 
 /* ---------------------------------------------------------- applications */
@@ -284,4 +360,3 @@ export async function addApplicationNote(
 
   revalidatePath(`/admin/applications/${id}`);
 }
-

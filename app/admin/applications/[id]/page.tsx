@@ -5,7 +5,12 @@ import { ArrowLeft, Download, Mail, MapPin, Phone } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Panel, StatusPill, formatDate } from "@/components/admin/ui";
-import { addApplicationNote, setApplicationStatus } from "../../actions";
+import DangerZone from "@/components/admin/DangerZone";
+import {
+  addApplicationNote,
+  deleteApplication,
+  setApplicationStatus,
+} from "../../actions";
 import { APPLICATION_STATUSES } from "@/lib/application-status";
 
 export const metadata = { title: "Application" };
@@ -35,6 +40,7 @@ export default async function ApplicationPage({
 
   const setStatus = setApplicationStatus.bind(null, application.id);
   const addNote = addApplicationNote.bind(null, application.id);
+  const removeApplication = deleteApplication.bind(null, application.id);
 
   const fullName = `${application.firstName} ${application.lastName}`;
 
@@ -196,8 +202,8 @@ export default async function ApplicationPage({
 
         {/* -------------------------------------------- sidebar */}
 
-        <div className="lg:col-span-1">
-          <Panel title="Status" className="lg:sticky lg:top-24">
+        <div className="lg:sticky lg:top-24 lg:col-span-1 lg:self-start">
+          <Panel title="Status">
             <form action={setStatus} className="p-6">
               <label htmlFor="status" className="sr-only">
                 Application status
@@ -224,6 +230,29 @@ export default async function ApplicationPage({
               </button>
             </form>
           </Panel>
+
+          <section className="border-line mt-6 border-t pt-6">
+            <h2 className="text-navy font-semibold">Delete</h2>
+            <p className="text-muted mt-2 text-sm leading-relaxed">
+              For duplicates, test submissions, or when a candidate asks to be
+              erased — which our privacy policy commits to.
+            </p>
+
+            <div className="mt-4">
+              <DangerZone
+                action={removeApplication}
+                buttonLabel="Delete application"
+                title={`Delete ${fullName}'s application?`}
+                consequences={[
+                  "Their contact details, cover note and recruiter notes will be removed.",
+                  application.cvPath
+                    ? "Their CV will be permanently deleted from storage."
+                    : "No CV is stored for this application.",
+                  `Reference ${application.reference} will no longer resolve.`,
+                ]}
+              />
+            </div>
+          </section>
         </div>
       </div>
     </>

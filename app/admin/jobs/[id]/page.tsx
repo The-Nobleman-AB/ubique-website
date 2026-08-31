@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertTriangle, ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
 import { getJobById } from "@/lib/jobs";
 import JobForm from "@/components/admin/JobForm";
 import { StatusPill } from "@/components/admin/ui";
+import DangerZone from "@/components/admin/DangerZone";
 import { deleteJob, updateJob } from "../../actions";
 
 export const metadata = { title: "Edit role" };
@@ -13,15 +14,12 @@ export const dynamic = "force-dynamic";
 
 export default async function EditJobPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string }>;
 }) {
   await requireUser();
 
   const { id } = await params;
-  const { error } = await searchParams;
 
   const job = await getJobById(id);
 
@@ -30,6 +28,8 @@ export default async function EditJobPage({
   /* Bind the id so the form action keeps the (prev, formData) shape. */
   const action = updateJob.bind(null, job.id);
   const remove = deleteJob.bind(null, job.id);
+
+  const applications = job.applicationCount ?? 0;
 
   return (
     <>
@@ -67,40 +67,53 @@ export default async function EditJobPage({
             )}
           </p>
         </div>
-
-        {(job.applicationCount ?? 0) === 0 && (
-          <form action={remove}>
-            <button
-              type="submit"
-              className="rounded-control border-danger/30 text-danger hover:bg-danger/5 inline-flex items-center gap-2 border px-4 py-2.5 text-sm font-semibold transition-colors"
-            >
-              <Trash2 size={15} aria-hidden="true" />
-              Delete role
-            </button>
-          </form>
-        )}
       </div>
 
-      {error === "has-applications" && (
-        <div
-          role="alert"
-          className="rounded-card border-warn/30 bg-warn/5 mt-6 flex items-start gap-3 border p-5"
-        >
-          <AlertTriangle
-            size={18}
-            aria-hidden="true"
-            className="text-warn mt-0.5 shrink-0"
-          />
-          <p className="text-navy text-sm leading-relaxed">
-            This role has applications against it, so it can&rsquo;t be deleted
-            — that would delete the candidates too. Set it to{" "}
-            <strong>Closed</strong> instead: the page stays up for anyone
-            holding a link, but applications stop.
-          </p>
-        </div>
-      )}
-
       <JobForm job={job} action={action} submitLabel="Save changes" />
+
+      <section className="border-line mt-12 border-t pt-8">
+        <h2 className="text-navy font-semibold">Delete this role</h2>
+        <p className="text-muted mt-2 max-w-2xl leading-relaxed">
+          {applications > 0 ? (
+            <>
+              Most of the time you want <strong>Closed</strong> instead — the
+              page stays up for anyone holding a link, applications stop, and
+              the candidates are kept. Delete only when the role and its
+              applicants should be gone for good.
+            </>
+          ) : (
+            <>
+              Nothing has been submitted against this role, so deleting it
+              removes only the role itself.
+            </>
+          )}
+        </p>
+
+        <div className="mt-5">
+          <DangerZone
+            action={remove}
+            buttonLabel="Delete role"
+            title={`Delete “${job.title}”?`}
+            consequences={
+              applications > 0
+                ? [
+                    `${applications} application${applications === 1 ? "" : "s"} will be deleted with it, including candidate contact details and recruiter notes.`,
+                    `${applications} CV${applications === 1 ? "" : "s"} will be permanently removed from storage.`,
+                    job.status !== "DRAFT"
+                      ? `/careers/${job.slug} will start returning 404 for anyone holding the link.`
+                      : "This role was never published, so no public link breaks.",
+                  ]
+                : [
+                    "The role and its content will be removed.",
+                    job.status !== "DRAFT"
+                      ? `/careers/${job.slug} will start returning 404 for anyone holding the link.`
+                      : "This role was never published, so no public link breaks.",
+                  ]
+            }
+            confirmPhrase={applications > 0 ? job.title : undefined}
+          />
+        </div>
+      </section>
     </>
   );
 }
