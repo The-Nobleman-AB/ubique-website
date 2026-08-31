@@ -1,6 +1,4 @@
 import { randomBytes } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/db";
@@ -13,11 +11,10 @@ import {
   type Row,
 } from "@/lib/email";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
+import { store } from "@/lib/storage";
 import { applicationSchema, fieldErrors, validateCv } from "@/lib/validation";
 
 export const runtime = "nodejs";
-
-const STORAGE_DIR = path.join(process.cwd(), "storage", "cv");
 
 /** Short, human-quotable reference so a candidate can chase an application. */
 function reference(): string {
@@ -112,18 +109,23 @@ export async function POST(request: Request) {
   /* ------------------------------------------------------- store the CV */
 
   const ref = reference();
-  const extension = cvFile.name.match(/\.(pdf|docx?)$/i)?.[0]?.toLowerCase() ?? ".pdf";
+  const extension =
+    cvFile.name.match(/\.(pdf|docx?)$/i)?.[0]?.toLowerCase() ?? ".pdf";
   const safeName = `${data.lastName}-${data.firstName}-CV${extension}`.replace(
     /[^A-Za-z0-9.\-]/g,
     "-",
   );
-  const storedPath = path.join(STORAGE_DIR, `${ref}${extension}`);
 
   const bytes = Buffer.from(await cvFile.arrayBuffer());
 
+  let stored;
+
   try {
-    await mkdir(STORAGE_DIR, { recursive: true });
-    await writeFile(storedPath, bytes);
+    stored = await store(
+      `${ref}${extension}`,
+      bytes,
+      cvFile.type || "application/pdf",
+    );
   } catch (error) {
     console.error("[apply] Could not store CV:", error);
 
@@ -156,7 +158,7 @@ export async function POST(request: Request) {
       cvFilename: safeName,
       cvMimeType: cvFile.type || "application/pdf",
       cvSize: cvFile.size,
-      cvPath: storedPath,
+      cvPath: stored.key,
       consent: true,
     },
   });
@@ -187,9 +189,7 @@ export async function POST(request: Request) {
         label: "Cover note",
         value: data.coverNote,
       }),
-      attachments: [
-        { filename: safeName, content: bytes.toString("base64") },
-      ],
+      attachments: [{ filename: safeName, content: bytes.toString("base64") }],
     });
 
     await prisma.application.update({
@@ -200,7 +200,10 @@ export async function POST(request: Request) {
     /* Not fatal — the application is saved and visible in the admin. Log it
        so the gap between "received" and "emailed" is traceable. */
     if (error instanceof EmailNotConfiguredError) {
-      console.warn("[apply] Stored, but email is not configured:", error.message);
+      console.warn(
+        "[apply] Stored, but email is not configured:",
+        error.message,
+      );
     } else {
       console.error("[apply] Stored, but the notification failed:", error);
     }

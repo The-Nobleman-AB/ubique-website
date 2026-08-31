@@ -1,31 +1,43 @@
+import { PrismaPg } from "@prisma/adapter-pg";
+
 import { PrismaClient } from "@/lib/generated/prisma";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 /**
  * Prisma client singleton.
  *
- * Prisma 7 takes a driver adapter rather than reading the URL from the schema.
- * To move to Postgres: swap the provider in prisma/schema.prisma, install
- * @prisma/adapter-pg, and change the adapter here. Nothing else in the app
- * touches the driver.
+ * Postgres, because the app runs on Vercel: its filesystem is read-only and
+ * wiped between invocations, so a SQLite file can't be written at all — admin
+ * sessions, job posting and applications would every one of them fail.
  *
- * The globalThis cache stops `next dev` opening a new connection on every
- * hot reload.
+ * Prisma 7 takes a driver adapter rather than reading the URL from the schema.
+ * Neon and Vercel Postgres both speak the standard protocol, so `pg` works
+ * against either with no code change.
+ *
+ * The globalThis cache stops `next dev` opening a new pool on every hot reload.
  */
 
-const url = process.env.DATABASE_URL ?? "file:./dev.db";
-
 function createClient() {
-  const adapter = new PrismaBetterSqlite3({
-    url,
+  const connectionString = process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    /* Better a clear message than a driver-level failure three frames deep. */
+    throw new Error(
+      "DATABASE_URL is not set. Point it at a Postgres instance — see README.",
+    );
+  }
+
+  const adapter = new PrismaPg({
+    connectionString,
+    /* Serverless opens a connection per invocation; a small pool with a short
+       idle timeout avoids exhausting Postgres' connection limit. Neon's pooled
+       endpoint handles this too — use it if you have one. */
+    max: 5,
+    idleTimeoutMillis: 10_000,
   });
 
   return new PrismaClient({
     adapter,
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["warn", "error"]
-        : ["error"],
+    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
   });
 }
 

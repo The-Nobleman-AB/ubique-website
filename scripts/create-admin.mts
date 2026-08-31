@@ -9,18 +9,41 @@ import { hashPassword } from "../lib/auth";
  *
  *   npm run admin:create
  *
- * Prompts rather than taking argv, so the password never lands in shell
- * history. Re-running with an existing email resets that user's password.
+ * Prompts by default, so the password never lands in shell history.
+ * Re-running with an existing email resets that user's password and revokes
+ * any active sessions.
+ *
+ * For production — where you're running against a remote DATABASE_URL and a
+ * prompt is awkward — set ADMIN_EMAIL, ADMIN_NAME and ADMIN_PASSWORD instead
+ * and it runs without asking. Prefer a shell that doesn't record history, or
+ * a one-off environment variable, so the password isn't left behind.
  */
 
-const rl = createInterface({ input: stdin, output: stdout });
+const fromEnv =
+  process.env.ADMIN_EMAIL &&
+  process.env.ADMIN_NAME &&
+  process.env.ADMIN_PASSWORD;
 
-const email = (await rl.question("Email: ")).trim().toLowerCase();
-const name = (await rl.question("Full name: ")).trim();
-const password = (await rl.question("Password (min 12 chars): ")).trim();
-const confirm = (await rl.question("Confirm password: ")).trim();
+let email: string;
+let name: string;
+let password: string;
+let confirm: string;
 
-rl.close();
+if (fromEnv) {
+  email = process.env.ADMIN_EMAIL!.trim().toLowerCase();
+  name = process.env.ADMIN_NAME!.trim();
+  password = process.env.ADMIN_PASSWORD!;
+  confirm = password;
+} else {
+  const rl = createInterface({ input: stdin, output: stdout });
+
+  email = (await rl.question("Email: ")).trim().toLowerCase();
+  name = (await rl.question("Full name: ")).trim();
+  password = (await rl.question("Password (min 12 chars): ")).trim();
+  confirm = (await rl.question("Confirm password: ")).trim();
+
+  rl.close();
+}
 
 if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
   console.error("\n✗ That doesn't look like a valid email address.");
@@ -58,7 +81,9 @@ if (existing) {
   await prisma.session.deleteMany({ where: { userId: existing.id } });
   console.log(`\n✓ Password reset for ${email}. Existing sessions revoked.`);
 } else {
-  console.log(`\n✓ Admin created: ${email} (${isFirstUser ? "owner" : "editor"})`);
+  console.log(
+    `\n✓ Admin created: ${email} (${isFirstUser ? "owner" : "editor"})`,
+  );
 }
 
 console.log("  Sign in at /admin/login");

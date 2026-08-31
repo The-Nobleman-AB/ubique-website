@@ -1,8 +1,8 @@
-import { readFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { read } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -34,7 +34,7 @@ export async function GET(
   }
 
   try {
-    const file = await readFile(application.cvPath);
+    const file = await read(application.cvPath);
 
     return new NextResponse(new Uint8Array(file), {
       headers: {

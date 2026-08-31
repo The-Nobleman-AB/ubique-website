@@ -25,7 +25,9 @@ type JobRow = {
 function parseList(value: string): string[] {
   try {
     const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed.filter((v) => typeof v === "string") : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((v) => typeof v === "string")
+      : [];
   } catch {
     return [];
   }
@@ -51,45 +53,90 @@ function toJob(row: JobRow & { _count?: { applications: number } }): Job {
   };
 }
 
+/**
+ * Runs a query, and returns `fallback` if the database is unreachable.
+ *
+ * Build servers don't necessarily have a database — Vercel runs `next build`
+ * before any runtime environment exists, and these pages are statically
+ * generated, so `generateStaticParams` and the homepage both query at build
+ * time. Without this the whole build fails with P2021 / P1001.
+ *
+ * Degrading to empty is also the right runtime behaviour: a database blip
+ * should render a careers page with no roles on it, not take the entire site
+ * down. Pages are ISR with a 300s window, so they self-heal on the next
+ * revalidation.
+ */
+async function safely<T>(
+  operation: string,
+  query: () => Promise<T>,
+  fallback: T,
+): Promise<T> {
+  try {
+    return await query();
+  } catch (error) {
+    console.error(`[jobs] ${operation} failed — falling back:`, error);
+    return fallback;
+  }
+}
+
 /* ---------------------------------------------------------------- public */
 
 /** Roles visible on the public site. CLOSED stays reachable by direct link. */
 export async function getPublishedJobs(): Promise<Job[]> {
-  const rows = await prisma.job.findMany({
-    where: { status: "OPEN" },
-    orderBy: { postedAt: "desc" },
-  });
-
-  return rows.map(toJob);
+  return safely(
+    "getPublishedJobs",
+    async () => {
+      const rows = await prisma.job.findMany({
+        where: { status: "OPEN" },
+        orderBy: { postedAt: "desc" },
+      });
+      return rows.map(toJob);
+    },
+    [],
+  );
 }
 
 export async function getJobBySlug(slug: string): Promise<Job | null> {
-  const row = await prisma.job.findUnique({ where: { slug } });
-
-  if (!row || row.status === "DRAFT") return null;
-
-  return toJob(row);
+  return safely(
+    `getJobBySlug(${slug})`,
+    async () => {
+      const row = await prisma.job.findUnique({ where: { slug } });
+      if (!row || row.status === "DRAFT") return null;
+      return toJob(row);
+    },
+    null,
+  );
 }
 
 /** Slugs to prerender — drafts excluded so unpublished roles never get a URL. */
 export async function getPublishedSlugs(): Promise<string[]> {
-  const rows = await prisma.job.findMany({
-    where: { status: { in: ["OPEN", "CLOSED"] } },
-    select: { slug: true },
-  });
-
-  return rows.map((row) => row.slug);
+  return safely(
+    "getPublishedSlugs",
+    async () => {
+      const rows = await prisma.job.findMany({
+        where: { status: { in: ["OPEN", "CLOSED"] } },
+        select: { slug: true },
+      });
+      return rows.map((row) => row.slug);
+    },
+    [],
+  );
 }
 
 /* ----------------------------------------------------------------- admin */
 
 export async function getAllJobs(): Promise<Job[]> {
-  const rows = await prisma.job.findMany({
-    orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
-    include: { _count: { select: { applications: true } } },
-  });
-
-  return rows.map(toJob);
+  return safely(
+    "getAllJobs",
+    async () => {
+      const rows = await prisma.job.findMany({
+        orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+        include: { _count: { select: { applications: true } } },
+      });
+      return rows.map(toJob);
+    },
+    [],
+  );
 }
 
 export async function getJobById(id: string): Promise<Job | null> {
@@ -102,7 +149,10 @@ export async function getJobById(id: string): Promise<Job | null> {
 }
 
 /** URL-safe slug derived from the title, kept unique against existing rows. */
-export async function uniqueSlug(title: string, excludeId?: string): Promise<string> {
+export async function uniqueSlug(
+  title: string,
+  excludeId?: string,
+): Promise<string> {
   const base =
     title
       .toLowerCase()

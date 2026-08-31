@@ -5,9 +5,15 @@ Turbopack), React 19, Tailwind v4 and Prisma.
 
 ## Getting started
 
+Needs Postgres. Locally that can be Homebrew Postgres, Docker, or a Neon
+branch — the connection string is all that changes.
+
 ```bash
+createdb ubique_dev                                    # or use a Neon branch
+echo 'DATABASE_URL="postgresql://you@localhost:5432/ubique_dev"' > .env
+
 npm install          # postinstall runs `prisma generate`
-npm run setup        # applies migrations and seeds the starter roles
+npm run setup        # migrates and seeds the starter roles
 npm run admin:create # prompts for your admin email and password
 npm run dev          # http://localhost:3000
 ```
@@ -88,17 +94,38 @@ Enquiries go to `CONTACT_TO`, applications to `CAREERS_TO` (comma-separate for
 several). Both senders get a confirmation, and `Reply-To` is set to the
 enquirer so replying from the inbox reaches them directly.
 
-## Database
+## Deploying to Vercel
 
-SQLite by default, so the site runs with no setup. The schema is
-Postgres-compatible — to move:
+Three things must be set, or the site builds but every write fails.
 
-1. `provider = "postgresql"` in `prisma/schema.prisma`
-2. `npm i @prisma/adapter-pg` and swap the adapter in `lib/db.ts`
-3. Point `DATABASE_URL` at the instance, then `npx prisma migrate deploy`
+**1. Postgres.** Vercel's filesystem is read-only and wiped between requests, so
+a database file cannot work — admin login, job posting and applications would
+all fail. Add Vercel Postgres or Neon, then set `DATABASE_URL` for Production,
+Preview and Development. Use the **pooled** connection string; serverless opens
+a connection per invocation and will otherwise exhaust the limit.
 
-CVs are written to `storage/cv/`. On a serverless host, swap that write in
-`app/api/apply/route.ts` for object storage.
+`npm run build` runs `scripts/migrate.mjs` first, which applies migrations and
+stops the deploy with a readable message if `DATABASE_URL` is missing or still
+points at a file.
+
+**2. Blob storage for CVs.** Add a Blob store to the project; Vercel sets
+`BLOB_READ_WRITE_TOKEN` automatically. Without it, CVs are written to
+`./storage/cv` — fine locally, gone on the next request in production. Files
+are served only through `/admin/applications/[id]/cv`, which checks the session.
+
+**3. Email.** See above. Without it both forms return a clear error rather than
+silently discarding anything — but an application is always written to the
+database first, so nothing is ever lost.
+
+### Database
+
+Postgres via Prisma with the `pg` driver adapter. The list fields on `Job` are
+stored as JSON strings and converted in `lib/jobs.ts` — the only place that
+knows about the encoding.
+
+Job queries degrade to empty rather than throwing if the database is
+unreachable, so a build server without a database still produces a working site
+and pages self-heal on the next ISR revalidation.
 
 ## Scripts
 

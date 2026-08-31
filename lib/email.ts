@@ -44,12 +44,24 @@ export class EmailNotConfiguredError extends Error {
 export function activeTransport(): Transport {
   const forced = process.env.EMAIL_TRANSPORT as Transport | undefined;
 
-  if (forced && forced !== "none") return forced;
+  if (forced && forced !== "none") {
+    if (forced === "file" && process.env.NODE_ENV === "production") {
+      /* Would write to a read-only filesystem and lose the message. */
+      return process.env.SMTP_HOST
+        ? "smtp"
+        : process.env.RESEND_API_KEY
+          ? "resend"
+          : "none";
+    }
+    return forced;
+  }
 
   if (process.env.SMTP_HOST) return "smtp";
   if (process.env.RESEND_API_KEY) return "resend";
 
-  /* Development falls back to the outbox so the forms are testable. */
+  /* Development falls back to the outbox so the forms are testable. The
+     outbox writes to disk, which serverless hosts don't allow — so it is
+     never selected in production, even if EMAIL_TRANSPORT asks for it. */
   return process.env.NODE_ENV === "production" ? "none" : "file";
 }
 
@@ -228,7 +240,9 @@ async function sendToOutbox(options: SendEmailOptions): Promise<void> {
 
   await writeFile(file, message.message as Buffer);
 
-  console.log(`[email] Written to outbox: ${path.relative(process.cwd(), file)}`);
+  console.log(
+    `[email] Written to outbox: ${path.relative(process.cwd(), file)}`,
+  );
 }
 
 /* ---------------------------------------------------------------- render */
