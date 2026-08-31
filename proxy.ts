@@ -13,7 +13,11 @@ import { SESSION_COOKIE } from "@/lib/session-cookie";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/admin/login") return NextResponse.next();
+  /* Both of these have to work before a session can exist. Each guards itself:
+     setup closes once an admin exists, login needs valid credentials. */
+  if (pathname === "/admin/login" || pathname === "/admin/setup") {
+    return NextResponse.next();
+  }
 
   const hasCookie = request.cookies.has(SESSION_COOKIE);
 
