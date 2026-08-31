@@ -6,6 +6,7 @@ import {
   LogOut,
   Mail,
   Send,
+  ServerCog,
   Users,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ const nav = [
   { name: "Applications", href: "/admin/applications", icon: Users },
   { name: "Subscribers", href: "/admin/subscribers", icon: Send },
   { name: "Email", href: "/admin/email", icon: Mail },
+  { name: "System", href: "/admin/system", icon: ServerCog },
 ];
 
 export default async function AdminLayout({

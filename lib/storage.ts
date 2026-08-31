@@ -25,16 +25,39 @@ export type StorageDriver = "blob" | "disk" | "none";
 export class StorageNotConfiguredError extends Error {
   constructor() {
     super(
-      "No blob storage configured. Add a Blob store in the Vercel dashboard " +
-        "(Storage → Create → Blob), then redeploy so BLOB_READ_WRITE_TOKEN " +
-        "reaches the running functions.",
+      "No blob storage configured. Connect a Blob store to this project in " +
+        "the Vercel dashboard (Storage → your store → Connect Project), then " +
+        "redeploy. The SDK needs either BLOB_READ_WRITE_TOKEN, or BLOB_STORE_ID " +
+        "with OIDC — connecting the store sets whichever your store uses.",
     );
     this.name = "StorageNotConfiguredError";
   }
 }
 
+/**
+ * Vercel Blob supports two ways of authenticating, and which one you get
+ * depends on when the store was created:
+ *
+ *   BLOB_READ_WRITE_TOKEN   the long-lived token. Older stores, and anything
+ *                           you create manually.
+ *
+ *   BLOB_STORE_ID + OIDC    newer stores. There is no read-write token to
+ *                           find — the platform injects a short-lived
+ *                           VERCEL_OIDC_TOKEN at runtime and the SDK pairs it
+ *                           with the store id. This is the better model: no
+ *                           long-lived secret sitting in your environment.
+ *
+ * Checking only for the token made a correctly-configured OIDC store look
+ * unconfigured, so we accept either.
+ */
+export function blobAuth(): "token" | "oidc" | null {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return "token";
+  if (process.env.BLOB_STORE_ID) return "oidc";
+  return null;
+}
+
 export function activeDriver(): StorageDriver {
-  if (process.env.BLOB_READ_WRITE_TOKEN) return "blob";
+  if (blobAuth()) return "blob";
 
   /* Writing to disk in production is not a fallback, it's a guaranteed EROFS —
      serverless filesystems are read-only. Saying so beats attempting a write
