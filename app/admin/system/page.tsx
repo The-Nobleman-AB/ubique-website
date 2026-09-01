@@ -102,28 +102,34 @@ export default async function SystemPage() {
   const auth = blobAuth();
 
   const storage: { value: string; level: Level; detail: string } =
-    driver === "blob"
+    driver === "s3"
       ? {
-          value: `Vercel Blob — ${auth === "oidc" ? "OIDC" : "read-write token"}`,
+          value: "S3-compatible object storage",
           level: "ok",
-          detail:
-            auth === "oidc"
-              ? "Authenticating with BLOB_STORE_ID and a short-lived OIDC token. There is no BLOB_READ_WRITE_TOKEN to find — that's expected for newer stores."
-              : "Authenticating with BLOB_READ_WRITE_TOKEN.",
+          detail: `Reading and writing ${process.env.S3_BUCKET} at ${process.env.S3_ENDPOINT}. Portable — this works identically on any host.`,
         }
-      : driver === "disk"
+      : driver === "blob"
         ? {
-            value: "Local disk",
-            level: "warn",
+            value: `Vercel Blob — ${auth === "oidc" ? "OIDC" : "read-write token"}`,
+            level: "ok",
             detail:
-              "Fine in development. On a serverless host this would fail — the filesystem is read-only.",
+              auth === "oidc"
+                ? "Authenticating with BLOB_STORE_ID and a short-lived OIDC token. There is no BLOB_READ_WRITE_TOKEN to find — that's expected for newer stores."
+                : "Authenticating with BLOB_READ_WRITE_TOKEN.",
           }
-        : {
-            value: "Not configured",
-            level: "bad",
-            detail:
-              "CV uploads will fail. Connect a Blob store to this project (Storage → your store → Connect Project) and redeploy. Applications are still saved; the CV rides on the notification email instead.",
-          };
+        : driver === "disk"
+          ? {
+              value: "Local disk",
+              level: "warn",
+              detail:
+                "Fine in development. On a serverless host this would fail — the filesystem is read-only.",
+            }
+          : {
+              value: "Not configured",
+              level: "bad",
+              detail:
+                "CV uploads will fail. Set the S3_* variables for any S3-compatible store, or connect a Vercel Blob store, then redeploy. Applications are still saved either way — the CV rides on the notification email instead.",
+            };
 
   /* --- email --- */
   const transport = activeTransport();

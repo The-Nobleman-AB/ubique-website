@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -22,15 +23,50 @@ import path from "node:path";
 
 const DISK_DIR = path.join(process.cwd(), "storage", "cv");
 
-export type StorageDriver = "blob" | "disk" | "none";
+export type StorageDriver = "s3" | "blob" | "disk" | "none";
+
+export interface S3Config {
+  endpoint: string;
+  bucket: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  region: string;
+}
+
+/**
+ * Any S3-compatible object store: Cloudflare R2, Backblaze B2, AWS S3,
+ * MinIO. This is what makes the app host-agnostic — Vercel Blob only exists
+ * on Vercel, so relying on it alone means the hosting decision is made by the
+ * code rather than by us.
+ */
+export function s3Config(): S3Config | null {
+  const endpoint = process.env.S3_ENDPOINT;
+  const bucket = process.env.S3_BUCKET;
+  const accessKeyId = process.env.S3_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
+
+  if (!endpoint || !bucket || !accessKeyId || !secretAccessKey) return null;
+
+  return {
+    /* Trailing slashes would produce a double slash in the signed URL, which
+       changes the signature and fails with an opaque 403. */
+    endpoint: endpoint.replace(/\/+$/, ""),
+    bucket,
+    accessKeyId,
+    secretAccessKey,
+    /* R2 ignores the region but the signature still has to carry one. */
+    region: process.env.S3_REGION ?? "auto",
+  };
+}
 
 export class StorageNotConfiguredError extends Error {
   constructor() {
     super(
-      "No blob storage configured. Connect a Blob store to this project in " +
-        "the Vercel dashboard (Storage → your store → Connect Project), then " +
-        "redeploy. The SDK needs either BLOB_READ_WRITE_TOKEN, or BLOB_STORE_ID " +
-        "with OIDC — connecting the store sets whichever your store uses.",
+      "No file storage configured. Either set S3_ENDPOINT, S3_BUCKET, " +
+        "S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY for any S3-compatible " +
+        "store (Cloudflare R2, Backblaze B2, AWS S3) — this works on every " +
+        "host — or, on Vercel, connect a Blob store to the project so it sets " +
+        "BLOB_READ_WRITE_TOKEN or BLOB_STORE_ID for you.",
     );
     this.name = "StorageNotConfiguredError";
   }
@@ -56,6 +92,10 @@ export function blobAuth(): "token" | "oidc" | null {
 }
 
 export function activeDriver(): StorageDriver {
+  /* S3 first: it's the portable one, so if both are configured the app keeps
+     behaving identically wherever it's deployed. */
+  if (s3Config()) return "s3";
+
   if (blobAuth()) return "blob";
 
   /* Writing to disk in production is not a fallback, it's a guaranteed EROFS —
@@ -75,8 +115,28 @@ export interface StoredFile {
   size: number;
 }
 
-/** Blob keys carry this prefix so `read` knows how to fetch them. */
+/** Keys carry a prefix so `read` knows which driver wrote them. */
 const BLOB_PREFIX = "blob:";
+const S3_PREFIX = "s3:";
+
+/* ------------------------------------------------------------------- s3 */
+
+async function s3Client(config: S3Config) {
+  const { AwsClient } = await import("aws4fetch");
+
+  return new AwsClient({
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey,
+    region: config.region,
+    service: "s3",
+  });
+}
+
+function s3Url(config: S3Config, key: string): string {
+  /* Path-style addressing. Virtual-hosted style needs per-bucket DNS, which
+     not every S3-compatible provider sets up. */
+  return `${config.endpoint}/${config.bucket}/${key}`;
+}
 
 /* ------------------------------------------------------------------ write */
 
@@ -88,6 +148,34 @@ export async function store(
   const driver = activeDriver();
 
   if (driver === "none") throw new StorageNotConfiguredError();
+
+  if (driver === "s3") {
+    const config = s3Config()!;
+
+    /* A random prefix keeps keys unguessable. Nothing serves these directly —
+       reads go through a session-checked route — but a predictable key would
+       be one misconfigured bucket policy away from exposing every CV. */
+    const key = `cv/${randomUUID()}-${filename}`;
+
+    const response = await (
+      await s3Client(config)
+    ).fetch(s3Url(config, key), {
+      method: "PUT",
+      body: new Uint8Array(bytes),
+      headers: {
+        "Content-Type": contentType,
+        "Content-Length": String(bytes.length),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `S3 upload failed (${response.status}): ${(await response.text().catch(() => "")).slice(0, 300)}`,
+      );
+    }
+
+    return { key: `${S3_PREFIX}${key}`, driver: "s3", size: bytes.length };
+  }
 
   if (driver === "blob") {
     const { put } = await import("@vercel/blob");
@@ -119,6 +207,26 @@ export async function store(
 /* ------------------------------------------------------------------- read */
 
 export async function read(key: string): Promise<Buffer> {
+  if (key.startsWith(S3_PREFIX)) {
+    const config = s3Config();
+
+    if (!config) {
+      throw new StorageNotConfiguredError();
+    }
+
+    const objectKey = key.slice(S3_PREFIX.length);
+
+    const response = await (
+      await s3Client(config)
+    ).fetch(s3Url(config, objectKey));
+
+    if (!response.ok) {
+      throw new Error(`S3 fetch failed (${response.status}) for ${objectKey}`);
+    }
+
+    return Buffer.from(await response.arrayBuffer());
+  }
+
   if (key.startsWith(BLOB_PREFIX)) {
     const { get } = await import("@vercel/blob");
 
@@ -160,6 +268,18 @@ export async function read(key: string): Promise<Buffer> {
 
 /** Used when a retention period expires, or an application is removed. */
 export async function remove(key: string): Promise<void> {
+  if (key.startsWith(S3_PREFIX)) {
+    const config = s3Config();
+
+    if (!config) return;
+
+    await (
+      await s3Client(config)
+    ).fetch(s3Url(config, key.slice(S3_PREFIX.length)), { method: "DELETE" });
+
+    return;
+  }
+
   if (key.startsWith(BLOB_PREFIX) || key.startsWith("http")) {
     const { del } = await import("@vercel/blob");
 

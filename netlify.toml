@@ -1,0 +1,27 @@
+# Netlify deployment.
+#
+# The Next.js runtime handles the App Router, server actions and ISR, so the
+# build command is the ordinary one — `scripts/migrate.mjs` applies any pending
+# Prisma migrations first, exactly as it does elsewhere.
+#
+# Required environment variables (Site configuration → Environment variables):
+#
+#   DATABASE_URL            pooled Postgres connection string
+#   NEXT_PUBLIC_SITE_URL    https://www.ubique-systems.com
+#   S3_ENDPOINT             e.g. https://<account>.r2.cloudflarestorage.com
+#   S3_BUCKET               e.g. ubique-cv
+#   S3_ACCESS_KEY_ID        \
+#   S3_SECRET_ACCESS_KEY    / from the R2 or B2 console
+#   SMTP_*                  as configured for Microsoft 365
+#   CONTACT_TO, CAREERS_TO  where submissions land
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 needs Node 20 or newer.
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
