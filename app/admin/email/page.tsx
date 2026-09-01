@@ -10,6 +10,7 @@ import {
 import { Panel } from "@/components/admin/ui";
 import TestEmailForm from "@/components/admin/TestEmailForm";
 import OAuthDiagnostic from "@/components/admin/OAuthDiagnostic";
+import SmtpTranscript from "@/components/admin/SmtpTranscript";
 
 export const metadata = { title: "Email" };
 export const dynamic = "force-dynamic";
@@ -190,6 +191,12 @@ export default async function EmailSettingsPage() {
       {authMode === "oauth2" && (
         <Panel title="Diagnose OAuth" className="mt-6">
           <OAuthDiagnostic />
+        </Panel>
+      )}
+
+      {transport === "smtp" && (
+        <Panel title="SMTP conversation" className="mt-6">
+          <SmtpTranscript />
         </Panel>
       )}
 

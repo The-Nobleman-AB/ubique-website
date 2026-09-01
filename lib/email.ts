@@ -306,6 +306,98 @@ async function sendViaSmtp(options: SendEmailOptions): Promise<void> {
   });
 }
 
+/**
+ * Captures the raw SMTP conversation while attempting to authenticate.
+ *
+ * When a server says only "535 Authentication unsuccessful" there is no way
+ * to tell from the error object whether we even offered the right mechanism.
+ * The transcript settles it: you can see the server's EHLO capabilities, which
+ * AUTH verb we sent, and exactly what came back.
+ */
+export async function smtpTranscript(): Promise<string[]> {
+  const lines: string[] = [];
+
+  /* Nodemailer logs bunyan-style: a metadata object first, then a printf
+     format string and its arguments. The actual SMTP line lives in the format
+     string, so capturing only the first argument yields connection noise and
+     none of the conversation. */
+  const record = (meta: unknown, format?: unknown, ...args: unknown[]) => {
+    if (typeof format !== "string") return;
+
+    let index = 0;
+    const text = format.replace(/%[sdj]/g, () =>
+      index < args.length ? String(args[index++]) : "",
+    );
+
+    const tnx = (meta as { tnx?: string })?.tnx;
+    const direction =
+      tnx === "server" ? "S: " : tnx === "client" ? "C: " : "   ";
+
+    /* Redact only what we send. The server's capability list also contains
+       the word AUTH, and masking that would hide the very thing being
+       diagnosed — whether XOAUTH2 is on offer at all. */
+    const safe =
+      tnx === "client"
+        ? text
+            .replace(/(AUTH\s+\w+\s+)\S+/gi, "$1<redacted>")
+            .replace(/Bearer\s+\S+/gi, "Bearer <redacted>")
+        : text;
+
+    lines.push(direction + safe);
+  };
+
+  const host = process.env.SMTP_HOST;
+
+  if (!host) throw new EmailNotConfiguredError("SMTP_HOST is not set");
+
+  const port = Number(process.env.SMTP_PORT ?? 587);
+  const mode = smtpAuthMode();
+
+  const logger = {
+    level: () => {},
+    trace: record,
+    debug: record,
+    info: record,
+    warn: record,
+    error: record,
+    fatal: record,
+  };
+
+  const auth =
+    mode === "oauth2"
+      ? {
+          type: "OAuth2" as const,
+          user: process.env.SMTP_USER ?? sendingMailbox(),
+          accessToken: await microsoftAccessToken(),
+        }
+      : mode === "basic"
+        ? { user: process.env.SMTP_USER!, pass: process.env.SMTP_PASS! }
+        : undefined;
+
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
+    auth,
+    logger,
+    debug: true,
+  });
+
+  try {
+    await transporter.verify();
+    lines.push(">>> RESULT: authentication succeeded");
+  } catch (error) {
+    lines.push(
+      `>>> RESULT: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  return lines;
+}
+
 /** Checks the SMTP credentials without sending anything. */
 export async function verifySmtp(): Promise<void> {
   const transporter = await smtpTransporter();

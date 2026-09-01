@@ -6,6 +6,7 @@ import {
   activeTransport,
   diagnoseOAuth,
   recipients,
+  smtpTranscript,
   smtpAuthMode,
   renderRows,
   renderText,
@@ -200,4 +201,29 @@ export async function runOAuthDiagnosis(): Promise<
     ok: "The app side is correct — Microsoft issued a token carrying SMTP.SendAsApp for the Outlook SMTP endpoint. If sending still fails with 5.7.3, the remaining causes are all on the Exchange side: SMTP AUTH switched off for the mailbox or the tenant, the service principal lacking rights to the mailbox, or the mailbox being unlicensed.",
     detail,
   };
+}
+
+/**
+ * Returns the raw SMTP dialogue from an authentication attempt.
+ *
+ * Deliberately unfiltered — the whole value is seeing exactly what the server
+ * said, rather than our interpretation of it. Tokens are redacted inside
+ * smtpTranscript before they reach here.
+ */
+export async function fetchSmtpTranscript(): Promise<
+  ActionState & { lines?: string[] }
+> {
+  await requireUser();
+
+  if (activeTransport() !== "smtp") {
+    return { error: "Not using SMTP, so there is no conversation to capture." };
+  }
+
+  try {
+    return { lines: await smtpTranscript() };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
