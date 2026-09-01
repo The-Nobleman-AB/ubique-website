@@ -131,35 +131,168 @@ export async function sendEmail(options: SendEmailOptions): Promise<Transport> {
 
 /* ------------------------------------------------------------------ smtp */
 
+/**
+ * How we authenticate to the SMTP server.
+ *
+ *   oauth2  Microsoft 365 with an Azure app registration. Microsoft disables
+ *           basic SMTP AUTH by default for existing tenants from December
+ *           2026 and removes it entirely after that, so this is where every
+ *           Microsoft tenant ends up. No mailbox password is involved.
+ *
+ *   basic   Username and password (an app password where MFA is on). Still
+ *           works, but on a clock — see above.
+ *
+ *   none    An unauthenticated relay: a connector that trusts this host's IP,
+ *           or a local MTA. Nothing to send.
+ */
+export type SmtpAuthMode = "oauth2" | "basic" | "none";
+
+export function smtpAuthMode(): SmtpAuthMode {
+  if (
+    process.env.SMTP_TENANT_ID &&
+    process.env.SMTP_CLIENT_ID &&
+    process.env.SMTP_CLIENT_SECRET
+  ) {
+    return "oauth2";
+  }
+
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) return "basic";
+
+  return "none";
+}
+
+/* Tokens last about an hour. Cache until shortly before expiry rather than
+   asking Microsoft for a new one on every enquiry. */
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
+async function microsoftAccessToken(): Promise<string> {
+  if (cachedToken && cachedToken.expiresAt > Date.now() + 120_000) {
+    return cachedToken.value;
+  }
+
+  const tenant = process.env.SMTP_TENANT_ID!;
+
+  const response = await fetch(
+    `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: process.env.SMTP_CLIENT_ID!,
+        client_secret: process.env.SMTP_CLIENT_SECRET!,
+        /* The SMTP scope specifically. Graph tokens are rejected by the
+           SMTP endpoint even though the app registration looks identical. */
+        scope: "https://outlook.office365.com/.default",
+        grant_type: "client_credentials",
+      }),
+    },
+  );
+
+  const payload = (await response.json().catch(() => ({}))) as {
+    access_token?: string;
+    expires_in?: number;
+    error_description?: string;
+  };
+
+  if (!response.ok || !payload.access_token) {
+    throw new Error(
+      `Microsoft refused the OAuth token (${response.status}): ${
+        payload.error_description ?? "no detail returned"
+      }`,
+    );
+  }
+
+  cachedToken = {
+    value: payload.access_token,
+    expiresAt: Date.now() + (payload.expires_in ?? 3600) * 1000,
+  };
+
+  return cachedToken.value;
+}
+
 let cachedTransporter: nodemailer.Transporter | null = null;
 
-function smtpTransporter(): nodemailer.Transporter {
-  if (cachedTransporter) return cachedTransporter;
-
+async function smtpTransporter(): Promise<nodemailer.Transporter> {
   const host = process.env.SMTP_HOST;
 
   if (!host) throw new EmailNotConfiguredError("SMTP_HOST is not set");
 
   const port = Number(process.env.SMTP_PORT ?? 587);
+  const mode = smtpAuthMode();
 
-  cachedTransporter = nodemailer.createTransport({
+  const base = {
     host,
     port,
     /* 465 is implicit TLS; 587 upgrades with STARTTLS. */
     secure: port === 465,
-    auth: process.env.SMTP_USER
-      ? {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS ?? "",
-        }
-      : undefined,
+    /* Serverless functions have a hard wall-clock limit, and a mail server
+       that never answers would otherwise burn all of it and return nothing
+       useful. Fail fast enough to show the visitor a real error. */
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
+  };
+
+  if (mode === "oauth2") {
+    /* Built per send: the access token rotates, so this one can't be cached
+       the way a static username and password can. */
+    return nodemailer.createTransport({
+      ...base,
+      auth: {
+        type: "OAuth2",
+        user: process.env.SMTP_USER ?? sendingMailbox(),
+        accessToken: await microsoftAccessToken(),
+      },
+    });
+  }
+
+  if (cachedTransporter) return cachedTransporter;
+
+  cachedTransporter = nodemailer.createTransport({
+    ...base,
+    auth:
+      mode === "basic"
+        ? { user: process.env.SMTP_USER!, pass: process.env.SMTP_PASS! }
+        : undefined,
   });
 
   return cachedTransporter;
 }
 
+/**
+ * Exchange Online refuses to send when the From address isn't the mailbox that
+ * authenticated — 5.7.60 SendAsDenied — unless that mailbox has been granted
+ * explicit Send As rights on the other address.
+ *
+ * It is far and away the most common way this setup fails, and it fails at
+ * send time, on a real enquiry. Surface it on the settings page instead.
+ */
+export function senderMismatch(): { from: string; user: string } | null {
+  if (activeTransport() !== "smtp") return null;
+
+  const user = process.env.SMTP_USER?.trim().toLowerCase();
+
+  if (!user) return null;
+
+  const from = sendingMailbox().toLowerCase();
+
+  if (!from || from === user) return null;
+
+  return { from, user };
+}
+
+/** The mailbox we authenticate as, pulled out of CONTACT_FROM if need be. */
+function sendingMailbox(): string {
+  const from = process.env.CONTACT_FROM ?? "";
+  const match = from.match(/<([^>]+)>/);
+
+  return (match ? match[1] : from).trim();
+}
+
 async function sendViaSmtp(options: SendEmailOptions): Promise<void> {
-  await smtpTransporter().sendMail({
+  const transporter = await smtpTransporter();
+
+  await transporter.sendMail({
     from: sender(),
     to: options.to,
     subject: options.subject,
@@ -175,7 +308,8 @@ async function sendViaSmtp(options: SendEmailOptions): Promise<void> {
 
 /** Checks the SMTP credentials without sending anything. */
 export async function verifySmtp(): Promise<void> {
-  await smtpTransporter().verify();
+  const transporter = await smtpTransporter();
+  await transporter.verify();
 }
 
 /* ---------------------------------------------------------------- resend */

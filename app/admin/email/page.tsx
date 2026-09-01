@@ -1,7 +1,12 @@
 import { CheckCircle2, CircleAlert, Inbox, Mail } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
-import { activeTransport, recipients } from "@/lib/email";
+import {
+  activeTransport,
+  recipients,
+  senderMismatch,
+  smtpAuthMode,
+} from "@/lib/email";
 import { Panel } from "@/components/admin/ui";
 import TestEmailForm from "@/components/admin/TestEmailForm";
 
@@ -40,6 +45,16 @@ export default async function EmailSettingsPage() {
   const transport = activeTransport();
   const info = DESCRIPTIONS[transport];
 
+  const authMode = transport === "smtp" ? smtpAuthMode() : null;
+  const mismatch = senderMismatch();
+
+  const AUTH_LABELS: Record<string, string> = {
+    oauth2: "Authenticating with OAuth — no mailbox password stored.",
+    basic:
+      "Authenticating with a username and password. Works today, but Microsoft disables this by default from December 2026 — plan to move to OAuth.",
+    none: "No credentials set — this only works against a relay that trusts this host's IP address.",
+  };
+
   const tone =
     info.tone === "ok"
       ? "border-accent/30 bg-accent-tint"
@@ -74,8 +89,52 @@ export default async function EmailSettingsPage() {
         <div>
           <p className="text-navy font-semibold">Transport: {info.label}</p>
           <p className="text-muted mt-2 leading-relaxed">{info.body}</p>
+          {authMode && (
+            <p className="text-muted mt-2 text-sm leading-relaxed">
+              {AUTH_LABELS[authMode]}
+            </p>
+          )}
         </div>
       </div>
+
+      {mismatch && (
+        <div
+          role="alert"
+          className="rounded-card border-warn/30 bg-warn/5 mt-6 flex items-start gap-4 border p-6"
+        >
+          <CircleAlert
+            size={22}
+            aria-hidden="true"
+            className="text-warn mt-0.5 shrink-0"
+          />
+          <div>
+            <p className="text-navy font-semibold">
+              The From address isn&rsquo;t the mailbox signing in
+            </p>
+            <p className="text-muted mt-2 text-sm leading-relaxed">
+              Messages are addressed from{" "}
+              <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
+                {mismatch.from}
+              </code>{" "}
+              but authenticate as{" "}
+              <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
+                {mismatch.user}
+              </code>
+              . Microsoft 365 rejects that with <em>5.7.60 SendAsDenied</em>{" "}
+              unless the signing-in mailbox has been granted{" "}
+              <strong>Send As</strong> rights on the other address. Either set{" "}
+              <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
+                CONTACT_FROM
+              </code>{" "}
+              to the same mailbox as{" "}
+              <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
+                SMTP_USER
+              </code>
+              , or grant the permission in Exchange.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Panel title="Where messages go">
@@ -143,64 +202,89 @@ export default async function EmailSettingsPage() {
           </p>
 
           <p className="text-navy mt-6 font-medium">
-            Option 1 — SMTP AUTH (start here)
+            Option 1 — Microsoft 365 with OAuth (recommended)
+          </p>
+          <p className="mt-2 text-sm">
+            No mailbox password is stored anywhere; the app exchanges an Azure
+            client secret for a short-lived token on each send. Microsoft
+            disables basic SMTP AUTH by default for existing tenants from
+            December 2026, so this is where the tenant ends up regardless.
           </p>
           <pre className="bg-surface border-line mt-3 overflow-x-auto rounded border p-4 text-xs">
             {`SMTP_HOST="smtp.office365.com"
 SMTP_PORT="587"
-SMTP_USER="noreply@ubique-systems.com"
+SMTP_TENANT_ID="…"
+SMTP_CLIENT_ID="…"
+SMTP_CLIENT_SECRET="…"
+SMTP_USER="relay@ubique-systems.com"
+CONTACT_FROM="Ubique Systems <relay@ubique-systems.com>"`}
+          </pre>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm">
+            <li>
+              Azure portal → App registrations → New registration. Name it
+              something like &ldquo;Website mail&rdquo;. No redirect URI needed.
+            </li>
+            <li>
+              API permissions → Add → APIs my organisation uses →{" "}
+              <strong>Office 365 Exchange Online</strong> → Application
+              permissions → <strong>SMTP.SendAsApp</strong>. Then{" "}
+              <strong>Grant admin consent</strong>.
+            </li>
+            <li>
+              Certificates &amp; secrets → New client secret. Copy the{" "}
+              <strong>Value</strong> (not the Secret ID) — it&rsquo;s shown
+              once. Note the expiry date and put a reminder in the calendar.
+            </li>
+            <li>
+              In Exchange Online PowerShell, give the app rights to the mailbox
+              — the portal has no equivalent:
+              <pre className="bg-surface border-line mt-2 overflow-x-auto rounded border p-3 text-xs">
+                {`New-ServicePrincipal -AppId <client-id> \\
+  -ObjectId <enterprise-app-object-id>
+
+Add-MailboxPermission -Identity "relay@ubique-systems.com" \\
+  -User <enterprise-app-object-id> -AccessRights FullAccess`}
+              </pre>
+            </li>
+            <li>Set the variables above, redeploy, and send a test here.</li>
+          </ol>
+
+          <p className="text-navy mt-6 font-medium">
+            Option 2 — Microsoft 365 with a password (fastest today)
+          </p>
+          <p className="mt-2 text-sm">
+            Fewer moving parts, and it works right now — but it&rsquo;s a
+            stopgap with a known end date. Reasonable if you want mail live this
+            week and OAuth scheduled properly afterwards.
+          </p>
+          <pre className="bg-surface border-line mt-3 overflow-x-auto rounded border p-4 text-xs">
+            {`SMTP_HOST="smtp.office365.com"
+SMTP_PORT="587"
+SMTP_USER="relay@ubique-systems.com"
 SMTP_PASS="…"
-CONTACT_FROM="Ubique Systems <noreply@ubique-systems.com>"
-CONTACT_TO="info@ubique-systems.com"
-CAREERS_TO="careers@ubique-systems.com"`}
+CONTACT_FROM="Ubique Systems <relay@ubique-systems.com>"`}
           </pre>
           <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm">
             <li>Create or pick a licensed mailbox to send from.</li>
             <li>
               Admin centre → Users → Active users → that mailbox → Mail → Manage
-              email apps → tick <strong>Authenticated SMTP</strong>.
+              email apps → tick <strong>Authenticated SMTP</strong>. Allow up to
+              an hour to apply.
             </li>
             <li>
               If MFA is on for that account, generate an{" "}
               <strong>app password</strong> — a normal password will be
               rejected.
             </li>
-            <li>
-              Put the block above in{" "}
-              <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
-                .env.local
-              </code>
-              , restart, then send a test from this page.
-            </li>
           </ol>
-
-          <p className="text-navy mt-6 font-medium">
-            Option 2 — SMTP relay connector (if AUTH is disabled)
-          </p>
-          <p className="mt-2 text-sm">
-            Microsoft has been retiring basic authentication for SMTP client
-            submission. If Option 1 fails with{" "}
-            <em>&ldquo;SmtpClientAuthentication is disabled&rdquo;</em> and an
-            admin can&rsquo;t re-enable it, use a connector instead: Exchange
-            admin centre → Mail flow → Connectors → from{" "}
-            <strong>Your organisation&rsquo;s email server</strong> to{" "}
-            <strong>Office 365</strong>, authenticating by the server&rsquo;s
-            static IP. Then point{" "}
-            <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
-              SMTP_HOST
-            </code>{" "}
-            at your tenant&rsquo;s MX endpoint on port 25 and leave{" "}
-            <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
-              SMTP_USER
-            </code>{" "}
-            empty — no password involved.
-          </p>
 
           <p className="text-navy mt-6 font-medium">
             Option 3 — Resend (needs an SPF change first)
           </p>
           <p className="mt-2 text-sm">
-            Workable, but because SPF ends in{" "}
+            Decouples website mail from the corporate tenant entirely, which is
+            the better security posture — no Microsoft credential in the web app
+            at all. But because SPF ends in{" "}
             <code className="bg-surface rounded px-1.5 py-0.5 text-xs">
               -all
             </code>{" "}
@@ -209,8 +293,7 @@ CAREERS_TO="careers@ubique-systems.com"`}
               include:_spf.resend.com
             </code>{" "}
             to the domain&rsquo;s SPF record and verify the domain in Resend, or
-            everything will bounce. Only worth it if you&rsquo;d rather not put
-            a mailbox credential in the app at all.
+            everything will bounce.
           </p>
 
           <p className="mt-6 text-sm">

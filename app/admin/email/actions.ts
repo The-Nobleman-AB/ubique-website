@@ -86,8 +86,20 @@ function explain(error: unknown): string {
 
   const patterns: [RegExp, string][] = [
     [
+      /AADSTS7000215|invalid_client|invalid client secret/i,
+      "Azure rejected the client secret. Secrets expire — check the expiry on the app registration (Azure portal → App registrations → your app → Certificates & secrets) and generate a new one if it has lapsed. Note that you need the secret *Value*, not the Secret ID.",
+    ],
+    [
+      /AADSTS700016|AADSTS900023|application with identifier|was not found in the directory/i,
+      "Azure couldn't find that application in the tenant. Check SMTP_CLIENT_ID and SMTP_TENANT_ID — the tenant ID must be the one that owns ubique-systems.com, and admin consent must have been granted for the SMTP.SendAsApp permission.",
+    ],
+    [
+      /5\.7\.57|Client not authenticated to send|must issue a STARTTLS/i,
+      "Microsoft accepted the token but won't let this app send as that mailbox. The service principal needs mailbox rights, which is a PowerShell step the Azure portal doesn't cover: New-ServicePrincipal, then Add-MailboxPermission for the sending mailbox. See the setup notes below.",
+    ],
+    [
       /SmtpClientAuthentication is disabled/i,
-      "Microsoft 365 has SMTP AUTH disabled for this mailbox. An admin needs to enable it: Microsoft 365 admin centre → Users → Active users → select the mailbox → Mail → Manage email apps → tick 'Authenticated SMTP'. It can take an hour to apply. If your tenant has retired basic SMTP auth entirely, use a Microsoft 365 SMTP relay connector instead — see the setup notes below.",
+      "Microsoft 365 has SMTP AUTH disabled for this mailbox. An admin can enable it: Microsoft 365 admin centre → Users → Active users → select the mailbox → Mail → Manage email apps → tick 'Authenticated SMTP'. It can take an hour to apply. Worth knowing: Microsoft disables basic SMTP AUTH by default for existing tenants from December 2026, so this is a stopgap — the durable fix is OAuth (see the setup notes below).",
     ],
     [
       /5\.7\.139|basic authentication is disabled|AuthenticationFailed/i,
