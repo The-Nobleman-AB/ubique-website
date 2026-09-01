@@ -5,12 +5,14 @@ import {
   EmailNotConfiguredError,
   activeTransport,
   recipients,
+  smtpAuthMode,
   renderRows,
   renderText,
   sendEmail,
   verifySmtp,
 } from "@/lib/email";
 import { siteConfig } from "@/lib/site";
+import type { SmtpAuthMode } from "@/lib/email";
 import type { ActionState } from "@/lib/action-state";
 
 /** Sends a real test message through whatever transport is configured. */
@@ -73,7 +75,9 @@ export async function sendTestEmail(
       return { error: error.message };
     }
 
-    return { error: explain(error) };
+    return {
+      error: explain(error, transport === "smtp" ? smtpAuthMode() : "none"),
+    };
   }
 }
 
@@ -81,8 +85,9 @@ export async function sendTestEmail(
  * Mail servers return accurate but unhelpful errors. These are the failures we
  * actually expect with Microsoft 365, translated into the next thing to do.
  */
-function explain(error: unknown): string {
+function explain(error: unknown, authMode: SmtpAuthMode): string {
   const raw = error instanceof Error ? error.message : String(error);
+  const oauth = authMode === "oauth2";
 
   const patterns: [RegExp, string][] = [
     [
@@ -102,12 +107,24 @@ function explain(error: unknown): string {
       "Microsoft 365 has SMTP AUTH disabled for this mailbox. An admin can enable it: Microsoft 365 admin centre → Users → Active users → select the mailbox → Mail → Manage email apps → tick 'Authenticated SMTP'. It can take an hour to apply. Worth knowing: Microsoft disables basic SMTP AUTH by default for existing tenants from December 2026, so this is a stopgap — the durable fix is OAuth (see the setup notes below).",
     ],
     [
+      /did not meet the criteria to be authenticated/i,
+      "The password may well be correct — this specific wording means a tenant policy refused the legacy sign-in before the credentials were even considered. It's Security Defaults or a Conditional Access rule blocking legacy authentication. An app password will NOT get around it: app passwords only work with per-user legacy MFA, and are unavailable once Security Defaults or Conditional Access is in play. Either exclude this mailbox from that policy, or switch to OAuth — set SMTP_TENANT_ID, SMTP_CLIENT_ID and SMTP_CLIENT_SECRET and this app uses it automatically, no code change.",
+    ],
+    [
       /5\.7\.139|basic authentication is disabled|AuthenticationFailed/i,
-      "Microsoft rejected the sign-in. If multi-factor authentication is on for this account, a normal password won't work — create an app password, or switch to a relay connector that authenticates by IP instead of credentials.",
+      "Microsoft rejected the sign-in. If multi-factor authentication is on for this account, a normal password won't work — create an app password, or move to OAuth (see the setup notes below).",
+    ],
+    [
+      /5\.7\.3/i,
+      oauth
+        ? "Azure issued the token — this is Exchange refusing to accept it, which narrows it to two things. First and most likely: SMTP AUTH is still switched off. OAuth removes the password but still goes through the SMTP AUTH endpoint, so it has to be enabled on the mailbox AND not disabled tenant-wide. Second: the service principal has no rights to the mailbox — nearly always because New-ServicePrincipal was given the App registration's Object ID instead of the Enterprise application's. The setup page has the exact commands to check both."
+        : "The mailbox rejected the sign-in. Check SMTP_USER is the full email address and that SMTP AUTH is enabled on it.",
     ],
     [
       /535|Authentication unsuccessful|Invalid login|BadCredentials/i,
-      "The username or password was rejected. Check SMTP_USER is the full email address, and that SMTP_PASS is correct — an app password if MFA is enabled.",
+      oauth
+        ? "Exchange rejected the token. Check SMTP_USER is the full address of the mailbox the service principal was granted, and that SMTP AUTH is enabled both tenant-wide and on that mailbox."
+        : "The username or password was rejected. Check SMTP_USER is the full email address, and that SMTP_PASS is correct — an app password if MFA is enabled.",
     ],
     [
       /5\.7\.60|SendAsDenied|not allowed to send as/i,
