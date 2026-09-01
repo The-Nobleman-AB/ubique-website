@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import {
   EmailNotConfiguredError,
   activeTransport,
+  diagnoseOAuth,
   recipients,
   smtpAuthMode,
   renderRows,
@@ -149,4 +150,54 @@ function explain(error: unknown, authMode: SmtpAuthMode): string {
   }
 
   return `The mail server rejected it: ${raw}`;
+}
+
+/**
+ * Runs the OAuth diagnosis and turns it into a verdict, because the raw
+ * claims mean nothing to someone who hasn't debugged Entra before.
+ */
+export async function runOAuthDiagnosis(): Promise<
+  ActionState & { ok?: string; detail?: string[] }
+> {
+  await requireUser();
+
+  const result = await diagnoseOAuth();
+
+  if (!result.tokenIssued) {
+    return {
+      error: `Microsoft would not issue a token. ${result.error ?? ""}`.trim(),
+    };
+  }
+
+  const detail = [
+    `Mailbox: ${result.mailbox}`,
+    `Audience: ${result.audience ?? "unknown"}`,
+    `Roles: ${result.roles.length > 0 ? result.roles.join(", ") : "none"}`,
+    `Tenant: ${result.tenantId ?? "unknown"}`,
+    `App: ${result.appId ?? "unknown"}`,
+    `Token expires: ${result.expiresAt ?? "unknown"}`,
+  ];
+
+  const hasRole = result.roles.includes("SMTP.SendAsApp");
+  const rightAudience = result.audience?.includes("outlook.office365.com");
+
+  if (!hasRole) {
+    return {
+      error:
+        "The token carries no SMTP.SendAsApp role, so Exchange will reject it whatever the mailbox settings say. Admin consent hasn't taken effect. In Azure: App registrations → your app → API permissions. SMTP.SendAsApp must be listed under Office 365 Exchange Online as an APPLICATION permission (not delegated) and show 'Granted' with a green tick. Re-grant consent, then run this again.",
+      detail,
+    };
+  }
+
+  if (!rightAudience) {
+    return {
+      error: `The token was issued for ${result.audience ?? "an unknown audience"} rather than the Outlook SMTP endpoint. That points at a misconfigured scope rather than anything on the Exchange side.`,
+      detail,
+    };
+  }
+
+  return {
+    ok: "The app side is correct — Microsoft issued a token carrying SMTP.SendAsApp for the Outlook SMTP endpoint. If sending still fails with 5.7.3, the remaining causes are all on the Exchange side: SMTP AUTH switched off for the mailbox or the tenant, the service principal lacking rights to the mailbox, or the mailbox being unlicensed.",
+    detail,
+  };
 }

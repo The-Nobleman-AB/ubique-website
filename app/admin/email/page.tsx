@@ -9,6 +9,7 @@ import {
 } from "@/lib/email";
 import { Panel } from "@/components/admin/ui";
 import TestEmailForm from "@/components/admin/TestEmailForm";
+import OAuthDiagnostic from "@/components/admin/OAuthDiagnostic";
 
 export const metadata = { title: "Email" };
 export const dynamic = "force-dynamic";
@@ -185,6 +186,12 @@ export default async function EmailSettingsPage() {
           <TestEmailForm />
         </Panel>
       </div>
+
+      {authMode === "oauth2" && (
+        <Panel title="Diagnose OAuth" className="mt-6">
+          <OAuthDiagnostic />
+        </Panel>
+      )}
 
       <Panel title="How to switch it on" className="mt-6">
         <div className="text-muted px-6 py-5 leading-relaxed">

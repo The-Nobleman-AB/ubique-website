@@ -442,3 +442,104 @@ export function renderText(title: string, rows: Row[], body?: Row): string {
 
   return [title, "=".repeat(title.length), "", ...lines].join("\n");
 }
+
+/* ------------------------------------------------------- oauth diagnosis */
+
+export interface OAuthDiagnosis {
+  /** Did Microsoft issue a token at all? */
+  tokenIssued: boolean;
+  /** Audience the token is for — must be the Outlook SMTP endpoint. */
+  audience?: string;
+  /** Application roles inside the token. SMTP.SendAsApp must be present. */
+  roles: string[];
+  tenantId?: string;
+  appId?: string;
+  expiresAt?: string;
+  /** The mailbox nodemailer will authenticate as. */
+  mailbox: string;
+  error?: string;
+}
+
+/**
+ * Reads the claims out of the token Microsoft issues us.
+ *
+ * The point is to split one ambiguous SMTP rejection into two very different
+ * problems. If SMTP.SendAsApp isn't in the token, admin consent never took
+ * and no amount of mailbox configuration will help. If it is there, the app
+ * is fine and the fault is on the Exchange side — SMTP AUTH switched off, or
+ * the service principal missing rights to the mailbox.
+ *
+ * The signature isn't verified: we aren't trusting this token, we're reading
+ * back what we were just handed to see what it says.
+ */
+export async function diagnoseOAuth(): Promise<OAuthDiagnosis> {
+  const mailbox = process.env.SMTP_USER ?? sendingMailbox();
+
+  if (smtpAuthMode() !== "oauth2") {
+    return {
+      tokenIssued: false,
+      roles: [],
+      mailbox,
+      error:
+        "Not using OAuth. Set SMTP_TENANT_ID, SMTP_CLIENT_ID and SMTP_CLIENT_SECRET first.",
+    };
+  }
+
+  let token: string;
+
+  try {
+    /* Bypass the cache — a stale token would hide a consent change made in
+       the last hour, which is exactly when someone runs this. */
+    cachedToken = null;
+    token = await microsoftAccessToken();
+  } catch (error) {
+    return {
+      tokenIssued: false,
+      roles: [],
+      mailbox,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+
+  const segments = token.split(".");
+
+  if (segments.length < 2) {
+    return {
+      tokenIssued: true,
+      roles: [],
+      mailbox,
+      error: "Microsoft returned a token in an unexpected format.",
+    };
+  }
+
+  try {
+    const claims = JSON.parse(
+      Buffer.from(segments[1], "base64url").toString("utf8"),
+    ) as {
+      aud?: string;
+      roles?: string[];
+      tid?: string;
+      appid?: string;
+      exp?: number;
+    };
+
+    return {
+      tokenIssued: true,
+      audience: claims.aud,
+      roles: claims.roles ?? [],
+      tenantId: claims.tid,
+      appId: claims.appid,
+      expiresAt: claims.exp
+        ? new Date(claims.exp * 1000).toUTCString()
+        : undefined,
+      mailbox,
+    };
+  } catch {
+    return {
+      tokenIssued: true,
+      roles: [],
+      mailbox,
+      error: "Couldn't read the claims out of the token.",
+    };
+  }
+}
