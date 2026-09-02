@@ -49,6 +49,88 @@ const nextConfig: NextConfig = {
         destination: "/countries/uk",
         permanent: true,
       },
+
+      /* ------------------------------------------------------------------
+         Every URL the old site published.
+         
+         These carry whatever ranking and inbound links the old site earned —
+         business cards, email signatures, directory listings, Google results.
+         Without them each one becomes a 404 the moment DNS switches, and the
+         ranking is lost rather than transferred. 308s so search engines move
+         the authority across rather than treating it as a temporary detour.
+         ------------------------------------------------------------------ */
+
+      { source: "/who-we-are", destination: "/about", permanent: true },
+      { source: "/why-choose-us", destination: "/about", permanent: true },
+      {
+        source: "/global-delivery-model",
+        destination: "/about",
+        permanent: true,
+      },
+      { source: "/contact-us", destination: "/contact", permanent: true },
+      {
+        source: "/ubique-job-listing",
+        destination: "/careers",
+        permanent: true,
+      },
+
+      { source: "/it-services", destination: "/services", permanent: true },
+      { source: "/it-resourcing", destination: "/services", permanent: true },
+      {
+        source: "/it-consulting",
+        destination: "/services/it-consulting",
+        permanent: true,
+      },
+      {
+        source: "/academics",
+        destination: "/services/academics",
+        permanent: true,
+      },
+      {
+        source: "/technology-recruitment-consultants",
+        destination: "/services/technology-practices",
+        permanent: true,
+      },
+
+      {
+        source: "/aviation-defence",
+        destination: "/industries/aviation-defence",
+        permanent: true,
+      },
+      {
+        source: "/banking-accountancy",
+        destination: "/industries/banking-financial-services",
+        permanent: true,
+      },
+      /* These three old pages each covered two industries that are now
+         separate. The redirect goes to the first-named of the pair, which is
+         the better guess at what a visitor following the link wanted. */
+      {
+        source: "/automotive-telecom",
+        destination: "/industries/automotive",
+        permanent: true,
+      },
+      {
+        source: "/energy-healthcare",
+        destination: "/industries/energy-utilities",
+        permanent: true,
+      },
+      {
+        source: "/manufacturing-retail",
+        destination: "/industries/manufacturing",
+        permanent: true,
+      },
+
+      {
+        source: "/privacy-policy",
+        destination: "/legal/privacy",
+        permanent: true,
+      },
+      {
+        source: "/terms-and-conditions",
+        destination: "/legal/terms",
+        permanent: true,
+      },
     ];
   },
 };
