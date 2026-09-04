@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+
+import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, Phone, X } from "lucide-react";
@@ -105,18 +107,22 @@ export default function Header() {
           <div className="flex h-20 items-center justify-between gap-8">
             {/* ---------------------------------------------- logo */}
 
+            {/* The logo keeps a light ground at every scroll position, so a
+                single dark logo file works throughout — no white variant to
+                produce and keep in sync. Over the navy hero this reads as a
+                deliberate lockup; once the bar turns white it merges into it.
+
+                Padding stays constant and only the background changes, so the
+                logo never shifts position as you scroll. */}
             <Link
               href="/"
+              aria-label="Ubique Systems — home"
               className={cn(
-                "shrink-0 text-2xl font-bold tracking-tight transition-colors",
-                linkColor,
+                "rounded-control shrink-0 px-4 py-2 transition-colors duration-200 hover:opacity-80",
+                scrolled ? "bg-transparent" : "bg-white",
               )}
             >
-              <span className="sr-only">Ubique Systems — home</span>
-              <span aria-hidden="true">
-                UBIQUE
-                <span className="text-accent">.</span>
-              </span>
+              <Logo tone="dark" />
             </Link>
 
             {/* ---------------------------------------------- desktop nav */}
@@ -408,9 +414,7 @@ function MobileDrawer({
         )}
       >
         <div className="border-line flex items-center justify-between border-b px-6 py-5">
-          <span className="text-navy text-xl font-bold">
-            UBIQUE<span className="text-accent">.</span>
-          </span>
+          <Logo tone="dark" height={26} />
 
           <button
             type="button"

@@ -21,6 +21,37 @@ export const siteConfig = {
 
   tagline: "Global Talent. Local Expertise.",
 
+  /**
+   * The logo files.
+   *
+   * Both start null, which renders the existing "UBIQUE." wordmark as text —
+   * so nothing is broken while the artwork is being prepared. Drop the files
+   * into public/images/brand/ and set the paths here; every header, footer and
+   * menu picks them up at once.
+   *
+   * Two variants are needed because the header sits over a dark hero at the
+   * top of the page and turns white once scrolled — a single colour would
+   * disappear against one of them.
+   */
+  brand: {
+    /** Dark logo. Used in the header and mobile menu, both on a light ground. */
+    logo: "/images/brand/logo.png" as string | null,
+    /** White logo, for the navy footer. Null falls back to the text wordmark. */
+    logoWhite: "/images/brand/logo-white.png" as string | null,
+    /** Rendered height in pixels. Width scales automatically. */
+    logoHeight: 30,
+    /**
+     * Natural width ÷ height of each file — 360×120 and 378×98 respectively.
+     *
+     * Only used to reserve the right space before the image loads. A wrong
+     * value never distorts the logo, but the header visibly jumps as it
+     * settles, which counts against Core Web Vitals. Kept per variant because
+     * the two files are not the same shape.
+     */
+    logoAspect: 3,
+    logoWhiteAspect: 3.86,
+  },
+
   description:
     "Established in 2000, Ubique Systems is an ISO 27001-certified IT recruitment and consulting partner with 500+ consultants worldwide. We build specialist technology teams across SAP, Oracle, Salesforce, Dynamics 365, cloud and data — in 15+ countries.",
 

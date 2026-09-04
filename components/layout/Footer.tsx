@@ -1,4 +1,6 @@
 import Link from "next/link";
+
+import Logo from "./Logo";
 import { ExternalLink, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 import NewsletterSignup from "./NewsletterSignup";
@@ -26,9 +28,7 @@ export default function Footer() {
           {/* ------------------------------------------------ brand */}
 
           <div className="lg:col-span-4">
-            <p className="text-2xl font-bold tracking-tight">
-              UBIQUE<span className="text-accent">.</span>
-            </p>
+            <Logo tone="light" height={32} />
 
             <p className="mt-5 max-w-sm leading-relaxed text-white/70">
               An ISO 27001-certified IT recruitment and consulting partner,
