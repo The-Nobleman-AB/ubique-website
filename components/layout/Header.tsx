@@ -403,7 +403,7 @@ function MobileDrawer({
              panel slides over it means re-blurring every frame, which is what
              made the menu stutter on phones. A deeper tint reads almost
              identically and costs nothing. */
-          "bg-navy/55 fixed inset-0 z-40 transition-opacity duration-200 lg:hidden",
+          "bg-navy/55 fixed inset-0 z-[55] transition-opacity duration-200 lg:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -413,7 +413,7 @@ function MobileDrawer({
         aria-label="Main"
         aria-hidden={!open}
         className={cn(
-          "shadow-panel fixed top-0 right-0 z-50 flex h-dvh w-[340px] max-w-[90vw] flex-col bg-white transition-transform duration-200 ease-out will-change-transform lg:hidden",
+          "shadow-panel fixed top-0 right-0 z-[60] flex h-dvh w-[340px] max-w-[90vw] [touch-action:manipulation] flex-col bg-white transition-transform duration-200 ease-out lg:hidden",
           open ? "translate-x-0" : "pointer-events-none translate-x-full",
         )}
       >
