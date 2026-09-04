@@ -1,5 +1,3 @@
-"use client";
-
 import { Search, Lightbulb, Settings2, Handshake } from "lucide-react";
 
 const process = [

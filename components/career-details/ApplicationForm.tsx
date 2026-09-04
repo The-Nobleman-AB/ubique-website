@@ -17,10 +17,8 @@ import { cn } from "@/lib/cn";
 import {
   ACCEPTED_CV_EXTENSIONS,
   MAX_CV_BYTES,
-  applicationSchema,
-  fieldErrors,
   validateCv,
-} from "@/lib/validation";
+} from "@/lib/validation-constants";
 
 /**
  * One-page application.
@@ -89,9 +87,23 @@ export default function ApplicationForm({ job }: { job: Job }) {
     setCv(file);
   }
 
+  /* Start fetching the validation chunk the moment someone engages with the
+     form. Filling it in takes seconds; the chunk takes a fraction of one, so
+     it is invariably ready by the time they press submit. Fires once. */
+  const warmedValidation = useRef(false);
+
+  const warmValidation = () => {
+    if (warmedValidation.current) return;
+    warmedValidation.current = true;
+    void import("@/lib/validation");
+  };
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFormError(null);
+
+    /* See the note in GetInTouch — zod arrives on submit, not on page load. */
+    const { applicationSchema, fieldErrors } = await import("@/lib/validation");
 
     const parsed = applicationSchema.safeParse({ ...values, jobId: job.id });
     const next: Record<string, string> = parsed.success
@@ -217,6 +229,7 @@ export default function ApplicationForm({ job }: { job: Job }) {
         <form
           noValidate
           onSubmit={handleSubmit}
+          onFocusCapture={warmValidation}
           className="rounded-panel border-line mt-10 border bg-white p-6 md:p-10"
         >
           {formError && (

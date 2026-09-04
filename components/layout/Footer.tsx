@@ -28,7 +28,12 @@ export default function Footer() {
           {/* ------------------------------------------------ brand */}
 
           <div className="lg:col-span-4">
-            <Logo tone="light" height={32} />
+            {/* Same treatment as the header: the logo always sits on a light
+                ground, so one dark logo file serves the whole site and there
+                is no white variant to keep in sync. */}
+            <div className="rounded-control inline-block bg-white px-4 py-2.5">
+              <Logo tone="dark" height={32} />
+            </div>
 
             <p className="mt-5 max-w-sm leading-relaxed text-white/70">
               An ISO 27001-certified IT recruitment and consulting partner,

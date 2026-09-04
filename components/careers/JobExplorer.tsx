@@ -102,7 +102,9 @@ export default function JobExplorer({ jobs }: { jobs: Job[] }) {
   );
 
   return (
-    <section className="section-y-sm bg-white">
+    /* The careers hero links here. scroll-mt clears the fixed 80px header,
+       which would otherwise cover the heading you just jumped to. */
+    <section id="job-explorer" className="section-y-sm scroll-mt-24 bg-white">
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
 

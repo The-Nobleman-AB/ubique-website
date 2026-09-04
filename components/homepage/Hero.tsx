@@ -43,7 +43,7 @@ export default function Hero() {
               </Link>
 
               <Link
-                href="/careers"
+                href="/careers#job-explorer"
                 className="rounded-control inline-flex items-center justify-center border border-white/20 px-8 py-4 text-white transition-all duration-200 hover:bg-white/10"
               >
                 Explore Jobs

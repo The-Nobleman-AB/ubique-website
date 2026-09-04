@@ -12,12 +12,7 @@ import {
 
 import { regionalInboxes } from "@/data/offices";
 import { cn } from "@/lib/cn";
-import {
-  contactSchema,
-  enquiryTypeLabels,
-  enquiryTypes,
-  fieldErrors,
-} from "@/lib/validation";
+import { enquiryTypeLabels, enquiryTypes } from "@/lib/validation-constants";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -56,10 +51,26 @@ export default function GetInTouch() {
     });
   };
 
+  /* Start fetching the validation chunk the moment someone engages with the
+     form. Filling it in takes seconds; the chunk takes a fraction of one, so
+     it is invariably ready by the time they press submit. Fires once. */
+  const warmedValidation = useRef(false);
+
+  const warmValidation = () => {
+    if (warmedValidation.current) return;
+    warmedValidation.current = true;
+    void import("@/lib/validation");
+  };
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setFormError(null);
+
+    /* Loaded here rather than imported at the top: zod is ~70 KB gzipped and
+       nobody needs it until they submit. By this point the fetch is warm —
+       see the prefetch on first interaction below. */
+    const { contactSchema, fieldErrors } = await import("@/lib/validation");
 
     // Validate with the same schema the API uses, so the messages match.
     const parsed = contactSchema.safeParse(values);
@@ -189,6 +200,7 @@ export default function GetInTouch() {
             <form
               noValidate
               onSubmit={handleSubmit}
+              onFocusCapture={warmValidation}
               className="rounded-panel border-line bg-surface border p-7 md:p-10"
             >
               {formError && (

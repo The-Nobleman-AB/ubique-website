@@ -1,5 +1,3 @@
-"use client";
-
 import type { Job } from "@/lib/job-types";
 
 interface JobOverviewProps {

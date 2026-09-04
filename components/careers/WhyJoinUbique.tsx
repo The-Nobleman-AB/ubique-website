@@ -1,5 +1,3 @@
-"use client";
-
 const reasons = [
   {
     number: "01",

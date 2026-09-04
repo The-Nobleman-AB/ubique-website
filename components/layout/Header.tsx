@@ -87,7 +87,7 @@ export default function Header() {
   /* Solid at every scroll position — a translucent bar over a light hero
      leaves the nav links sitting on an unpredictable background. */
   const bar = scrolled
-    ? "bg-white/95 backdrop-blur-md shadow-lift"
+    ? "bg-white/95 shadow-lift lg:backdrop-blur-md"
     : "bg-navy border-b border-white/10";
 
   const linkColor = scrolled ? "text-navy" : "text-white";
@@ -399,7 +399,11 @@ function MobileDrawer({
         onClick={onClose}
         aria-hidden="true"
         className={cn(
-          "bg-navy/40 fixed inset-0 z-40 backdrop-blur-sm transition-opacity duration-200 lg:hidden",
+          /* No backdrop-blur here. Blurring the whole viewport while the
+             panel slides over it means re-blurring every frame, which is what
+             made the menu stutter on phones. A deeper tint reads almost
+             identically and costs nothing. */
+          "bg-navy/55 fixed inset-0 z-40 transition-opacity duration-200 lg:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -409,7 +413,7 @@ function MobileDrawer({
         aria-label="Main"
         aria-hidden={!open}
         className={cn(
-          "shadow-panel fixed top-0 right-0 z-50 flex h-dvh w-[340px] max-w-[90vw] flex-col bg-white transition-transform duration-200 ease-out lg:hidden",
+          "shadow-panel fixed top-0 right-0 z-50 flex h-dvh w-[340px] max-w-[90vw] flex-col bg-white transition-transform duration-200 ease-out will-change-transform lg:hidden",
           open ? "translate-x-0" : "pointer-events-none translate-x-full",
         )}
       >

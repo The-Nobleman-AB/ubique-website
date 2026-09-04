@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 import { countryCount } from "@/data/offices";
 import { practices } from "@/data/practices";

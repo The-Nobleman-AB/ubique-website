@@ -1,5 +1,3 @@
-"use client";
-
 export default function Testimonials() {
   return (
     <section className="section-y-lg bg-surface">

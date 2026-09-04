@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+import {
+  ACCEPTED_CV_TYPES,
+  MAX_CV_BYTES,
+  enquiryTypes,
+} from "./validation-constants";
+
+/* Re-exported so server-side importers carry on using this one module. Only
+   the browser pays for the split. */
+export * from "./validation-constants";
+
 /**
  * Shared validation schemas.
  *
@@ -43,23 +53,6 @@ const phone = z
 
 /* ------------------------------------------------------------------ contact */
 
-export const enquiryTypes = [
-  "hiring",
-  "consulting",
-  "candidate",
-  "partnership",
-  "other",
-] as const;
-
-export const enquiryTypeLabels: Record<(typeof enquiryTypes)[number], string> =
-  {
-    hiring: "I'm hiring — talent and resourcing",
-    consulting: "Consulting and delivery services",
-    candidate: "I'm looking for a role",
-    partnership: "Partnership or supplier enquiry",
-    other: "Something else",
-  };
-
 export const contactSchema = z.object({
   name,
   email,
@@ -94,16 +87,6 @@ export const contactSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 
 /* -------------------------------------------------------------- application */
-
-export const MAX_CV_BYTES = 5 * 1024 * 1024; // 5 MB
-
-export const ACCEPTED_CV_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-] as const;
-
-export const ACCEPTED_CV_EXTENSIONS = ".pdf,.doc,.docx";
 
 export const applicationSchema = z.object({
   jobId: z.string().trim().min(1),
@@ -142,24 +125,6 @@ export const applicationSchema = z.object({
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
-
-/** Validates the uploaded CV outside zod, since File isn't available on both sides. */
-export function validateCv(file: File | null): string | null {
-  if (!file || file.size === 0) return "Please attach your CV.";
-
-  if (file.size > MAX_CV_BYTES) {
-    return `That file is ${(file.size / 1024 / 1024).toFixed(1)} MB. The limit is 5 MB.`;
-  }
-
-  const typeOk = (ACCEPTED_CV_TYPES as readonly string[]).includes(file.type);
-  const extensionOk = /\.(pdf|docx?)$/i.test(file.name);
-
-  if (!typeOk && !extensionOk) {
-    return "Please upload a PDF or Word document.";
-  }
-
-  return null;
-}
 
 /** Turns a ZodError into a flat { field: message } map for the UI. */
 export function fieldErrors(error: z.ZodError): Record<string, string> {
