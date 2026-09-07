@@ -46,13 +46,12 @@ export default function TechnologyStack({ job }: TechnologyStackProps) {
                   {/* Technology */}
 
                   <div>
+                    {/* "Technology used within this role" under every entry in
+                        a list headed Tools and Technologies restated the
+                        heading once per row. */}
                     <h3 className="display-4 text-navy font-bold transition-all duration-200 group-hover:translate-x-2">
                       {technology}
                     </h3>
-
-                    <p className="text-muted mt-3">
-                      Technology used within this role.
-                    </p>
                   </div>
 
                   {/* Badge */}

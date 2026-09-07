@@ -48,15 +48,12 @@ export default function Responsibilities({ job }: ResponsibilitiesProps) {
                   {/* Content */}
 
                   <div>
-                    <h3 className="text-navy display-4 font-bold transition-all duration-200 group-hover:translate-x-2">
+                    {/* The responsibility is the content. A sentence of
+                        boilerplate under each one said nothing, and repeating
+                        it verbatim down the page read as padding. */}
+                    <h3 className="text-navy display-4 max-w-3xl font-bold transition-all duration-200 group-hover:translate-x-2">
                       {responsibility}
                     </h3>
-
-                    <p className="text-muted mt-5 max-w-3xl text-lg leading-relaxed">
-                      This responsibility plays an key role in delivering
-                      high-quality outcomes, collaborating across teams and
-                      creating measurable value for our clients.
-                    </p>
                   </div>
                 </div>
 
