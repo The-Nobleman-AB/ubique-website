@@ -18,6 +18,7 @@ type JobRow = {
   responsibilities: string;
   requirements: string;
   technologies: string;
+  niceToHave: string;
   status: string;
   [key: string]: unknown;
 };
@@ -43,11 +44,16 @@ function toJob(row: JobRow & { _count?: { applications: number } }): Job {
   return {
     ...(rest as unknown as Omit<
       Job,
-      "responsibilities" | "requirements" | "technologies" | "status"
+      | "responsibilities"
+      | "requirements"
+      | "technologies"
+      | "niceToHave"
+      | "status"
     >),
     responsibilities: parseList(row.responsibilities),
     requirements: parseList(row.requirements),
     technologies: parseList(row.technologies),
+    niceToHave: parseList(row.niceToHave),
     status: row.status as JobStatus,
     applicationCount: _count?.applications,
   };
@@ -79,6 +85,25 @@ async function safely<T>(
   }
 }
 
+/**
+ * Strips the fields that exist only for the Nexus feed.
+ *
+ * The public pages hand the whole Job object to client components, so anything
+ * on it is serialised into the page and readable by anyone viewing source.
+ * The TR number and the content hash are internal bookkeeping — they have no
+ * business leaving the server.
+ */
+function withoutInternals(job: Job): Job {
+  /* contentHash sits on the database row but not on the Job type, so it rides
+     through toJob's spread without TypeScript ever seeing it. Destructure it
+     out explicitly rather than trusting the type to have caught it. */
+  const { contentHash: _hash, ...rest } = job as Job & {
+    contentHash?: string | null;
+  };
+
+  return { ...rest, nexusId: null };
+}
+
 /* ---------------------------------------------------------------- public */
 
 /** Roles visible on the public site. CLOSED stays reachable by direct link. */
@@ -90,7 +115,7 @@ export async function getPublishedJobs(): Promise<Job[]> {
         where: { status: "OPEN" },
         orderBy: { postedAt: "desc" },
       });
-      return rows.map(toJob);
+      return rows.map((row) => withoutInternals(toJob(row)));
     },
     [],
   );
@@ -102,7 +127,7 @@ export async function getJobBySlug(slug: string): Promise<Job | null> {
     async () => {
       const row = await prisma.job.findUnique({ where: { slug } });
       if (!row || row.status === "DRAFT") return null;
-      return toJob(row);
+      return withoutInternals(toJob(row));
     },
     null,
   );

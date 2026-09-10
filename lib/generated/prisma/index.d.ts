@@ -3767,14 +3767,28 @@ export namespace Prisma {
 
   export type AggregateJob = {
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
+  }
+
+  export type JobAvgAggregateOutputType = {
+    experienceMin: number | null
+    experienceMax: number | null
+  }
+
+  export type JobSumAggregateOutputType = {
+    experienceMin: number | null
+    experienceMax: number | null
   }
 
   export type JobMinAggregateOutputType = {
     id: string | null
     slug: string | null
     title: string | null
+    nexusId: string | null
+    contentHash: string | null
     department: string | null
     location: string | null
     employmentType: string | null
@@ -3784,6 +3798,9 @@ export namespace Prisma {
     responsibilities: string | null
     requirements: string | null
     technologies: string | null
+    niceToHave: string | null
+    experienceMin: number | null
+    experienceMax: number | null
     status: string | null
     postedAt: Date | null
     validThrough: Date | null
@@ -3795,6 +3812,8 @@ export namespace Prisma {
     id: string | null
     slug: string | null
     title: string | null
+    nexusId: string | null
+    contentHash: string | null
     department: string | null
     location: string | null
     employmentType: string | null
@@ -3804,6 +3823,9 @@ export namespace Prisma {
     responsibilities: string | null
     requirements: string | null
     technologies: string | null
+    niceToHave: string | null
+    experienceMin: number | null
+    experienceMax: number | null
     status: string | null
     postedAt: Date | null
     validThrough: Date | null
@@ -3815,6 +3837,8 @@ export namespace Prisma {
     id: number
     slug: number
     title: number
+    nexusId: number
+    contentHash: number
     department: number
     location: number
     employmentType: number
@@ -3824,6 +3848,9 @@ export namespace Prisma {
     responsibilities: number
     requirements: number
     technologies: number
+    niceToHave: number
+    experienceMin: number
+    experienceMax: number
     status: number
     postedAt: number
     validThrough: number
@@ -3833,10 +3860,22 @@ export namespace Prisma {
   }
 
 
+  export type JobAvgAggregateInputType = {
+    experienceMin?: true
+    experienceMax?: true
+  }
+
+  export type JobSumAggregateInputType = {
+    experienceMin?: true
+    experienceMax?: true
+  }
+
   export type JobMinAggregateInputType = {
     id?: true
     slug?: true
     title?: true
+    nexusId?: true
+    contentHash?: true
     department?: true
     location?: true
     employmentType?: true
@@ -3846,6 +3885,9 @@ export namespace Prisma {
     responsibilities?: true
     requirements?: true
     technologies?: true
+    niceToHave?: true
+    experienceMin?: true
+    experienceMax?: true
     status?: true
     postedAt?: true
     validThrough?: true
@@ -3857,6 +3899,8 @@ export namespace Prisma {
     id?: true
     slug?: true
     title?: true
+    nexusId?: true
+    contentHash?: true
     department?: true
     location?: true
     employmentType?: true
@@ -3866,6 +3910,9 @@ export namespace Prisma {
     responsibilities?: true
     requirements?: true
     technologies?: true
+    niceToHave?: true
+    experienceMin?: true
+    experienceMax?: true
     status?: true
     postedAt?: true
     validThrough?: true
@@ -3877,6 +3924,8 @@ export namespace Prisma {
     id?: true
     slug?: true
     title?: true
+    nexusId?: true
+    contentHash?: true
     department?: true
     location?: true
     employmentType?: true
@@ -3886,6 +3935,9 @@ export namespace Prisma {
     responsibilities?: true
     requirements?: true
     technologies?: true
+    niceToHave?: true
+    experienceMin?: true
+    experienceMax?: true
     status?: true
     postedAt?: true
     validThrough?: true
@@ -3932,6 +3984,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: JobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: JobMinAggregateInputType
@@ -3962,6 +4026,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: JobCountAggregateInputType | true
+    _avg?: JobAvgAggregateInputType
+    _sum?: JobSumAggregateInputType
     _min?: JobMinAggregateInputType
     _max?: JobMaxAggregateInputType
   }
@@ -3970,6 +4036,8 @@ export namespace Prisma {
     id: string
     slug: string
     title: string
+    nexusId: string | null
+    contentHash: string | null
     department: string
     location: string
     employmentType: string
@@ -3979,12 +4047,17 @@ export namespace Prisma {
     responsibilities: string
     requirements: string
     technologies: string
+    niceToHave: string
+    experienceMin: number | null
+    experienceMax: number | null
     status: string
     postedAt: Date
     validThrough: Date | null
     createdAt: Date
     updatedAt: Date
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
   }
@@ -4007,6 +4080,8 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     title?: boolean
+    nexusId?: boolean
+    contentHash?: boolean
     department?: boolean
     location?: boolean
     employmentType?: boolean
@@ -4016,6 +4091,9 @@ export namespace Prisma {
     responsibilities?: boolean
     requirements?: boolean
     technologies?: boolean
+    niceToHave?: boolean
+    experienceMin?: boolean
+    experienceMax?: boolean
     status?: boolean
     postedAt?: boolean
     validThrough?: boolean
@@ -4029,6 +4107,8 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     title?: boolean
+    nexusId?: boolean
+    contentHash?: boolean
     department?: boolean
     location?: boolean
     employmentType?: boolean
@@ -4038,6 +4118,9 @@ export namespace Prisma {
     responsibilities?: boolean
     requirements?: boolean
     technologies?: boolean
+    niceToHave?: boolean
+    experienceMin?: boolean
+    experienceMax?: boolean
     status?: boolean
     postedAt?: boolean
     validThrough?: boolean
@@ -4049,6 +4132,8 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     title?: boolean
+    nexusId?: boolean
+    contentHash?: boolean
     department?: boolean
     location?: boolean
     employmentType?: boolean
@@ -4058,6 +4143,9 @@ export namespace Prisma {
     responsibilities?: boolean
     requirements?: boolean
     technologies?: boolean
+    niceToHave?: boolean
+    experienceMin?: boolean
+    experienceMax?: boolean
     status?: boolean
     postedAt?: boolean
     validThrough?: boolean
@@ -4069,6 +4157,8 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     title?: boolean
+    nexusId?: boolean
+    contentHash?: boolean
     department?: boolean
     location?: boolean
     employmentType?: boolean
@@ -4078,6 +4168,9 @@ export namespace Prisma {
     responsibilities?: boolean
     requirements?: boolean
     technologies?: boolean
+    niceToHave?: boolean
+    experienceMin?: boolean
+    experienceMax?: boolean
     status?: boolean
     postedAt?: boolean
     validThrough?: boolean
@@ -4085,7 +4178,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "department" | "location" | "employmentType" | "workplace" | "experience" | "description" | "responsibilities" | "requirements" | "technologies" | "status" | "postedAt" | "validThrough" | "createdAt" | "updatedAt", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "nexusId" | "contentHash" | "department" | "location" | "employmentType" | "workplace" | "experience" | "description" | "responsibilities" | "requirements" | "technologies" | "niceToHave" | "experienceMin" | "experienceMax" | "status" | "postedAt" | "validThrough" | "createdAt" | "updatedAt", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applications?: boolean | Job$applicationsArgs<ExtArgs>
     _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
@@ -4105,6 +4198,18 @@ export namespace Prisma {
        */
       slug: string
       title: string
+      /**
+       * The Nexus TR number, e.g. TRPD-26-04274. Unique so the feed can upsert on
+       * it, and null for roles created by hand in the admin. Internal reference —
+       * never rendered publicly, never in a URL.
+       */
+      nexusId: string | null
+      /**
+       * SHA-256 of the publishable fields, supplied by the feed. When it matches
+       * what we hold, the record is unchanged and the write is skipped — the same
+       * job legitimately arrives four days running.
+       */
+      contentHash: string | null
       department: string
       location: string
       employmentType: string
@@ -4119,6 +4224,13 @@ export namespace Prisma {
       responsibilities: string
       requirements: string
       technologies: string
+      niceToHave: string
+      /**
+       * Supplied alongside the prose in `experience`, so roles can be filtered or
+       * badged as "8+ years" without parsing a sentence.
+       */
+      experienceMin: number | null
+      experienceMax: number | null
       /**
        * DRAFT hides it everywhere. OPEN publishes it. CLOSED keeps the page
        * alive for existing links but stops applications.
@@ -4555,6 +4667,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Job", 'String'>
     readonly slug: FieldRef<"Job", 'String'>
     readonly title: FieldRef<"Job", 'String'>
+    readonly nexusId: FieldRef<"Job", 'String'>
+    readonly contentHash: FieldRef<"Job", 'String'>
     readonly department: FieldRef<"Job", 'String'>
     readonly location: FieldRef<"Job", 'String'>
     readonly employmentType: FieldRef<"Job", 'String'>
@@ -4564,6 +4678,9 @@ export namespace Prisma {
     readonly responsibilities: FieldRef<"Job", 'String'>
     readonly requirements: FieldRef<"Job", 'String'>
     readonly technologies: FieldRef<"Job", 'String'>
+    readonly niceToHave: FieldRef<"Job", 'String'>
+    readonly experienceMin: FieldRef<"Job", 'Int'>
+    readonly experienceMax: FieldRef<"Job", 'Int'>
     readonly status: FieldRef<"Job", 'String'>
     readonly postedAt: FieldRef<"Job", 'DateTime'>
     readonly validThrough: FieldRef<"Job", 'DateTime'>
@@ -9598,6 +9715,8 @@ export namespace Prisma {
     id: 'id',
     slug: 'slug',
     title: 'title',
+    nexusId: 'nexusId',
+    contentHash: 'contentHash',
     department: 'department',
     location: 'location',
     employmentType: 'employmentType',
@@ -9607,6 +9726,9 @@ export namespace Prisma {
     responsibilities: 'responsibilities',
     requirements: 'requirements',
     technologies: 'technologies',
+    niceToHave: 'niceToHave',
+    experienceMin: 'experienceMin',
+    experienceMax: 'experienceMax',
     status: 'status',
     postedAt: 'postedAt',
     validThrough: 'validThrough',
@@ -9903,6 +10025,8 @@ export namespace Prisma {
     id?: StringFilter<"Job"> | string
     slug?: StringFilter<"Job"> | string
     title?: StringFilter<"Job"> | string
+    nexusId?: StringNullableFilter<"Job"> | string | null
+    contentHash?: StringNullableFilter<"Job"> | string | null
     department?: StringFilter<"Job"> | string
     location?: StringFilter<"Job"> | string
     employmentType?: StringFilter<"Job"> | string
@@ -9912,6 +10036,9 @@ export namespace Prisma {
     responsibilities?: StringFilter<"Job"> | string
     requirements?: StringFilter<"Job"> | string
     technologies?: StringFilter<"Job"> | string
+    niceToHave?: StringFilter<"Job"> | string
+    experienceMin?: IntNullableFilter<"Job"> | number | null
+    experienceMax?: IntNullableFilter<"Job"> | number | null
     status?: StringFilter<"Job"> | string
     postedAt?: DateTimeFilter<"Job"> | Date | string
     validThrough?: DateTimeNullableFilter<"Job"> | Date | string | null
@@ -9924,6 +10051,8 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    nexusId?: SortOrderInput | SortOrder
+    contentHash?: SortOrderInput | SortOrder
     department?: SortOrder
     location?: SortOrder
     employmentType?: SortOrder
@@ -9933,6 +10062,9 @@ export namespace Prisma {
     responsibilities?: SortOrder
     requirements?: SortOrder
     technologies?: SortOrder
+    niceToHave?: SortOrder
+    experienceMin?: SortOrderInput | SortOrder
+    experienceMax?: SortOrderInput | SortOrder
     status?: SortOrder
     postedAt?: SortOrder
     validThrough?: SortOrderInput | SortOrder
@@ -9944,10 +10076,12 @@ export namespace Prisma {
   export type JobWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     slug?: string
+    nexusId?: string
     AND?: JobWhereInput | JobWhereInput[]
     OR?: JobWhereInput[]
     NOT?: JobWhereInput | JobWhereInput[]
     title?: StringFilter<"Job"> | string
+    contentHash?: StringNullableFilter<"Job"> | string | null
     department?: StringFilter<"Job"> | string
     location?: StringFilter<"Job"> | string
     employmentType?: StringFilter<"Job"> | string
@@ -9957,18 +10091,23 @@ export namespace Prisma {
     responsibilities?: StringFilter<"Job"> | string
     requirements?: StringFilter<"Job"> | string
     technologies?: StringFilter<"Job"> | string
+    niceToHave?: StringFilter<"Job"> | string
+    experienceMin?: IntNullableFilter<"Job"> | number | null
+    experienceMax?: IntNullableFilter<"Job"> | number | null
     status?: StringFilter<"Job"> | string
     postedAt?: DateTimeFilter<"Job"> | Date | string
     validThrough?: DateTimeNullableFilter<"Job"> | Date | string | null
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     applications?: ApplicationListRelationFilter
-  }, "id" | "slug">
+  }, "id" | "slug" | "nexusId">
 
   export type JobOrderByWithAggregationInput = {
     id?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    nexusId?: SortOrderInput | SortOrder
+    contentHash?: SortOrderInput | SortOrder
     department?: SortOrder
     location?: SortOrder
     employmentType?: SortOrder
@@ -9978,14 +10117,19 @@ export namespace Prisma {
     responsibilities?: SortOrder
     requirements?: SortOrder
     technologies?: SortOrder
+    niceToHave?: SortOrder
+    experienceMin?: SortOrderInput | SortOrder
+    experienceMax?: SortOrderInput | SortOrder
     status?: SortOrder
     postedAt?: SortOrder
     validThrough?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: JobCountOrderByAggregateInput
+    _avg?: JobAvgOrderByAggregateInput
     _max?: JobMaxOrderByAggregateInput
     _min?: JobMinOrderByAggregateInput
+    _sum?: JobSumOrderByAggregateInput
   }
 
   export type JobScalarWhereWithAggregatesInput = {
@@ -9995,6 +10139,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Job"> | string
     slug?: StringWithAggregatesFilter<"Job"> | string
     title?: StringWithAggregatesFilter<"Job"> | string
+    nexusId?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    contentHash?: StringNullableWithAggregatesFilter<"Job"> | string | null
     department?: StringWithAggregatesFilter<"Job"> | string
     location?: StringWithAggregatesFilter<"Job"> | string
     employmentType?: StringWithAggregatesFilter<"Job"> | string
@@ -10004,6 +10150,9 @@ export namespace Prisma {
     responsibilities?: StringWithAggregatesFilter<"Job"> | string
     requirements?: StringWithAggregatesFilter<"Job"> | string
     technologies?: StringWithAggregatesFilter<"Job"> | string
+    niceToHave?: StringWithAggregatesFilter<"Job"> | string
+    experienceMin?: IntNullableWithAggregatesFilter<"Job"> | number | null
+    experienceMax?: IntNullableWithAggregatesFilter<"Job"> | number | null
     status?: StringWithAggregatesFilter<"Job"> | string
     postedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     validThrough?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
@@ -10465,6 +10614,8 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    nexusId?: string | null
+    contentHash?: string | null
     department: string
     location: string
     employmentType: string
@@ -10474,6 +10625,9 @@ export namespace Prisma {
     responsibilities?: string
     requirements?: string
     technologies?: string
+    niceToHave?: string
+    experienceMin?: number | null
+    experienceMax?: number | null
     status?: string
     postedAt?: Date | string
     validThrough?: Date | string | null
@@ -10486,6 +10640,8 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    nexusId?: string | null
+    contentHash?: string | null
     department: string
     location: string
     employmentType: string
@@ -10495,6 +10651,9 @@ export namespace Prisma {
     responsibilities?: string
     requirements?: string
     technologies?: string
+    niceToHave?: string
+    experienceMin?: number | null
+    experienceMax?: number | null
     status?: string
     postedAt?: Date | string
     validThrough?: Date | string | null
@@ -10507,6 +10666,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -10516,6 +10677,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10528,6 +10692,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -10537,6 +10703,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10549,6 +10718,8 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    nexusId?: string | null
+    contentHash?: string | null
     department: string
     location: string
     employmentType: string
@@ -10558,6 +10729,9 @@ export namespace Prisma {
     responsibilities?: string
     requirements?: string
     technologies?: string
+    niceToHave?: string
+    experienceMin?: number | null
+    experienceMax?: number | null
     status?: string
     postedAt?: Date | string
     validThrough?: Date | string | null
@@ -10569,6 +10743,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -10578,6 +10754,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10589,6 +10768,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -10598,6 +10779,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11136,6 +11320,32 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type ApplicationListRelationFilter = {
     every?: ApplicationWhereInput
     some?: ApplicationWhereInput
@@ -11150,6 +11360,8 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    nexusId?: SortOrder
+    contentHash?: SortOrder
     department?: SortOrder
     location?: SortOrder
     employmentType?: SortOrder
@@ -11159,6 +11371,9 @@ export namespace Prisma {
     responsibilities?: SortOrder
     requirements?: SortOrder
     technologies?: SortOrder
+    niceToHave?: SortOrder
+    experienceMin?: SortOrder
+    experienceMax?: SortOrder
     status?: SortOrder
     postedAt?: SortOrder
     validThrough?: SortOrder
@@ -11166,10 +11381,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type JobAvgOrderByAggregateInput = {
+    experienceMin?: SortOrder
+    experienceMax?: SortOrder
+  }
+
   export type JobMaxOrderByAggregateInput = {
     id?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    nexusId?: SortOrder
+    contentHash?: SortOrder
     department?: SortOrder
     location?: SortOrder
     employmentType?: SortOrder
@@ -11179,6 +11401,9 @@ export namespace Prisma {
     responsibilities?: SortOrder
     requirements?: SortOrder
     technologies?: SortOrder
+    niceToHave?: SortOrder
+    experienceMin?: SortOrder
+    experienceMax?: SortOrder
     status?: SortOrder
     postedAt?: SortOrder
     validThrough?: SortOrder
@@ -11190,6 +11415,8 @@ export namespace Prisma {
     id?: SortOrder
     slug?: SortOrder
     title?: SortOrder
+    nexusId?: SortOrder
+    contentHash?: SortOrder
     department?: SortOrder
     location?: SortOrder
     employmentType?: SortOrder
@@ -11199,11 +11426,53 @@ export namespace Prisma {
     responsibilities?: SortOrder
     requirements?: SortOrder
     technologies?: SortOrder
+    niceToHave?: SortOrder
+    experienceMin?: SortOrder
+    experienceMax?: SortOrder
     status?: SortOrder
     postedAt?: SortOrder
     validThrough?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type JobSumOrderByAggregateInput = {
+    experienceMin?: SortOrder
+    experienceMax?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -11325,21 +11594,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type ApplicationScalarRelationFilter = {
     is?: ApplicationWhereInput
     isNot?: ApplicationWhereInput
@@ -11372,24 +11626,6 @@ export namespace Prisma {
     authorId?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type AdminInviteCountOrderByAggregateInput = {
@@ -11621,6 +11857,18 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type ApplicationUpdateManyWithoutJobNestedInput = {
     create?: XOR<ApplicationCreateWithoutJobInput, ApplicationUncheckedCreateWithoutJobInput> | ApplicationCreateWithoutJobInput[] | ApplicationUncheckedCreateWithoutJobInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutJobInput | ApplicationCreateOrConnectWithoutJobInput[]
@@ -11747,10 +11995,6 @@ export namespace Prisma {
     update?: XOR<XOR<AdminUserUpdateToOneWithWhereWithoutNotesInput, AdminUserUpdateWithoutNotesInput>, AdminUserUncheckedUpdateWithoutNotesInput>
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type AdminUserCreateNestedOneWithoutInvitesInput = {
     create?: XOR<AdminUserCreateWithoutInvitesInput, AdminUserUncheckedCreateWithoutInvitesInput>
     connectOrCreate?: AdminUserCreateOrConnectWithoutInvitesInput
@@ -11868,6 +12112,64 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -11906,37 +12208,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -12264,6 +12535,8 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    nexusId?: string | null
+    contentHash?: string | null
     department: string
     location: string
     employmentType: string
@@ -12273,6 +12546,9 @@ export namespace Prisma {
     responsibilities?: string
     requirements?: string
     technologies?: string
+    niceToHave?: string
+    experienceMin?: number | null
+    experienceMax?: number | null
     status?: string
     postedAt?: Date | string
     validThrough?: Date | string | null
@@ -12284,6 +12560,8 @@ export namespace Prisma {
     id?: string
     slug: string
     title: string
+    nexusId?: string | null
+    contentHash?: string | null
     department: string
     location: string
     employmentType: string
@@ -12293,6 +12571,9 @@ export namespace Prisma {
     responsibilities?: string
     requirements?: string
     technologies?: string
+    niceToHave?: string
+    experienceMin?: number | null
+    experienceMax?: number | null
     status?: string
     postedAt?: Date | string
     validThrough?: Date | string | null
@@ -12344,6 +12625,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -12353,6 +12636,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12364,6 +12650,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    nexusId?: NullableStringFieldUpdateOperationsInput | string | null
+    contentHash?: NullableStringFieldUpdateOperationsInput | string | null
     department?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     employmentType?: StringFieldUpdateOperationsInput | string
@@ -12373,6 +12661,9 @@ export namespace Prisma {
     responsibilities?: StringFieldUpdateOperationsInput | string
     requirements?: StringFieldUpdateOperationsInput | string
     technologies?: StringFieldUpdateOperationsInput | string
+    niceToHave?: StringFieldUpdateOperationsInput | string
+    experienceMin?: NullableIntFieldUpdateOperationsInput | number | null
+    experienceMax?: NullableIntFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     postedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validThrough?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

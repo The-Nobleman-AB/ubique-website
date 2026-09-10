@@ -7,11 +7,14 @@ interface RequirementsProps {
 }
 
 export default function Requirements({ job }: RequirementsProps) {
-  const midpoint = Math.ceil(job.requirements.length / 2);
+  /* Previously this split the requirements array down the middle and called
+     the halves "required" and "preferred" — a distinction the data never
+     made. The Nexus feed supplies a real nice-to-have list, so use it, and
+     show everything as required when there isn't one. */
 
-  const required = job.requirements.slice(0, midpoint);
+  const required = job.requirements;
 
-  const preferred = job.requirements.slice(midpoint);
+  const preferred = job.niceToHave;
 
   return (
     <section className="section-y bg-white">

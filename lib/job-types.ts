@@ -34,6 +34,13 @@ export interface Job {
   responsibilities: string[];
   requirements: string[];
   technologies: string[];
+  /// Genuinely optional extras. Empty for roles created by hand in the admin.
+  niceToHave: string[];
+  experienceMin: number | null;
+  experienceMax: number | null;
+  /// Nexus TR number for feed-sourced roles, null for hand-created ones.
+  /// Internal reference — never rendered publicly.
+  nexusId: string | null;
   status: JobStatus;
   postedAt: Date;
   validThrough: Date | null;

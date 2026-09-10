@@ -84,8 +84,10 @@ export default function JobPostingSchema({ job }: { job: Job }) {
 
     ...(remote ? { jobLocationType: "TELECOMMUTE" } : {}),
 
-    industry: job.department,
-    occupationalCategory: job.department,
+    /* `department` carries the Nexus TR number by design, so it must not be
+       published as the industry — Google would index "TRPD-26-04274" as the
+       sector this role sits in. Left off entirely rather than guessed. */
+    occupationalCategory: job.title,
     experienceRequirements: {
       "@type": "OccupationalExperienceRequirements",
       description: job.experience,

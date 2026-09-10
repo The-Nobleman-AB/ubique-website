@@ -49,6 +49,16 @@ model Job {
   slug  String @unique
   title String
 
+  /// The Nexus TR number, e.g. TRPD-26-04274. Unique so the feed can upsert on
+  /// it, and null for roles created by hand in the admin. Internal reference —
+  /// never rendered publicly, never in a URL.
+  nexusId String? @unique
+
+  /// SHA-256 of the publishable fields, supplied by the feed. When it matches
+  /// what we hold, the record is unchanged and the write is skipped — the same
+  /// job legitimately arrives four days running.
+  contentHash String?
+
   department     String
   location       String
   employmentType String // Full Time | Contract | Part Time ...
@@ -63,6 +73,12 @@ model Job {
   responsibilities String @default("[]")
   requirements     String @default("[]")
   technologies     String @default("[]")
+  niceToHave       String @default("[]")
+
+  /// Supplied alongside the prose in `experience`, so roles can be filtered or
+  /// badged as "8+ years" without parsing a sentence.
+  experienceMin Int?
+  experienceMax Int?
 
   /// DRAFT hides it everywhere. OPEN publishes it. CLOSED keeps the page
   /// alive for existing links but stops applications.
@@ -78,6 +94,7 @@ model Job {
 
   @@index([status])
   @@index([postedAt])
+  @@index([nexusId])
 }
 
 /// A candidate's submission against a job.

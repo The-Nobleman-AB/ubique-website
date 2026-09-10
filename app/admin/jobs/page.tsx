@@ -73,6 +73,19 @@ export default async function AdminJobsPage() {
                       >
                         {job.title}
                       </Link>
+
+                      {/* Roles from the Nexus feed are overwritten on the next
+                          batch, so editing them here is wasted work. Say so
+                          rather than letting someone find out. */}
+                      {job.nexusId && (
+                        <span
+                          title={`Synced from Nexus · ${job.nexusId} · edits here are overwritten by the next feed`}
+                          className="rounded-pill bg-brand-tint text-brand ml-2 px-2 py-0.5 align-middle text-[0.65rem] font-semibold tracking-wide uppercase"
+                        >
+                          Nexus
+                        </span>
+                      )}
+
                       <p className="text-muted mt-0.5 text-sm">
                         {job.department} · {job.location} · {job.workplace}
                       </p>

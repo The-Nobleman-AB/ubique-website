@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ubique Systems">
+  <!--
+    Tab icon. Drawn as paths rather than text so it renders identically
+    everywhere — an SVG <text> element depends on a font the browser may not
+    have, and a favicon is exactly where that fails silently.
+
+    Mirrors the wordmark: navy ground, white U, the accent dot that follows
+    "UBIQUE" in the logo. Colours are the site tokens.
+  -->
+  <rect width="64" height="64" rx="14" fill="#071b3a"/>
+  <path
+    d="M20 17 V31 Q20 45 32 45 Q44 45 44 31 V17"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="8.5"
+    stroke-linecap="round"
+  />
+  <circle cx="51" cy="41" r="4.5" fill="#12b76a"/>
+</svg>
