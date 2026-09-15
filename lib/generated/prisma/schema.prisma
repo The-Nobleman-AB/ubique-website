@@ -123,6 +123,16 @@ model Application {
 
   consent Boolean @default(false)
 
+  /// Which wording the candidate agreed to — see lib/consent.ts. Null for
+  /// applications taken before versioning existed; deliberately not backfilled,
+  /// because we cannot know what those applicants actually saw.
+  consentTextVersion String?
+
+  /// Set when Nexus confirms it has stored both the application and the CV.
+  /// Null means still waiting to be collected, which is a state both sides
+  /// can query and alert on.
+  collectedAt DateTime?
+
   /// NEW | REVIEWING | SHORTLISTED | INTERVIEWING | OFFERED | REJECTED | HIRED
   status String @default("NEW")
 
@@ -138,6 +148,8 @@ model Application {
   @@index([status])
   @@index([createdAt])
   @@index([email])
+  /// Drives the Nexus collection query: uncollected, oldest first.
+  @@index([collectedAt, createdAt])
 }
 
 /// Recruiter comment on an application.

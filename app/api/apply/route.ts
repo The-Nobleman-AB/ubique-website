@@ -11,6 +11,7 @@ import {
   type Row,
 } from "@/lib/email";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
+import { CONSENT_TEXT_VERSION } from "@/lib/consent";
 import { StorageNotConfiguredError, store } from "@/lib/storage";
 import { applicationSchema, fieldErrors, validateCv } from "@/lib/validation";
 
@@ -154,6 +155,8 @@ export async function POST(request: Request) {
   const application = await prisma.application.create({
     data: {
       reference: ref,
+      /* Stamped at submission — see lib/consent.ts. */
+      consentTextVersion: CONSENT_TEXT_VERSION,
       jobId: job.id,
       firstName: data.firstName,
       lastName: data.lastName,

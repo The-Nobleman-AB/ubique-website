@@ -5157,6 +5157,8 @@ export namespace Prisma {
     cvSize: number | null
     cvPath: string | null
     consent: boolean | null
+    consentTextVersion: string | null
+    collectedAt: Date | null
     status: string | null
     notifiedAt: Date | null
     createdAt: Date | null
@@ -5179,6 +5181,8 @@ export namespace Prisma {
     cvSize: number | null
     cvPath: string | null
     consent: boolean | null
+    consentTextVersion: string | null
+    collectedAt: Date | null
     status: string | null
     notifiedAt: Date | null
     createdAt: Date | null
@@ -5201,6 +5205,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: number
     consent: number
+    consentTextVersion: number
+    collectedAt: number
     status: number
     notifiedAt: number
     createdAt: number
@@ -5233,6 +5239,8 @@ export namespace Prisma {
     cvSize?: true
     cvPath?: true
     consent?: true
+    consentTextVersion?: true
+    collectedAt?: true
     status?: true
     notifiedAt?: true
     createdAt?: true
@@ -5255,6 +5263,8 @@ export namespace Prisma {
     cvSize?: true
     cvPath?: true
     consent?: true
+    consentTextVersion?: true
+    collectedAt?: true
     status?: true
     notifiedAt?: true
     createdAt?: true
@@ -5277,6 +5287,8 @@ export namespace Prisma {
     cvSize?: true
     cvPath?: true
     consent?: true
+    consentTextVersion?: true
+    collectedAt?: true
     status?: true
     notifiedAt?: true
     createdAt?: true
@@ -5386,6 +5398,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent: boolean
+    consentTextVersion: string | null
+    collectedAt: Date | null
     status: string
     notifiedAt: Date | null
     createdAt: Date
@@ -5427,6 +5441,8 @@ export namespace Prisma {
     cvSize?: boolean
     cvPath?: boolean
     consent?: boolean
+    consentTextVersion?: boolean
+    collectedAt?: boolean
     status?: boolean
     notifiedAt?: boolean
     createdAt?: boolean
@@ -5452,6 +5468,8 @@ export namespace Prisma {
     cvSize?: boolean
     cvPath?: boolean
     consent?: boolean
+    consentTextVersion?: boolean
+    collectedAt?: boolean
     status?: boolean
     notifiedAt?: boolean
     createdAt?: boolean
@@ -5475,6 +5493,8 @@ export namespace Prisma {
     cvSize?: boolean
     cvPath?: boolean
     consent?: boolean
+    consentTextVersion?: boolean
+    collectedAt?: boolean
     status?: boolean
     notifiedAt?: boolean
     createdAt?: boolean
@@ -5498,13 +5518,15 @@ export namespace Prisma {
     cvSize?: boolean
     cvPath?: boolean
     consent?: boolean
+    consentTextVersion?: boolean
+    collectedAt?: boolean
     status?: boolean
     notifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reference" | "jobId" | "firstName" | "lastName" | "email" | "phone" | "location" | "linkedin" | "coverNote" | "cvFilename" | "cvMimeType" | "cvSize" | "cvPath" | "consent" | "status" | "notifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reference" | "jobId" | "firstName" | "lastName" | "email" | "phone" | "location" | "linkedin" | "coverNote" | "cvFilename" | "cvMimeType" | "cvSize" | "cvPath" | "consent" | "consentTextVersion" | "collectedAt" | "status" | "notifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     job?: boolean | JobDefaultArgs<ExtArgs>
     notes?: boolean | Application$notesArgs<ExtArgs>
@@ -5545,6 +5567,18 @@ export namespace Prisma {
       cvSize: number
       cvPath: string
       consent: boolean
+      /**
+       * Which wording the candidate agreed to — see lib/consent.ts. Null for
+       * applications taken before versioning existed; deliberately not backfilled,
+       * because we cannot know what those applicants actually saw.
+       */
+      consentTextVersion: string | null
+      /**
+       * Set when Nexus confirms it has stored both the application and the CV.
+       * Null means still waiting to be collected, which is a state both sides
+       * can query and alert on.
+       */
+      collectedAt: Date | null
       /**
        * NEW | REVIEWING | SHORTLISTED | INTERVIEWING | OFFERED | REJECTED | HIRED
        */
@@ -5995,6 +6029,8 @@ export namespace Prisma {
     readonly cvSize: FieldRef<"Application", 'Int'>
     readonly cvPath: FieldRef<"Application", 'String'>
     readonly consent: FieldRef<"Application", 'Boolean'>
+    readonly consentTextVersion: FieldRef<"Application", 'String'>
+    readonly collectedAt: FieldRef<"Application", 'DateTime'>
     readonly status: FieldRef<"Application", 'String'>
     readonly notifiedAt: FieldRef<"Application", 'DateTime'>
     readonly createdAt: FieldRef<"Application", 'DateTime'>
@@ -9755,6 +9791,8 @@ export namespace Prisma {
     cvSize: 'cvSize',
     cvPath: 'cvPath',
     consent: 'consent',
+    consentTextVersion: 'consentTextVersion',
+    collectedAt: 'collectedAt',
     status: 'status',
     notifiedAt: 'notifiedAt',
     createdAt: 'createdAt',
@@ -10179,6 +10217,8 @@ export namespace Prisma {
     cvSize?: IntFilter<"Application"> | number
     cvPath?: StringFilter<"Application"> | string
     consent?: BoolFilter<"Application"> | boolean
+    consentTextVersion?: StringNullableFilter<"Application"> | string | null
+    collectedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     status?: StringFilter<"Application"> | string
     notifiedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
@@ -10203,6 +10243,8 @@ export namespace Prisma {
     cvSize?: SortOrder
     cvPath?: SortOrder
     consent?: SortOrder
+    consentTextVersion?: SortOrderInput | SortOrder
+    collectedAt?: SortOrderInput | SortOrder
     status?: SortOrder
     notifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -10230,6 +10272,8 @@ export namespace Prisma {
     cvSize?: IntFilter<"Application"> | number
     cvPath?: StringFilter<"Application"> | string
     consent?: BoolFilter<"Application"> | boolean
+    consentTextVersion?: StringNullableFilter<"Application"> | string | null
+    collectedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     status?: StringFilter<"Application"> | string
     notifiedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
@@ -10254,6 +10298,8 @@ export namespace Prisma {
     cvSize?: SortOrder
     cvPath?: SortOrder
     consent?: SortOrder
+    consentTextVersion?: SortOrderInput | SortOrder
+    collectedAt?: SortOrderInput | SortOrder
     status?: SortOrder
     notifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -10284,6 +10330,8 @@ export namespace Prisma {
     cvSize?: IntWithAggregatesFilter<"Application"> | number
     cvPath?: StringWithAggregatesFilter<"Application"> | string
     consent?: BoolWithAggregatesFilter<"Application"> | boolean
+    consentTextVersion?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    collectedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     status?: StringWithAggregatesFilter<"Application"> | string
     notifiedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
@@ -10804,6 +10852,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -10828,6 +10878,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -10850,6 +10902,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10874,6 +10928,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10897,6 +10953,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -10918,6 +10976,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10940,6 +11000,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11512,6 +11574,8 @@ export namespace Prisma {
     cvSize?: SortOrder
     cvPath?: SortOrder
     consent?: SortOrder
+    consentTextVersion?: SortOrder
+    collectedAt?: SortOrder
     status?: SortOrder
     notifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -11538,6 +11602,8 @@ export namespace Prisma {
     cvSize?: SortOrder
     cvPath?: SortOrder
     consent?: SortOrder
+    consentTextVersion?: SortOrder
+    collectedAt?: SortOrder
     status?: SortOrder
     notifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -11560,6 +11626,8 @@ export namespace Prisma {
     cvSize?: SortOrder
     cvPath?: SortOrder
     consent?: SortOrder
+    consentTextVersion?: SortOrder
+    collectedAt?: SortOrder
     status?: SortOrder
     notifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -12451,6 +12519,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12473,6 +12543,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12525,6 +12597,8 @@ export namespace Prisma {
     cvSize?: IntFilter<"Application"> | number
     cvPath?: StringFilter<"Application"> | string
     consent?: BoolFilter<"Application"> | boolean
+    consentTextVersion?: StringNullableFilter<"Application"> | string | null
+    collectedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     status?: StringFilter<"Application"> | string
     notifiedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
@@ -12702,6 +12776,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12725,6 +12801,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12791,6 +12869,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12814,6 +12894,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13030,6 +13112,8 @@ export namespace Prisma {
     cvSize: number
     cvPath: string
     consent?: boolean
+    consentTextVersion?: string | null
+    collectedAt?: Date | string | null
     status?: string
     notifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -13051,6 +13135,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13073,6 +13159,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13095,6 +13183,8 @@ export namespace Prisma {
     cvSize?: IntFieldUpdateOperationsInput | number
     cvPath?: StringFieldUpdateOperationsInput | string
     consent?: BoolFieldUpdateOperationsInput | boolean
+    consentTextVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    collectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

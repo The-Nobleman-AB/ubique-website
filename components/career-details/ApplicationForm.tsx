@@ -14,6 +14,7 @@ import {
 
 import type { Job } from "@/lib/job-types";
 import { cn } from "@/lib/cn";
+import { CONSENT_TEXT } from "@/lib/consent";
 import {
   ACCEPTED_CV_EXTENSIONS,
   MAX_CV_BYTES,
@@ -470,9 +471,14 @@ export default function ApplicationForm({ job }: { job: Job }) {
                 onChange={(e) => update("consent", e.target.checked)}
                 className="border-line text-brand accent-brand mt-1 h-5 w-5 shrink-0 cursor-pointer rounded"
               />
+              {/* Rendered from lib/consent.ts so the wording shown and the
+                  version stamped on the application cannot drift apart. The
+                  privacy policy link is inserted into the same sentence. */}
               <span className="text-muted text-sm leading-relaxed">
-                I&rsquo;m happy for Ubique Systems to process my details and CV
-                for this and comparable roles, as described in the{" "}
+                {CONSENT_TEXT.replace(
+                  " as described in the privacy policy.",
+                  " as described in the ",
+                )}
                 <Link
                   href="/legal/privacy"
                   className="text-brand font-medium underline underline-offset-2"
