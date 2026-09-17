@@ -10,7 +10,7 @@ import WhatYouGain from "@/components/career-details/WhatYouGain";
 import ApplicationForm from "@/components/career-details/ApplicationForm";
 import JobPostingSchema from "@/components/seo/JobPostingSchema";
 
-import { getJobBySlug, getPublishedSlugs } from "@/lib/jobs";
+import { getJobBySlug, getPublishedSlugs, isLive } from "@/lib/jobs";
 import { absoluteUrl } from "@/lib/site";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -42,11 +42,11 @@ export async function generateMetadata({
     description: `${job.description} ${job.employmentType}, ${job.workplace}, ${job.experience} experience. Apply through Ubique Systems.`,
     alternates: { canonical: absoluteUrl(`/careers/${job.slug}`) },
     /* A closed role keeps its page for anyone holding a link, but shouldn't
-       compete in search with roles you can actually apply for. */
-    robots:
-      job.status === "CLOSED"
-        ? { index: false, follow: true }
-        : { index: true, follow: true },
+       compete in search with roles you can actually apply for. A role past its
+       closing date counts as closed — we have already told Google it expired. */
+    robots: isLive(job)
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: "article",
       title: `${title} | Ubique Systems`,
@@ -64,7 +64,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
 
   return (
     <>
-      {job.status === "OPEN" && <JobPostingSchema job={job} />}
+      {isLive(job) && <JobPostingSchema job={job} />}
 
       <JobHero job={job} />
       <JobOverview job={job} />
@@ -73,7 +73,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
       <Requirements job={job} />
       <WhatYouGain job={job} />
 
-      {job.status === "OPEN" ? <ApplicationForm job={job} /> : <ClosedNotice />}
+      {isLive(job) ? <ApplicationForm job={job} /> : <ClosedNotice />}
     </>
   );
 }

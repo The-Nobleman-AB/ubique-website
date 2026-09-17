@@ -10,6 +10,7 @@ import {
   sendEmail,
   type Row,
 } from "@/lib/email";
+import { isLive } from "@/lib/jobs";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { CONSENT_TEXT_VERSION } from "@/lib/consent";
 import { StorageNotConfiguredError, store } from "@/lib/storage";
@@ -97,7 +98,10 @@ export async function POST(request: Request) {
      or the role closed while the form was on screen. */
   const job = await prisma.job.findUnique({ where: { id: data.jobId } });
 
-  if (!job || job.status !== "OPEN") {
+  /* isLive, not status alone: a role past its closing date has already been
+     advertised to Google as expired, and accepting applications for it means
+     collecting CVs nobody is going to read. */
+  if (!job || !isLive(job)) {
     return NextResponse.json(
       {
         error:

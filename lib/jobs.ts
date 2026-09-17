@@ -104,6 +104,45 @@ function withoutInternals(job: Job): Job {
   return { ...rest, nexusId: null };
 }
 
+/**
+ * Midnight this morning, UTC.
+ *
+ * A role closing on the 17th should stay open all of the 17th, so the cutoff
+ * is the start of today rather than the current instant — otherwise a job
+ * would go dark at 00:01 on its own closing day.
+ */
+function startOfToday(): Date {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  );
+}
+
+/**
+ * Has the closing date passed?
+ *
+ * `validThrough` is published to Google as the date the posting expires, so
+ * letting a lapsed role stay live on our own site means telling Google one
+ * thing and candidates another — and quietly collecting applications for a
+ * role nobody is working. A null date never expires, which is what hand-made
+ * roles in the admin leave it as.
+ *
+ * The Nexus feed slides closing_date to today + 7 on every extract, so a role
+ * only lapses once the feed stops sending it. That is exactly the stale-post
+ * safety net their team asked us to use.
+ */
+export function hasLapsed(job: { validThrough: Date | null }): boolean {
+  return job.validThrough !== null && job.validThrough < startOfToday();
+}
+
+/** Live means open, and not past its closing date. */
+export function isLive(job: {
+  status: string;
+  validThrough: Date | null;
+}): boolean {
+  return job.status === "OPEN" && !hasLapsed(job);
+}
+
 /* ---------------------------------------------------------------- public */
 
 /** Roles visible on the public site. CLOSED stays reachable by direct link. */
@@ -112,7 +151,13 @@ export async function getPublishedJobs(): Promise<Job[]> {
     "getPublishedJobs",
     async () => {
       const rows = await prisma.job.findMany({
-        where: { status: "OPEN" },
+        where: {
+          status: "OPEN",
+          OR: [
+            { validThrough: null },
+            { validThrough: { gte: startOfToday() } },
+          ],
+        },
         orderBy: { postedAt: "desc" },
       });
       return rows.map((row) => withoutInternals(toJob(row)));
