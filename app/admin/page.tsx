@@ -3,6 +3,7 @@ import { AlertCircle, ArrowRight, Plus } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { liveJobWhere } from "@/lib/jobs";
 import {
   EmptyState,
   Panel,
@@ -24,7 +25,9 @@ export default async function AdminDashboard({
 
   const [openRoles, draftRoles, totalApplications, newApplications, recent] =
     await Promise.all([
-      prisma.job.count({ where: { status: "OPEN" } }),
+      /* liveJobWhere, not status alone — otherwise this tile claims roles are
+         open that the public site stopped showing days ago. */
+      prisma.job.count({ where: liveJobWhere() }),
       prisma.job.count({ where: { status: "DRAFT" } }),
       prisma.application.count(),
       prisma.application.count({ where: { status: "NEW" } }),

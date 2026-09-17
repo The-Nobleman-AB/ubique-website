@@ -143,6 +143,36 @@ export function isLive(job: {
   return job.status === "OPEN" && !hasLapsed(job);
 }
 
+/**
+ * The same rule as a Prisma filter, so a count and a listing can never
+ * disagree about what is live.
+ */
+export function liveJobWhere() {
+  return {
+    status: "OPEN",
+    OR: [{ validThrough: null }, { validThrough: { gte: startOfToday() } }],
+  };
+}
+
+/**
+ * What the admin should call this role.
+ *
+ * A lapsed role keeps `status: "OPEN"` in the database — being live is
+ * computed from the status and the date together, not stored. Showing a green
+ * OPEN pill for something the public site has already taken down is the kind
+ * of small lie that costs someone an afternoon, so it gets its own label.
+ */
+export type EffectiveJobStatus = JobStatus | "EXPIRED";
+
+export function effectiveStatus(job: {
+  status: string;
+  validThrough: Date | null;
+}): EffectiveJobStatus {
+  if (job.status === "OPEN" && hasLapsed(job)) return "EXPIRED";
+
+  return job.status as JobStatus;
+}
+
 /* ---------------------------------------------------------------- public */
 
 /** Roles visible on the public site. CLOSED stays reachable by direct link. */
@@ -151,13 +181,7 @@ export async function getPublishedJobs(): Promise<Job[]> {
     "getPublishedJobs",
     async () => {
       const rows = await prisma.job.findMany({
-        where: {
-          status: "OPEN",
-          OR: [
-            { validThrough: null },
-            { validThrough: { gte: startOfToday() } },
-          ],
-        },
+        where: liveJobWhere(),
         orderBy: { postedAt: "desc" },
       });
       return rows.map((row) => withoutInternals(toJob(row)));

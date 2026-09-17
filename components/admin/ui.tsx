@@ -75,6 +75,9 @@ const JOB_TONES: Record<string, string> = {
   OPEN: "bg-accent-tint text-accent-dark",
   DRAFT: "bg-warn/10 text-warn",
   CLOSED: "bg-surface text-muted",
+  /* Distinct from CLOSED: nobody chose this, the date simply passed — and
+     unlike a closure it undoes itself if the date moves. */
+  EXPIRED: "bg-danger/10 text-danger",
 };
 
 const APPLICATION_TONES: Record<string, string> = {
@@ -90,14 +93,18 @@ const APPLICATION_TONES: Record<string, string> = {
 export function StatusPill({
   status,
   kind = "job",
+  title,
 }: {
   status: string;
   kind?: "job" | "application";
+  /** Hover text — used to say *when* an expired role lapsed. */
+  title?: string;
 }) {
   const tones = kind === "job" ? JOB_TONES : APPLICATION_TONES;
 
   return (
     <span
+      title={title}
       className={cn(
         "rounded-pill inline-block px-2.5 py-1 text-xs font-semibold tracking-wide uppercase",
         tones[status] ?? "bg-surface text-muted",

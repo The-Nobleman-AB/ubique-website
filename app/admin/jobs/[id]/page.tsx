@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
-import { getJobById } from "@/lib/jobs";
+import { effectiveStatus, getJobById } from "@/lib/jobs";
 import JobForm from "@/components/admin/JobForm";
 import { StatusPill } from "@/components/admin/ui";
 import DangerZone from "@/components/admin/DangerZone";
@@ -45,7 +45,7 @@ export default async function EditJobPage({
         <div>
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="display-3 text-navy font-bold">{job.title}</h1>
-            <StatusPill status={job.status} />
+            <StatusPill status={effectiveStatus(job)} />
           </div>
 
           <p className="text-muted mt-2">

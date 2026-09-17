@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ExternalLink, Plus } from "lucide-react";
 
 import { requireUser } from "@/lib/auth";
-import { getAllJobs } from "@/lib/jobs";
+import { effectiveStatus, getAllJobs } from "@/lib/jobs";
 import {
   EmptyState,
   Panel,
@@ -92,7 +92,14 @@ export default async function AdminJobsPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <StatusPill status={job.status} />
+                      <StatusPill
+                        status={effectiveStatus(job)}
+                        title={
+                          effectiveStatus(job) === "EXPIRED" && job.validThrough
+                            ? `Closing date passed on ${formatDate(job.validThrough)} — hidden from the careers page and no longer accepting applications. Move the date forward to reopen.`
+                            : undefined
+                        }
+                      />
                     </td>
 
                     <td className="px-6 py-4">
