@@ -15,7 +15,6 @@ export default function TermsPage() {
     <LegalPage
       title="Terms of Use"
       lastUpdated="2026-08-28"
-      awaitingReview
       intro="These terms govern your use of this website. They do not govern any consulting or recruitment services we provide — those are covered by a separate written agreement."
       sections={[
         {

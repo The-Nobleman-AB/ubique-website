@@ -15,7 +15,6 @@ export default function CookiePolicyPage() {
     <LegalPage
       title="Cookie Policy"
       lastUpdated="2026-08-28"
-      awaitingReview
       intro="A short policy, because there is not much to say: this site does not track you."
       sections={[
         {

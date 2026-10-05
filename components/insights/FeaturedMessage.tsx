@@ -20,10 +20,9 @@ export default function FeaturedMessage() {
               </h2>
 
               <p className="text-muted mt-8 max-w-3xl text-xl leading-relaxed">
-                As Ubique Systems continues to grow, this page will become the
-                home for company announcements, technology updates, hiring news
-                and industry perspectives that genuinely reflect our work and
-                expertise.
+                This is where we publish company announcements, technology
+                updates, hiring news and industry perspectives that genuinely
+                reflect our work and expertise.
               </p>
 
               <p className="text-muted mt-6 max-w-3xl leading-relaxed">
@@ -35,7 +34,7 @@ export default function FeaturedMessage() {
             {/* RIGHT */}
 
             <div className="rounded-card bg-navy flex flex-col justify-center p-10">
-              <p className="eyebrow text-sky">Coming Soon</p>
+              <p className="eyebrow text-sky">What we publish</p>
 
               <h3 className="mt-6 text-3xl leading-tight font-bold text-white">
                 Company News

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AlertTriangle, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 import PageHero from "@/components/ui/PageHero";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -134,26 +134,7 @@ export default function ResponsibilityPage() {
             </div>
 
             <div className="lg:col-span-7">
-              <div className="rounded-card border-warn/30 bg-warn/5 flex items-start gap-4 border p-6">
-                <AlertTriangle
-                  size={22}
-                  aria-hidden="true"
-                  className="text-warn mt-0.5 shrink-0"
-                />
-                <div>
-                  <h3 className="text-navy font-semibold">
-                    Awaiting confirmed policy
-                  </h3>
-                  <p className="text-muted mt-2 leading-relaxed">
-                    Environmental impact, community and charitable activity, and
-                    formal diversity reporting. Replace this block with the real
-                    positions once they are signed off — the section structure
-                    is already in place.
-                  </p>
-                </div>
-              </div>
-
-              <dl className="divide-line border-line mt-8 divide-y border-y">
+              <dl className="divide-line border-line divide-y border-y">
                 {[
                   {
                     title: "Environmental impact",

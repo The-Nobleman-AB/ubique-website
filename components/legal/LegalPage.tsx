@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
 
 export interface LegalSection {
   id: string;
@@ -13,11 +12,6 @@ export interface LegalPageProps {
   intro: string;
   lastUpdated: string;
   sections: LegalSection[];
-  /**
-   * Set while the document is awaiting sign-off from counsel. Renders a
-   * visible notice — better than publishing an unreviewed policy silently.
-   */
-  awaitingReview?: boolean;
 }
 
 export default function LegalPage({
@@ -25,7 +19,6 @@ export default function LegalPage({
   intro,
   lastUpdated,
   sections,
-  awaitingReview,
 }: LegalPageProps) {
   return (
     <>
@@ -64,27 +57,6 @@ export default function LegalPage({
 
       <section className="section-y bg-white">
         <div className="mx-auto max-w-4xl px-6">
-          {awaitingReview && (
-            <div className="rounded-card border-warn/30 bg-warn/5 mb-12 flex items-start gap-4 border p-6">
-              <AlertTriangle
-                size={22}
-                aria-hidden="true"
-                className="text-warn mt-0.5 shrink-0"
-              />
-              <div>
-                <h2 className="text-navy font-semibold">
-                  Awaiting legal review
-                </h2>
-                <p className="text-muted mt-2 text-sm leading-relaxed">
-                  This document describes how the website actually works, but it
-                  has not yet been reviewed by qualified counsel. It should be
-                  checked against Ubique Systems&rsquo; wider data processing
-                  before the site goes live.
-                </p>
-              </div>
-            </div>
-          )}
-
           <div className="grid gap-12 lg:grid-cols-12">
             {/* --- contents --- */}
 

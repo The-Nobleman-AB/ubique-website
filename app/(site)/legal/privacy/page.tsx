@@ -15,7 +15,6 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Privacy Policy"
       lastUpdated="2026-08-28"
-      awaitingReview
       intro="This policy explains what personal data this website collects, why we collect it, how long we keep it and what rights you have over it."
       sections={[
         {
