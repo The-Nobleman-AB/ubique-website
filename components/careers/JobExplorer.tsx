@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -14,6 +14,34 @@ import {
 import type { Job } from "@/lib/job-types";
 
 const JOBS_PER_PAGE = 10;
+
+/**
+ * Which page numbers to show, with gaps.
+ *
+ * Rendering every page was fine at three roles and absurd at 237 — 24 buttons
+ * in a non-wrapping row, about 1,340px of content on a 375px phone. Seven
+ * items at most: the first, the last, the current and its neighbours.
+ */
+function pageWindow(current: number, total: number): (number | "gap")[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const wanted = [1, current - 1, current, current + 1, total]
+    .filter((n) => n >= 1 && n <= total)
+    .sort((a, b) => a - b);
+
+  const out: (number | "gap")[] = [];
+  let previous = 0;
+
+  for (const n of new Set(wanted)) {
+    if (previous && n - previous > 1) out.push("gap");
+    out.push(n);
+    previous = n;
+  }
+
+  return out;
+}
 
 /**
  * Roles come from the database via the careers page — this component only
@@ -41,6 +69,29 @@ export default function JobExplorer({ jobs }: { jobs: Job[] }) {
   const [sort, setSort] = useState("Newest");
 
   const [page, setPage] = useState(1);
+
+  /* The pagination sits at the bottom of the list, so on a phone you tap
+     "next" and stay exactly where you were — the new page loads above you and
+     nothing appears to have happened. Bring the top of the results back into
+     view. Deliberately only on pagination, not on filter changes: those
+     controls are already at the top, and scrolling there would fight the user. */
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const goToPage = (next: number) => {
+    setPage(next);
+
+    const target = resultsRef.current;
+    if (!target) return;
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    target.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  };
 
   const filteredJobs = useMemo(() => {
     let result = [...jobs];
@@ -205,7 +256,12 @@ export default function JobExplorer({ jobs }: { jobs: Job[] }) {
 
         {/* Results Header */}
 
-        <div className="border-line mt-14 flex flex-col gap-6 border-t pt-8 lg:flex-row lg:items-center lg:justify-between">
+        <div
+          ref={resultsRef}
+          /* Clears the fixed 80px header, which scrollIntoView honours via
+             scroll-margin — otherwise the heading lands underneath it. */
+          className="border-line mt-14 flex scroll-mt-28 flex-col gap-6 border-t pt-8 lg:flex-row lg:items-center lg:justify-between"
+        >
           <div>
             <h3 className="text-navy display-4 font-bold">
               {totalJobs} Open Position
@@ -320,33 +376,53 @@ export default function JobExplorer({ jobs }: { jobs: Job[] }) {
         {totalPages > 1 && (
           <div className="mt-16 flex items-center justify-center gap-3">
             <button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              onClick={() => goToPage(Math.max(page - 1, 1))}
               disabled={page === 1}
-              className="hover:border-brand hover:text-brand border-line text-muted h-11 w-11 rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Previous page"
+              className="hover:border-brand hover:text-brand border-line text-muted h-11 w-11 shrink-0 rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
             >
               ←
             </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => setPage(pageNumber)}
-                  className={`h-11 w-11 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    page === pageNumber
-                      ? "bg-navy text-white"
-                      : "hover:border-brand hover:text-brand border-line text-muted border"
-                  } `}
-                >
-                  {pageNumber}
-                </button>
-              ),
-            )}
+            {/* Phones get their position, not a row of circles. Nobody taps
+                "page 17 of 24" on a 375px screen; they use the arrows. */}
+            <span className="text-muted px-2 text-sm font-medium tabular-nums sm:hidden">
+              Page {page} of {totalPages}
+            </span>
+
+            <div className="hidden items-center gap-2 sm:flex">
+              {pageWindow(page, totalPages).map((entry, index) =>
+                entry === "gap" ? (
+                  <span
+                    key={`gap-${index}`}
+                    aria-hidden="true"
+                    className="text-muted/50 w-5 text-center text-sm"
+                  >
+                    &hellip;
+                  </span>
+                ) : (
+                  <button
+                    key={entry}
+                    onClick={() => goToPage(entry)}
+                    aria-label={`Page ${entry}`}
+                    aria-current={page === entry ? "page" : undefined}
+                    className={`h-11 w-11 rounded-full text-sm font-semibold tabular-nums transition-all duration-200 ${
+                      page === entry
+                        ? "bg-navy text-white"
+                        : "hover:border-brand hover:text-brand border-line text-muted border"
+                    }`}
+                  >
+                    {entry}
+                  </button>
+                ),
+              )}
+            </div>
 
             <button
-              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() => goToPage(Math.min(page + 1, totalPages))}
               disabled={page === totalPages}
-              className="hover:border-brand hover:text-brand border-line text-muted h-11 w-11 rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Next page"
+              className="hover:border-brand hover:text-brand border-line text-muted h-11 w-11 shrink-0 rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
             >
               →
             </button>
